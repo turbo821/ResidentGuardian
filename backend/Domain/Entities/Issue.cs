@@ -18,7 +18,8 @@ namespace Domain.Entities
 
         public Guid CategoryId { get; set; }
         public Category Category { get; set; } = null!;
-
+        
+        public List<Answer> Answer { get; set; } = new();
         public List<StatusHistory> StatusHistories { get; set; } = new();
     }
 }
