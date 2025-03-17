@@ -35,6 +35,12 @@ builder.Services.AddCors(options =>
 builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
     {
         options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredLength = 6;
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.Zero;
+        options.Lockout.MaxFailedAccessAttempts = int.MaxValue;
         options.User.RequireUniqueEmail = true;
     })
     .AddEntityFrameworkStores<AppGuardContext>()
@@ -80,6 +86,13 @@ using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
     var roleSetter = new RoleSetter(roleManager);
+    await roleSetter.Setup();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    var roleSetter = new AdminSetter(userManager);
     await roleSetter.Setup();
 }
 

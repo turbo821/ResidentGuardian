@@ -1,22 +1,39 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Header = () => {
+  const { user, logout } = useAuth();
+
   return (
-<header className="bg-gray-800 text-white">
-  <div className="container mx-auto bg-gray-800 text-white p-4 flex justify-between items-center">
-    <h1 className="text-xl font-bold">ResidentGuardian</h1>
-    <nav>
-      <ul className="flex space-x-4">
-        <li><Link to="/" className="hover:text-green-400">Главная</Link></li>
-        <li><Link to="/map" className="hover:text-green-400">Карта</Link></li>
-        <li><Link to="/issues" className="hover:text-green-400">Темы</Link></li>
-        <li><Link to="/report" className="hover:text-green-400">Сообщить</Link></li>
-      </ul>
-    </nav>
-  </div>
-</header>
+    <header className="bg-blue-500 text-white">
+      <div className="container mx-auto p-4 flex justify-between items-center">
+        <div className="flex items-center space-x-6">
+          <img src="/problem-icon.png" style={{width: "50px"}}/>
+          <h1 className="text-xl font-bold">ResidentGuardian</h1>
+          <nav className="flex space-x-4">
+            <Link to="/" className="hover:text-green-400">Главная</Link>
+            <Link to="/issues" className="hover:text-green-400">Обращения</Link>
+            <Link to="/map" className="hover:text-green-400">Карта</Link>
+            <Link to="/about" className="hover:text-green-400">О портале</Link>
+          </nav>
+        </div>
+
+        <nav className="flex space-x-4">
+          {user ? (
+            <>
+              <Link to={`/profile/${user.id}`} className="hover:text-green-400">Личный кабинет</Link>
+              <button onClick={logout} className="hover:text-green-400">Выход</button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="hover:text-green-400">Вход</Link>
+              <Link to="/register" className="hover:text-green-400">Регистрация</Link>
+            </>
+          )}
+        </nav>
+      </div>
+    </header>
   );
 };
 
 export default Header;
-
