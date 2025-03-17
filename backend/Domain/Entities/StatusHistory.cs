@@ -10,7 +10,7 @@
         public Guid IssueId { get; set; }
         public Issue Issue { get; set; } = null!;
 
-        public Guid? ChangedByUserId { get; set; }
-        public User? ChangedByUser { get; set; }
+        public Guid ChangedByModeratorId { get; set; }
+        public User ChangedByModerator { get; set; } = null!;
     }
 }

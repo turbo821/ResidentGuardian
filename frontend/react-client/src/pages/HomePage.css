@@ -1,0 +1,10 @@
+.sity-image {
+
+  background-image: url("../assets/images/city-bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.map-image {
+  width: 600px;
+}

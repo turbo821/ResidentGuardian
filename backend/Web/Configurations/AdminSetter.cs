@@ -9,7 +9,9 @@ namespace Web.Configurations
         private readonly User _admin = new User
             {
                 UserName = "admin@example.com",
-                Email = "admin@example.com"
+                Email = "admin@example.com",
+                FullName = "Alexander",
+                EmailConfirmed = true
             };
 
         public AdminSetter(UserManager<User> userManager)
@@ -19,7 +21,10 @@ namespace Web.Configurations
 
         public async Task Setup()
         {
-            await _userManager.CreateAsync(_admin, "AdminPassword123!");
+            if (await _userManager.FindByEmailAsync(_admin.Email!) != null)
+                return;
+
+            await _userManager.CreateAsync(_admin, "password123");
             await _userManager.AddToRoleAsync(_admin, "Admin");
         }
     }

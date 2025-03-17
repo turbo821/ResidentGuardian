@@ -9,6 +9,7 @@ namespace Infrastructure.Data
         : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options)
     {
         public DbSet<Issue> Issues => Set<Issue>();
+        public DbSet<Answer> Answers => Set<Answer>();
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<StatusHistory> StatusHistories => Set<StatusHistory>();
         public DbSet<ModeratorCategory> ModeratorCategories => Set<ModeratorCategory>();
@@ -43,7 +44,7 @@ namespace Infrastructure.Data
                 .HasMaxLength(30);
 
             modelBuilder.Entity<StatusHistory>()
-                .HasOne(h => h.ChangedByUser)
+                .HasOne(h => h.ChangedByModerator)
                 .WithMany(u => u.StatusHistories);
 
             modelBuilder.Entity<StatusHistory>()
