@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using System.Security.Claims;
 using System.Text;
 
-namespace Application.Services
+namespace Infrastructure.Auth
 {
     public class JwtService : IJwtService
     {

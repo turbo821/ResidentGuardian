@@ -6,6 +6,7 @@ import MapPage from './pages/MapPage';
 import IssuesPage from './pages/IssuesPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import AboutPage from './pages/AboutPage';
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/issues" element={<Layout><IssuesPage /></Layout>} />
         <Route path="/login" element={<Layout><LoginPage/></Layout>} />
         <Route path="/register" element={<Layout><RegisterPage/></Layout>} />
+        <Route path="/about" element={<Layout><AboutPage/></Layout>} />
       </Routes>
     </Router>
   );
