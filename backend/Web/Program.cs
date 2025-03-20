@@ -8,6 +8,7 @@ using System.Text;
 using Web.Configurations;
 using Application.Services.Interfaces;
 using Application.Services;
+using Infrastructure.Auth;
 
 
 var builder = WebApplication.CreateBuilder(args);

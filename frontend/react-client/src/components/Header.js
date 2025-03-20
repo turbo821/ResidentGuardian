@@ -14,6 +14,8 @@ const Header = () => {
             <Link to="/" className="hover:text-green-400">Главная</Link>
             <Link to="/issues" className="hover:text-green-400">Обращения</Link>
             <Link to="/map" className="hover:text-green-400">Карта</Link>
+            <Link to="/report" className="hover:text-green-400">Сообщить о проблеме</Link>
+            <Link to="/themes" className="hover:text-green-400">Темы</Link>
             <Link to="/about" className="hover:text-green-400">О портале</Link>
           </nav>
         </div>

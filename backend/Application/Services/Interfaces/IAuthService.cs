@@ -7,5 +7,6 @@ namespace Application.Services.Interfaces
         Task<AuthResponse> RegisterModeratorAsync(RegisterRequest request);
         Task<AuthResponse> RegisterUserAsync(RegisterRequest request);
         Task<AuthResponse> LoginAsync(LoginRequest request);
+        Task<UserProfileDto?> GetUserProfileAsync(Guid userId);
     }
 }
