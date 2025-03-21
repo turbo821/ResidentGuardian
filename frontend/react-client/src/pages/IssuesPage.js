@@ -5,7 +5,6 @@ const IssuesPage = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
 
-  // Заглушка списка обращений
   const issues = [
     { id: 1, title: "Яма на дороге", status: "В ожидании", image: "https://via.placeholder.com/150" },
     { id: 2, title: "Не работает фонарь", status: "Решено", image: "https://via.placeholder.com/150" },
@@ -18,13 +17,11 @@ const IssuesPage = () => {
   return (
     <div className="min-h-[90vh] bg-blue-100 flex flex-col items-center py-12 px-4">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-6xl w-full">
-        {/* Заголовок */}
         <h2 className="text-4xl font-bold text-center text-gray-800">Каталог обращений</h2>
         <p className="mt-2 text-lg text-center text-gray-700">
           Ознакомьтесь с проблемами, о которых сообщили жители.
         </p>
 
-        {/* Поиск и фильтрация */}
         <div className="mt-6 flex flex-col md:flex-row gap-4">
           <input 
             type="text" 
@@ -45,7 +42,6 @@ const IssuesPage = () => {
           </select>
         </div>
 
-        {/* Список обращений (Адаптивная сетка) */}
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {issues.map((issue) => (
             <div key={issue.id} className="bg-white shadow-lg rounded-lg overflow-hidden">
@@ -64,7 +60,6 @@ const IssuesPage = () => {
           ))}
         </div>
 
-        {/* Кнопка "Создать обращение" */}
         <div className="mt-6 text-center">
           <Link 
             to="/report" 

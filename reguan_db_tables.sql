@@ -5,7 +5,7 @@
 -- Dumped from database version 16.1
 -- Dumped by pg_dump version 16.1
 
--- Started on 2025-03-17 01:34:39
+-- Started on 2025-03-22 00:12:11
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -339,6 +339,9 @@ COPY public."AspNetUserLogins" ("LoginProvider", "ProviderKey", "ProviderDisplay
 --
 
 COPY public."AspNetUserRoles" ("UserId", "RoleId") FROM stdin;
+4fbd8498-115b-4194-94dd-249ed292bd80	01957d08-0b5c-7811-9905-27c4ac82cee9
+0195a5f6-d477-7e1e-86fd-d4475a958d73	01957d08-0ab4-7282-959f-b9581cbd742c
+8a4268b2-c39a-4562-b9be-f78dd3dc3a55	01957d08-0b49-76d4-8c31-e32b4ec63173
 \.
 
 
@@ -359,6 +362,9 @@ COPY public."AspNetUserTokens" ("UserId", "LoginProvider", "Name", "Value") FROM
 --
 
 COPY public."AspNetUsers" ("Id", "CreatedAt", "UserName", "NormalizedUserName", "Email", "NormalizedEmail", "EmailConfirmed", "PasswordHash", "SecurityStamp", "ConcurrencyStamp", "PhoneNumber", "PhoneNumberConfirmed", "TwoFactorEnabled", "LockoutEnd", "LockoutEnabled", "AccessFailedCount", "FullName") FROM stdin;
+4fbd8498-115b-4194-94dd-249ed292bd80	2025-03-18 00:09:00.954252+03	tom@gmail.com	TOM@GMAIL.COM	tom@gmail.com	TOM@GMAIL.COM	t	AQAAAAIAAYagAAAAEJbHGieIBoKuZNlTellG6z2Y/cXAqISp9+HCedL6CiyNt0XkHA8CT0Ce890BGmH+lA==	6ULEMUGXOHMZUHFELIDJZZUPF4W3CFIZ	673f5205-2139-450e-9455-683f1b37a805	\N	f	f	\N	t	0	Tom
+0195a5f6-d477-7e1e-86fd-d4475a958d73	2025-03-18 00:16:11.560442+03	admin@example.com	ADMIN@EXAMPLE.COM	admin@example.com	ADMIN@EXAMPLE.COM	t	AQAAAAIAAYagAAAAEH9C3C1trs5lT5zwswZbS+D1XuMoYcM4WvP2R85ZvmyFHz6sJJcnyv+E5BGtwdgKWw==	H425N7KGKRMKQ4KZXDMUJ6QX6MJ37ADW	2895ac59-8c5e-4c08-b156-22722e3997be	\N	f	f	\N	t	0	Alexander
+8a4268b2-c39a-4562-b9be-f78dd3dc3a55	2025-03-18 00:25:56.304494+03	bob@gmail.com	BOB@GMAIL.COM	bob@gmail.com	BOB@GMAIL.COM	t	AQAAAAIAAYagAAAAEPP8mjO/JRYwvJ1E9+bGJHZh9b+ZXiOMLYp/rCpv6CYQ+4K2po5FR3NyNdVG8hVngw==	HHZRRF4SPUN2TX7PMWFSOEW2MRJWWO7N	a36bc9e2-1025-47bc-a02c-9353a0349184	\N	f	f	\N	t	0	Bob
 \.
 
 
@@ -815,7 +821,7 @@ ALTER TABLE ONLY public."StatusHistories"
     ADD CONSTRAINT "FK_StatusHistories_Issues_IssueId" FOREIGN KEY ("IssueId") REFERENCES public."Issues"("Id") ON DELETE CASCADE;
 
 
--- Completed on 2025-03-17 01:34:39
+-- Completed on 2025-03-22 00:12:13
 
 --
 -- PostgreSQL database dump complete
