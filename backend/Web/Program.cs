@@ -80,24 +80,30 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAdminCliService, AdminCliService>();
+builder.Services.AddScoped<RoleSetter>();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+// Cli mode
+if (args.Length > 0 && args.Contains("create-admin") || args.Contains("create-roles"))
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-    var roleSetter = new RoleSetter(roleManager);
-    await roleSetter.Setup();
+    using var scope = app.Services.CreateScope();
+    if (args.Contains("create-admin"))
+    {
+        var adminCli = scope.ServiceProvider.GetRequiredService<IAdminCliService>();
+        await adminCli.CreateAdminFromCommandLine(args);
+    }
+    if(args.Contains("create-roles"))
+    {
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+        var roleSetter = scope.ServiceProvider.GetRequiredService<RoleSetter>();
+        await roleSetter.Setup();
+    }
+    return;
 }
 
-using (var scope = app.Services.CreateScope())
-{
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-    var roleSetter = new AdminSetter(userManager);
-    await roleSetter.Setup();
-}
-
-app.UseCors("AllowClientCrimeMapApp");
+app.UseCors("AllowClientReGuanApp");
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

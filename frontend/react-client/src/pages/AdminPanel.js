@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AssignModerator from "../components/AdminPanel/AssignModerator";
 import AddModerator from "../components/AdminPanel/AddModerator";
 import AddCategory from "../components/AdminPanel/AddCategory";
 import CategoryList from "../components/AdminPanel/CategoryList";
+import { useAuth } from "../context/AuthContext";
 
 const AdminPanel = () => {
+  const { user, isLoading } = useAuth();
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([
     { id: "road", title: "Дорожные проблемы", description: "Ямы, трещины, поврежденные знаки." },
     { id: "lighting", title: "Освещение", description: "Неисправные фонари, отсутствие освещения." },
@@ -12,6 +16,21 @@ const AdminPanel = () => {
     { id: "landscaping", title: "Благоустройство", description: "Лавочки, детские площадки, озеленение." },
     { id: "transport", title: "Общественный транспорт", description: "Поломанные остановки, нехватка маршрутов." },
   ]);
+
+  useEffect(() => {
+    if (!isLoading && (!user || !user.roles.includes("Admin"))) {
+      navigate("/");
+    }
+  }, [user, isLoading, navigate]);
+
+  if (isLoading) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (!user || !user.roles.includes("Admin")) {
+    return null;
+  }
+
 
   return (
     <div className="min-h-[90vh] bg-blue-100 flex flex-col items-center py-12 px-4">

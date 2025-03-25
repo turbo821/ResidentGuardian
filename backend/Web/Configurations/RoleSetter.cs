@@ -14,11 +14,13 @@ namespace Web.Configurations
 
         public async Task Setup()
         {
+            Console.WriteLine("Role creation mode");
             foreach (var role in _roles)
             {
                 if (!await _roleManager.RoleExistsAsync(role))
                     await _roleManager.CreateAsync(new IdentityRole<Guid>(role));
             }
+            Console.WriteLine("Role created");
         }
     }
 }

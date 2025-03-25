@@ -13,15 +13,16 @@ const LoginPage = () => {
     const handleLogin = async (e) => {
       e.preventDefault();
       try {
-        const response = await fetch("/api/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await response.json();
-        if (!data.success) throw new Error(data.message);
-        login(data.token);
-        navigate("/dashboard");
+        const user = {
+          email: email,
+          password: password
+        };
+
+        const response = await api.post("/api/auth/login", user);
+        if (response.status !== 200) throw new Error(response.statusText);
+        login(response.data.token);
+        
+        navigate("/");
       } catch (err) {
         setError(err.message);
       }
