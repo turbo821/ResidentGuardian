@@ -66,7 +66,7 @@ namespace Web.Controllers
             if (id is null)
                 return BadRequest();
 
-            return Ok(new { Id = id });
+            return Ok(id);
         }
 
         //[Authorize]

@@ -5,7 +5,7 @@
 -- Dumped from database version 16.1
 -- Dumped by pg_dump version 16.1
 
--- Started on 2025-03-22 00:12:11
+-- Started on 2025-03-29 01:24:23
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -229,8 +229,8 @@ CREATE TABLE public."Issues" (
     "Location" text,
     "Point" public.geometry,
     "CreatedAt" timestamp with time zone NOT NULL,
-    "UserId" uuid NOT NULL,
-    "CategoryId" uuid NOT NULL
+    "UserId" uuid,
+    "CategoryId" uuid
 );
 
 
@@ -342,6 +342,7 @@ COPY public."AspNetUserRoles" ("UserId", "RoleId") FROM stdin;
 4fbd8498-115b-4194-94dd-249ed292bd80	01957d08-0b5c-7811-9905-27c4ac82cee9
 0195a5f6-d477-7e1e-86fd-d4475a958d73	01957d08-0ab4-7282-959f-b9581cbd742c
 8a4268b2-c39a-4562-b9be-f78dd3dc3a55	01957d08-0b49-76d4-8c31-e32b4ec63173
+0195cf1b-4450-77d8-8ada-87fdae2ba123	01957d08-0ab4-7282-959f-b9581cbd742c
 \.
 
 
@@ -365,6 +366,7 @@ COPY public."AspNetUsers" ("Id", "CreatedAt", "UserName", "NormalizedUserName", 
 4fbd8498-115b-4194-94dd-249ed292bd80	2025-03-18 00:09:00.954252+03	tom@gmail.com	TOM@GMAIL.COM	tom@gmail.com	TOM@GMAIL.COM	t	AQAAAAIAAYagAAAAEJbHGieIBoKuZNlTellG6z2Y/cXAqISp9+HCedL6CiyNt0XkHA8CT0Ce890BGmH+lA==	6ULEMUGXOHMZUHFELIDJZZUPF4W3CFIZ	673f5205-2139-450e-9455-683f1b37a805	\N	f	f	\N	t	0	Tom
 0195a5f6-d477-7e1e-86fd-d4475a958d73	2025-03-18 00:16:11.560442+03	admin@example.com	ADMIN@EXAMPLE.COM	admin@example.com	ADMIN@EXAMPLE.COM	t	AQAAAAIAAYagAAAAEH9C3C1trs5lT5zwswZbS+D1XuMoYcM4WvP2R85ZvmyFHz6sJJcnyv+E5BGtwdgKWw==	H425N7KGKRMKQ4KZXDMUJ6QX6MJ37ADW	2895ac59-8c5e-4c08-b156-22722e3997be	\N	f	f	\N	t	0	Alexander
 8a4268b2-c39a-4562-b9be-f78dd3dc3a55	2025-03-18 00:25:56.304494+03	bob@gmail.com	BOB@GMAIL.COM	bob@gmail.com	BOB@GMAIL.COM	t	AQAAAAIAAYagAAAAEPP8mjO/JRYwvJ1E9+bGJHZh9b+ZXiOMLYp/rCpv6CYQ+4K2po5FR3NyNdVG8hVngw==	HHZRRF4SPUN2TX7PMWFSOEW2MRJWWO7N	a36bc9e2-1025-47bc-a02c-9353a0349184	\N	f	f	\N	t	0	Bob
+0195cf1b-4450-77d8-8ada-87fdae2ba123	2025-03-26 00:00:25.429795+03	admin@gmail.com	ADMIN@GMAIL.COM	admin@gmail.com	ADMIN@GMAIL.COM	t	AQAAAAIAAYagAAAAEGLoWoHRIsTGbBsTf6zpJxxwa0ZYJ+9Hs+Gt2W7evU1qDwjV22N7v0t7IDP61V4ylw==	VKVDT6RBZC3SRVKAHEHDFRPIVTVZ732H	8ecf4005-5be4-4904-8ac7-5200b73494e2	\N	f	f	\N	t	0	Admin
 \.
 
 
@@ -385,6 +387,8 @@ COPY public."Categories" ("Id", "Name") FROM stdin;
 --
 
 COPY public."Issues" ("Id", "Title", "Description", "Status", "PhotoUrl", "Location", "Point", "CreatedAt", "UserId", "CategoryId") FROM stdin;
+72a96f2b-8738-42f8-a2c6-6f892f4891d9	вода бл	прорвало трубу ааа	Pending	\N	\N	\N	2025-03-28 21:53:38.515364+03	\N	\N
+c1c4ed49-5035-4c1d-a0e5-8c7bd1c6545d	ямама	на дороге2	Pending	\N	\N	\N	2025-03-29 01:07:56.828673+03	\N	\N
 \.
 
 
@@ -419,6 +423,7 @@ COPY public."__EFMigrationsHistory" ("MigrationId", "ProductVersion") FROM stdin
 20250316203429_AddAnswers	9.0.2
 20250316203608_DelAnswerIdInIssue	9.0.2
 20250316215919_AddFullName	9.0.2
+20250328174208_UserAndCategoryInIssueIsNullTestTime	9.0.2
 \.
 
 
@@ -768,21 +773,21 @@ ALTER TABLE ONLY public."AspNetUserTokens"
 
 
 --
--- TOC entry 5660 (class 2606 OID 109131)
+-- TOC entry 5660 (class 2606 OID 116175)
 -- Name: Issues FK_Issues_AspNetUsers_UserId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public."Issues"
-    ADD CONSTRAINT "FK_Issues_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES public."AspNetUsers"("Id") ON DELETE CASCADE;
+    ADD CONSTRAINT "FK_Issues_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES public."AspNetUsers"("Id");
 
 
 --
--- TOC entry 5661 (class 2606 OID 109136)
+-- TOC entry 5661 (class 2606 OID 116180)
 -- Name: Issues FK_Issues_Categories_CategoryId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public."Issues"
-    ADD CONSTRAINT "FK_Issues_Categories_CategoryId" FOREIGN KEY ("CategoryId") REFERENCES public."Categories"("Id") ON DELETE CASCADE;
+    ADD CONSTRAINT "FK_Issues_Categories_CategoryId" FOREIGN KEY ("CategoryId") REFERENCES public."Categories"("Id");
 
 
 --
@@ -821,7 +826,7 @@ ALTER TABLE ONLY public."StatusHistories"
     ADD CONSTRAINT "FK_StatusHistories_Issues_IssueId" FOREIGN KEY ("IssueId") REFERENCES public."Issues"("Id") ON DELETE CASCADE;
 
 
--- Completed on 2025-03-22 00:12:13
+-- Completed on 2025-03-29 01:24:25
 
 --
 -- PostgreSQL database dump complete

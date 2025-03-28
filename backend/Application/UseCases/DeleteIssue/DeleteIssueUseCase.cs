@@ -8,12 +8,10 @@ namespace Application.UseCases.DeleteIssue
     public class DeleteIssueUseCase : IDeleteIssueUseCase
     {
         private readonly IIssueRepository _repo;
-        private readonly IMapper _mapper;
 
-        public DeleteIssueUseCase(IIssueRepository repo, IMapper mapper)
+        public DeleteIssueUseCase(IIssueRepository repo)
         {
             _repo = repo;
-            _mapper = mapper;
         }
 
         public async Task<bool> Execute(Guid id)
@@ -26,9 +24,6 @@ namespace Application.UseCases.DeleteIssue
             var success = await _repo.Delete(issue);
 
             return success;
-
-
-
         }
     }
 }
