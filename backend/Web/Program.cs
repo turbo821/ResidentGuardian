@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,8 +8,15 @@ using Infrastructure.Data;
 using System.Text;
 using Web.Configurations;
 using Application.Services.Interfaces;
-using Application.Services;
 using Infrastructure.Auth;
+using Application.Helpers;
+using Application.UseCases.GetAllIssues;
+using Domain.Interfaces;
+using Infrastructure.Repositories;
+using Application.UseCases.CreateIssue;
+using Application.UseCases.GetIssue;
+using Application.UseCases.UpdateIssue;
+using Application.UseCases.DeleteIssue;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -78,10 +86,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IIssueRepository, IssueRepository>();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAdminCliService, AdminCliService>();
 builder.Services.AddScoped<RoleSetter>();
+
+builder.Services.AddScoped<IGetAllIssueUseCase, GetAllIssueUseCase>();
+builder.Services.AddScoped<IGetIssueUseCase, GetIssueUseCase>();
+builder.Services.AddScoped<ICreateIssueUseCase, CreateIssueUseCase>();
+builder.Services.AddScoped<IUpdateIssueUseCase, UpdateIssueUseCase>();
+builder.Services.AddScoped<IDeleteIssueUseCase, DeleteIssueUseCase>();
 
 var app = builder.Build();
 

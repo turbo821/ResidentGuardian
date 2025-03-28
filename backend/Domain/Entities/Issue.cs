@@ -13,12 +13,12 @@ namespace Domain.Entities
         public Point? Point { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public Guid UserId { get; set; }
-        public User User { get; set; } = null!;
+        public Guid? UserId { get; set; }
+        public User? User { get; set; } // = null!; -- its test
 
-        public Guid CategoryId { get; set; }
-        public Category Category { get; set; } = null!;
-        
+        public Guid? CategoryId { get; set; }
+        public Category? Category { get; set; } // = null!; -- its test
+
         public List<Answer> Answer { get; set; } = new();
         public List<StatusHistory> StatusHistories { get; set; } = new();
     }
