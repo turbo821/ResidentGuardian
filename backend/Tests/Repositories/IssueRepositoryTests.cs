@@ -54,7 +54,7 @@ namespace Tests.Repositories
         }
 
         [Fact]
-        public async Task Add_ReturnsId_WhenSuccessful()
+        public async Task Add_ReturnsId()
         {
             using var context = new AppGuardContext(GetDbOptions());
             var repository = new IssueRepository(context);
@@ -67,7 +67,21 @@ namespace Tests.Repositories
         }
 
         [Fact]
-        public async Task Update_ReturnsTrue_WhenSuccessful()
+        public async Task Add_ReturnsNull_WhenSaveFails()
+        {
+            // Arrange
+            using var context = new AppGuardContext(GetDbOptions());
+            var repository = new IssueRepository(context);
+
+            // Act
+            var result = await repository.Add(null!);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task Update_ReturnsTrue_WhenUpdated()
         {
             using var context = new AppGuardContext(GetDbOptions());
             var issue = new Issue { Id = Guid.NewGuid(), Title = "Old Title", Description = "Old Description" };
@@ -84,6 +98,21 @@ namespace Tests.Repositories
         }
 
         [Fact]
+        public async Task Update_ReturnsFalse_WhenCategoryNotFound()
+        {
+            // Arrange
+            using var context = new AppGuardContext(GetDbOptions());
+            var repository = new IssueRepository(context);
+            var issue = new Issue { Id = Guid.NewGuid(), Title = "Non-Existent", Description = "Will not be found" };
+
+            // Act
+            var result = await repository.Update(issue);
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
         public async Task Delete_ReturnsTrue_WhenSuccessful()
         {
             using var context = new AppGuardContext(GetDbOptions());
@@ -96,6 +125,22 @@ namespace Tests.Repositories
 
             Assert.True(result);
             Assert.Null(await repository.GetById(issue.Id));
+        }
+
+        [Fact]
+        public async Task DeleteCategory_ReturnsFalse_WhenCategoryNotFound()
+        {
+            // Arrange
+            using var context = new AppGuardContext(GetDbOptions());
+            var repository = new IssueRepository(context);
+
+            var issue = new Issue { Id = Guid.NewGuid(), Title = "Non-Existent", Description = "Will not be found" };
+
+            // Act
+            var result = await repository.Delete(issue);
+
+            // Assert
+            Assert.False(result);
         }
 
         [Fact]

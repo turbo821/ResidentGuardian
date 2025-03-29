@@ -5,7 +5,7 @@
 -- Dumped from database version 16.1
 -- Dumped by pg_dump version 16.1
 
--- Started on 2025-03-29 01:24:23
+-- Started on 2025-03-29 03:19:06
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -209,7 +209,8 @@ ALTER TABLE public."AspNetUsers" OWNER TO postgres;
 
 CREATE TABLE public."Categories" (
     "Id" uuid NOT NULL,
-    "Name" text NOT NULL
+    "Name" text NOT NULL,
+    "Description" text
 );
 
 
@@ -376,7 +377,9 @@ COPY public."AspNetUsers" ("Id", "CreatedAt", "UserName", "NormalizedUserName", 
 -- Data for Name: Categories; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public."Categories" ("Id", "Name") FROM stdin;
+COPY public."Categories" ("Id", "Name", "Description") FROM stdin;
+3e8225ec-d424-4ea7-9a4d-40f400bed880	Дороги	Проблемы дорог
+3c8c2ae3-302f-4642-811b-b87e711c409e	ЖКХ	Проблемы жкх
 \.
 
 
@@ -424,6 +427,7 @@ COPY public."__EFMigrationsHistory" ("MigrationId", "ProductVersion") FROM stdin
 20250316203608_DelAnswerIdInIssue	9.0.2
 20250316215919_AddFullName	9.0.2
 20250328174208_UserAndCategoryInIssueIsNullTestTime	9.0.2
+20250328223938_AddCategoryDescription	9.0.2
 \.
 
 
@@ -826,7 +830,7 @@ ALTER TABLE ONLY public."StatusHistories"
     ADD CONSTRAINT "FK_StatusHistories_Issues_IssueId" FOREIGN KEY ("IssueId") REFERENCES public."Issues"("Id") ON DELETE CASCADE;
 
 
--- Completed on 2025-03-29 01:24:25
+-- Completed on 2025-03-29 03:19:06
 
 --
 -- PostgreSQL database dump complete

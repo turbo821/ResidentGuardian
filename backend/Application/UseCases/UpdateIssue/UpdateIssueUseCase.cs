@@ -20,12 +20,8 @@ namespace Application.UseCases.UpdateIssue
         {
             var issue = _mapper.Map<Issue>(issueDto);
 
-            if(await _repo.IsExist(issue.Id))
-            {
-                var success = await _repo.Update(issue);
-                return success;
-            }
-            return false;
+            var success = await _repo.Update(issue);
+            return success;
         }
     }
 }

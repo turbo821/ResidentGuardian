@@ -27,6 +27,9 @@ namespace Infrastructure.Repositories
 
         public async Task<Guid?> Add(Issue issue)
         {
+            if (issue == null)
+                return null;
+
             await _context.Issues.AddAsync(issue);
             if(await Save())
                 return issue.Id;
@@ -44,6 +47,8 @@ namespace Infrastructure.Repositories
             //    );
 
             //return updatedRows > 0;
+            if (!await IsExist(issue.Id))
+                return false;
 
             _context.Issues.Update(issue);
             return await Save();
@@ -51,6 +56,9 @@ namespace Infrastructure.Repositories
 
         public async Task<bool> Delete(Issue issue)
         {
+            if (!await IsExist(issue.Id))
+                return false;
+
             _context.Issues.Remove(issue);
 
             return await Save();

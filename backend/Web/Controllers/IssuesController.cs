@@ -18,10 +18,8 @@ namespace Web.Controllers
         private readonly IDeleteIssueUseCase _deleteIssue;
 
         public IssuesController(
-            IGetAllIssueUseCase getAllIssues,
-            IGetIssueUseCase getIssue,
-            ICreateIssueUseCase createIssue,
-            IUpdateIssueUseCase updateIssue,
+            IGetAllIssueUseCase getAllIssues, IGetIssueUseCase getIssue,
+            ICreateIssueUseCase createIssue, IUpdateIssueUseCase updateIssue,
             IDeleteIssueUseCase deleteIssue)
         {
             _getAllIssues = getAllIssues;

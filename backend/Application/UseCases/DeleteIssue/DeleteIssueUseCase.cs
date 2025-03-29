@@ -18,10 +18,7 @@ namespace Application.UseCases.DeleteIssue
         {
             var issue = await _repo.GetById(id);
 
-            if (issue is null)
-                return false;
-
-            var success = await _repo.Delete(issue);
+            var success = await _repo.Delete(issue!);
 
             return success;
         }

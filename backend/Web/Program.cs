@@ -17,6 +17,10 @@ using Application.UseCases.CreateIssue;
 using Application.UseCases.GetIssue;
 using Application.UseCases.UpdateIssue;
 using Application.UseCases.DeleteIssue;
+using Application.UseCases.GetCategories;
+using Application.UseCases.CreateCategory;
+using Application.UseCases.UpdateCategory;
+using Application.UseCases.DeleteCategory;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -87,12 +91,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IIssueRepository, IssueRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAdminCliService, AdminCliService>();
 builder.Services.AddScoped<RoleSetter>();
+
+builder.Services.AddScoped<IGetCategoriesUseCase, GetCategoriesUseCase>();
+builder.Services.AddScoped<ICreateCategoryUseCase, CreateCategoryUseCase>();
+builder.Services.AddScoped<IUpdateCategoryUseCase, UpdateCategoryUseCase>();
+builder.Services.AddScoped<IDeleteCategoryUseCase, DeleteCategoryUseCase>();
 
 builder.Services.AddScoped<IGetAllIssueUseCase, GetAllIssueUseCase>();
 builder.Services.AddScoped<IGetIssueUseCase, GetIssueUseCase>();
