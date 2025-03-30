@@ -13,6 +13,7 @@ namespace Infrastructure.Data
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<StatusHistory> StatusHistories => Set<StatusHistory>();
         public DbSet<ModeratorCategory> ModeratorCategories => Set<ModeratorCategory>();
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

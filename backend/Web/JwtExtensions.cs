@@ -11,7 +11,7 @@ namespace Web
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>()!;
+            var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>()!;
             var key = Encoding.UTF8.GetBytes(jwtOptions.SecretKey);
 
             services.AddAuthentication(options =>
@@ -33,6 +33,15 @@ namespace Web
                     ValidAudience = jwtOptions.Audience,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        context.Token = context.Request.Cookies["resident-cookies"];
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

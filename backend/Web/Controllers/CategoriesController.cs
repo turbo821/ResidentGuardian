@@ -4,6 +4,7 @@ using Application.UseCases.DeleteCategory;
 using Application.UseCases.GetCategories;
 using Application.UseCases.UpdateCategory;
 using Application.UseCases.UpdateIssue;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Update;
 
@@ -36,7 +37,7 @@ namespace Web.Controllers
         }
 
 
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddCategory([FromBody] CreateCategoryRequest request)
         {
@@ -51,7 +52,7 @@ namespace Web.Controllers
             return Ok(id);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryRequest request)
         {
@@ -66,7 +67,7 @@ namespace Web.Controllers
             return Ok();
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> RemoveCategory(Guid id)

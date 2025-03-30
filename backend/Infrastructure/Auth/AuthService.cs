@@ -8,18 +8,23 @@ namespace Infrastructure.Auth
     public class AuthService : IAuthService
     {
         private readonly UserManager<User> _userManager;
-        private readonly IJwtService _tokenService;
+        private readonly IJwtProvider _jwtService;
+        private readonly IRefreshTokenService _refreshTokenService;
 
-        public AuthService(UserManager<User> userManager, IJwtService tokenService)
+        public AuthService(
+            UserManager<User> userManager,
+            IJwtProvider jwtService,
+            IRefreshTokenService refreshTokenService)
         {
             _userManager = userManager;
-            _tokenService = tokenService;
+            _jwtService = jwtService;
+            _refreshTokenService = refreshTokenService;
         }
 
         public async Task<AuthResponse> RegisterUserAsync(RegisterRequest request)
         {
             if (await _userManager.FindByEmailAsync(request.Email) != null)
-                return new() { Success = false, Message = "User with this email already exists" };
+                return new() { Success = false, Message = "User exists" };
 
             var user = new User
             {
@@ -32,18 +37,27 @@ namespace Infrastructure.Auth
 
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
-                return new() { Success = false, Message = "Registration error" };
+                return new() { Success = false, Message = "Registration failed" };
 
             await _userManager.AddToRoleAsync(user, "User");
 
-            var token = _tokenService.GenerateToken(user, new List<string> { "User" });
-            return new() { Success = true, Message = "Registration successful", Token = token };
+            var roles = await _userManager.GetRolesAsync(user);
+            var accessToken = _jwtService.GenerateAccessToken(user, roles);
+            var refreshToken = await _refreshTokenService.GenerateRefreshTokenAsync(user.Id);
+
+            return new()
+            {
+                Success = true,
+                Message = "Registered",
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            };
         }
 
         public async Task<AuthResponse> RegisterModeratorAsync(RegisterRequest request)
         {
             if (await _userManager.FindByEmailAsync(request.Email) != null)
-                return new() { Success = false, Message = "User with this email already exists" };
+                return new() { Success = false, Message = "User exists" };
 
             var user = new User
             {
@@ -56,7 +70,7 @@ namespace Infrastructure.Auth
 
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
-                return new() { Success = false, Message = "Registration error" };
+                return new() { Success = false, Message = "Registration failed" };
 
             await _userManager.AddToRoleAsync(user, "Moderator");
             return new() { Success = true, Message = "Moderator successfully registered" };
@@ -66,12 +80,19 @@ namespace Infrastructure.Auth
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
-                return new() { Success = false, Message = "Invalid email or password" };
+                return new() { Success = false, Message = "Invalid credentials" };
 
             var roles = await _userManager.GetRolesAsync(user);
-            var token = _tokenService.GenerateToken(user, roles);
+            var accessToken = _jwtService.GenerateAccessToken(user, roles);
+            var refreshToken = await _refreshTokenService.GenerateRefreshTokenAsync(user.Id);
 
-            return new() { Success = true, Message = "Authorization successful", Token = token };
+            return new()
+            {
+                Success = true,
+                Message = "Authenticated",
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            };
         }
 
         public async Task<UserProfileDto?> GetUserProfileAsync(Guid userId)
