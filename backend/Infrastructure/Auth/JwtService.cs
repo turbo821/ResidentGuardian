@@ -1,25 +1,25 @@
 ﻿using Application.Services.Interfaces;
 using Domain.Entities;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.JsonWebTokens;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Auth
 {
     public class JwtService : IJwtService
     {
-        private readonly IConfiguration _config;
+        private readonly JwtOptions _options;
 
-        public JwtService(IConfiguration config)
+        public JwtService(IOptions<JwtOptions> options)
         {
-            _config = config;
+            _options = options.Value;
         }
 
         public string GenerateToken(User user, IList<string> roles)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]!));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
@@ -36,9 +36,9 @@ namespace Infrastructure.Auth
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(2),
-                Issuer = _config["Jwt:Issuer"],
-                Audience = _config["Jwt:Audience"],
+                Expires = DateTime.UtcNow.AddHours(_options.ExpiresHours),
+                Issuer = _options.Issuer,
+                Audience = _options.Audience,
                 SigningCredentials = credentials
             };
 

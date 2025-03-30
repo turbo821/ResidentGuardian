@@ -1,11 +1,7 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Domain.Entities;
 using Infrastructure.Data;
-using System.Text;
 using Web.Configurations;
 using Application.Services.Interfaces;
 using Infrastructure.Auth;
@@ -21,6 +17,7 @@ using Application.UseCases.GetCategories;
 using Application.UseCases.CreateCategory;
 using Application.UseCases.UpdateCategory;
 using Application.UseCases.DeleteCategory;
+using Web;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -59,30 +56,10 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
     .AddEntityFrameworkStores<AppGuardContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
 
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
+builder.Services.AddJwtAuthentication(builder.Configuration);
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero
-    };
-});
 builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
