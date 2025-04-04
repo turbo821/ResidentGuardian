@@ -1,8 +1,14 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const handleLogout = async() => {
+    await logout();
+    navigate("/login");
+  }
 
   return (
     <header className="bg-blue-500 text-white">
@@ -24,7 +30,7 @@ const Header = () => {
           {user ? (
             <>
               <Link to={`/profile/${user.id}`} className="hover:text-green-400">Личный кабинет</Link>
-              <button onClick={logout} className="hover:text-green-400">Выход</button>
+              <button onClick={handleLogout} className="hover:text-green-400">Выход</button>
             </>
           ) : (
             <>

@@ -5,6 +5,15 @@ import { useAuth } from "../context/AuthContext";
 const ProfilePage = () => {
   const { id } = useParams();
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if(!user || id !== user.id) {
+      navigate("/");
+    }
+  }, []);
+
+
   return (
     <div className="min-h-[90vh] bg-blue-100 flex flex-col items-center py-12 px-4">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full">

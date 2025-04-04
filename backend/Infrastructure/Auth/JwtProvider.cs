@@ -29,7 +29,7 @@ namespace Infrastructure.Auth
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            claims.AddRange(roles.Select(role => new Claim("roles", role)));
+            claims.AddRange(roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -54,7 +54,7 @@ namespace Infrastructure.Auth
                 ValidIssuer = _options.Issuer,
                 ValidateAudience = true,
                 ValidAudience = _options.Audience,
-                ValidateLifetime = false // Проверяем срок вручную
+                ValidateLifetime = false
             };
 
             var tokenHandler = new JsonWebTokenHandler();

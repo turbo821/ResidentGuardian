@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api";
 import { useAuth } from "../context/AuthContext";
 
 const RegisterPage = () => {
@@ -8,24 +7,23 @@ const RegisterPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { register } = useAuth();
   
     const handleRegister = async (e) => {
       e.preventDefault();
+      setIsLoading(true);
+      setError(null);
+      
       try {
-        const response = await fetch("/api/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ fullName, email, password })
-        });
-        const data = await response.json();
-        if (!data.success) throw new Error(data.message);
-        login(data.token);
-        navigate("/dashboard");
-      } catch (err) {
-        setError(err.message);
-      }
+        await register(fullName, email, password);
+        navigate("/");
+        } catch (err) {
+            setError(err.response?.data || "Registration failed");
+        } finally {
+            setIsLoading(false);
+        }
     };
   
     return (
@@ -59,7 +57,7 @@ const RegisterPage = () => {
               className="w-full p-3 border rounded-lg mb-3"
             />
             <button type="submit" className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition">
-              Зарегистрироваться
+              {isLoading ? "Загрузка..." : "Зарегистрироваться"}
             </button>
           </form>
           <p className="mt-4 text-center">

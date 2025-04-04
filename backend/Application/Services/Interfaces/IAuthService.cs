@@ -4,9 +4,9 @@ namespace Application.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<AuthResponse> RegisterModeratorAsync(RegisterRequest request);
-        Task<AuthResponse> RegisterUserAsync(RegisterRequest request);
-        Task<AuthResponse> LoginAsync(LoginRequest request);
-        Task<UserProfileDto?> GetUserProfileAsync(Guid userId);
+        Task<AuthResponse> RegisterModerator(RegisterRequest request);
+        Task<AuthResponse> RegisterUser(RegisterRequest request);
+        Task<AuthResponse> Login(LoginRequest request);
+        Task<UserProfileDto?> GetUserProfile(Guid userId);
     }
 }

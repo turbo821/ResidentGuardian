@@ -3,9 +3,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.Auth;
 
-namespace Web
+namespace Web.Extensions
 {
-    public static class JwtExtensions
+    public static class AuthExtensions
     {
         public static IServiceCollection AddJwtAuthentication(
             this IServiceCollection services,

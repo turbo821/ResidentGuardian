@@ -1,24 +1,14 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Domain.Entities;
-using Infrastructure.Data;
-using Web.Configurations;
-using Application.Services.Interfaces;
-using Infrastructure.Auth;
-using Application.Helpers;
-using Application.UseCases.GetAllIssues;
-using Domain.Interfaces;
-using Infrastructure.Repositories;
-using Application.UseCases.CreateIssue;
-using Application.UseCases.GetIssue;
-using Application.UseCases.UpdateIssue;
-using Application.UseCases.DeleteIssue;
-using Application.UseCases.GetCategories;
-using Application.UseCases.CreateCategory;
-using Application.UseCases.UpdateCategory;
-using Application.UseCases.DeleteCategory;
-using Web;
 using Microsoft.AspNetCore.CookiePolicy;
+using Domain.Entities;
+using Application.Helpers;
+using Application.Services.Interfaces;
+using Infrastructure.Data;
+using Infrastructure.Auth;
+using Web.Configurations;
+using Web.Extensions;
+using Infrastructure.Background;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +22,13 @@ builder.Services.AddDbContext<AppGuardContext>(
 );
 
 var originsArray = allowedOrigins?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? ["http://localhost:3000", "https://localhost:3000"];
+
+Console.WriteLine("Origins:");
+foreach (var item in originsArray)
+{
+    Console.WriteLine($"{item}");
+}
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowClientReGuanApp", policy =>
@@ -68,47 +65,27 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IIssueRepository, IssueRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+builder.Services.AddHostedService<TokenCleanupService>();
 
 builder.Services.AddScoped<IAdminCliService, AdminCliService>();
 builder.Services.AddScoped<RoleSetter>();
 
-builder.Services.AddScoped<IGetCategoriesUseCase, GetCategoriesUseCase>();
-builder.Services.AddScoped<ICreateCategoryUseCase, CreateCategoryUseCase>();
-builder.Services.AddScoped<IUpdateCategoryUseCase, UpdateCategoryUseCase>();
-builder.Services.AddScoped<IDeleteCategoryUseCase, DeleteCategoryUseCase>();
-
-builder.Services.AddScoped<IGetAllIssueUseCase, GetAllIssueUseCase>();
-builder.Services.AddScoped<IGetIssueUseCase, GetIssueUseCase>();
-builder.Services.AddScoped<ICreateIssueUseCase, CreateIssueUseCase>();
-builder.Services.AddScoped<IUpdateIssueUseCase, UpdateIssueUseCase>();
-builder.Services.AddScoped<IDeleteIssueUseCase, DeleteIssueUseCase>();
+builder.Services.AddRepositories();
+builder.Services.AddUseCases();
 
 var app = builder.Build();
 
-// Cli mode
-if (args.Length > 0 && args.Contains("create-admin") || args.Contains("create-roles"))
+await app.UseAdminCliMode(args);
+
+using (var scope = app.Services.CreateScope())
 {
-    using var scope = app.Services.CreateScope();
-    if (args.Contains("create-admin"))
-    {
-        var adminCli = scope.ServiceProvider.GetRequiredService<IAdminCliService>();
-        await adminCli.CreateAdminFromCommandLine(args);
-    }
-    if(args.Contains("create-roles"))
-    {
-        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-        var roleSetter = scope.ServiceProvider.GetRequiredService<RoleSetter>();
-        await roleSetter.Setup();
-    }
-    return;
+    var roleSetter = scope.ServiceProvider.GetRequiredService<RoleSetter>();
+    await roleSetter.Setup();
 }
 
 app.UseCors("AllowClientReGuanApp");
@@ -118,13 +95,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCookiePolicy(new CookiePolicyOptions
 {
     MinimumSameSitePolicy = SameSiteMode.Strict,
     HttpOnly = HttpOnlyPolicy.Always,
-    Secure = CookieSecurePolicy.Always
+    Secure = CookieSecurePolicy.None,
+
 });
 
 app.UseAuthentication();

@@ -10,16 +10,16 @@ namespace Infrastructure.Auth
     public class RefreshTokenService : IRefreshTokenService
     {
         private readonly AppGuardContext _context;
-        private readonly IJwtProvider _jwtService;
+        private readonly IJwtProvider _jwtProvider;
         private readonly UserManager<User> _userManager;
 
         public RefreshTokenService(
             AppGuardContext context,
-            IJwtProvider jwtService,
+            IJwtProvider jwtProvider,
             UserManager<User> userManager)
         {
             _context = context;
-            _jwtService = jwtService;
+            _jwtProvider = jwtProvider;
             _userManager = userManager;
         }
 
@@ -50,10 +50,9 @@ namespace Infrastructure.Auth
 
             var user = storedToken.User;
             var roles = await _userManager.GetRolesAsync(user);
-            var newAccessToken = _jwtService.GenerateAccessToken(user, roles);
+            var newAccessToken = _jwtProvider.GenerateAccessToken(user, roles);
             var newRefreshToken = await GenerateRefreshTokenAsync(user.Id);
 
-            // Отзываем старый токен
             _context.RefreshTokens.Remove(storedToken);
             await _context.SaveChangesAsync();
 
@@ -73,7 +72,12 @@ namespace Infrastructure.Auth
 
             _context.RefreshTokens.RemoveRange(tokens);
             await _context.SaveChangesAsync();
+        }
 
+        public async Task<bool> IsTokenRevokedAsync(Guid userId)
+        {
+            return !await _context.RefreshTokens
+                .AnyAsync(rt => rt.UserId == userId && rt.Expires > DateTime.UtcNow);
         }
     }
 }

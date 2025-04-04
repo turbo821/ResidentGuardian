@@ -21,7 +21,7 @@ namespace Infrastructure.Auth
             _refreshTokenService = refreshTokenService;
         }
 
-        public async Task<AuthResponse> RegisterUserAsync(RegisterRequest request)
+        public async Task<AuthResponse> RegisterUser(RegisterRequest request)
         {
             if (await _userManager.FindByEmailAsync(request.Email) != null)
                 return new() { Success = false, Message = "User exists" };
@@ -54,7 +54,7 @@ namespace Infrastructure.Auth
             };
         }
 
-        public async Task<AuthResponse> RegisterModeratorAsync(RegisterRequest request)
+        public async Task<AuthResponse> RegisterModerator(RegisterRequest request)
         {
             if (await _userManager.FindByEmailAsync(request.Email) != null)
                 return new() { Success = false, Message = "User exists" };
@@ -76,7 +76,7 @@ namespace Infrastructure.Auth
             return new() { Success = true, Message = "Moderator successfully registered" };
         }
 
-        public async Task<AuthResponse> LoginAsync(LoginRequest request)
+        public async Task<AuthResponse> Login(LoginRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
@@ -95,7 +95,7 @@ namespace Infrastructure.Auth
             };
         }
 
-        public async Task<UserProfileDto?> GetUserProfileAsync(Guid userId)
+        public async Task<UserProfileDto?> GetUserProfile(Guid userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null) return null;

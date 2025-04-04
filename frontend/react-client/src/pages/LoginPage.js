@@ -1,30 +1,27 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api";
 import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const { login } = useAuth();
   
     const handleLogin = async (e) => {
       e.preventDefault();
-      try {
-        const user = {
-          email: email,
-          password: password
-        };
+      setIsLoading(true);
+      setError(null);
 
-        const response = await api.post("/api/auth/login", user);
-        if (response.status !== 200) throw new Error(response.statusText);
-        login(response.data.token);
-        
+      try {
+        await login(email, password);
         navigate("/");
       } catch (err) {
-        setError(err.message);
+          setError(err.response?.data || "Login failed");
+      } finally {
+          setIsLoading(false);
       }
     };
   
@@ -51,7 +48,7 @@ const LoginPage = () => {
               className="w-full p-3 border rounded-lg mb-3"
             />
             <button type="submit" className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition">
-              Войти
+              {isLoading ? "Загрузка..." : "Войти"}
             </button>
           </form>
           <p className="mt-4 text-center">

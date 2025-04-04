@@ -24,7 +24,7 @@ namespace Web.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            var response = await _authService.RegisterUserAsync(request);
+            var response = await _authService.RegisterUser(request);
             if (!response.Success) return BadRequest(response.Message);
 
             SetAuthCookies(response.AccessToken!, response.RefreshToken!);
@@ -36,7 +36,7 @@ namespace Web.Controllers
         [HttpPost("register-moderator")]
         public async Task<IActionResult> RegisterModerator([FromBody] RegisterRequest request)
         {
-            var response = await _authService.RegisterModeratorAsync(request);
+            var response = await _authService.RegisterModerator(request);
             if (!response.Success) return BadRequest(response.Message);
 
             return Ok(response.Message);
@@ -45,7 +45,7 @@ namespace Web.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var response = await _authService.LoginAsync(request);
+            var response = await _authService.Login(request);
             if (!response.Success) return Unauthorized(response.Message);
 
             SetAuthCookies(response.AccessToken!, response.RefreshToken!);
@@ -66,13 +66,17 @@ namespace Web.Controllers
             return Ok();
         }
 
-        [Authorize]
-        [HttpPost("revoke-token")]
-        public async Task<IActionResult> RevokeToken()
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
         {
+            Response.Cookies.Delete("resident-cookies");
+            Response.Cookies.Delete("guard-cookies");
+
             var userId = User.FindFirstValue("id");
-            if (userId == null) return BadRequest();
+            if (userId == null) return BadRequest("Not authorized");
+
             await _refreshTokenService.RevokeTokenAsync(Guid.Parse(userId!));
+
             return NoContent();
         }
 
@@ -80,10 +84,13 @@ namespace Web.Controllers
         [HttpGet("profile")]
         public async Task<IActionResult> GetProfile()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirst("id")?.Value;
             if (userId == null) return Unauthorized();
 
-            var profile = await _authService.GetUserProfileAsync(Guid.Parse(userId));
+            var isTokenRevoked = await _refreshTokenService.IsTokenRevokedAsync(Guid.Parse(userId));
+            if (isTokenRevoked) return Unauthorized("Token revoked");
+
+            var profile = await _authService.GetUserProfile(Guid.Parse(userId));
             return Ok(profile);
         }
 
@@ -91,18 +98,14 @@ namespace Web.Controllers
         {
             Response.Cookies.Append("resident-cookies", accessToken, new CookieOptions
             {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTime.UtcNow.AddMinutes(15)
+                Expires = DateTime.UtcNow.AddMinutes(15),
+                Path = "/"
             });
 
             Response.Cookies.Append("guard-cookies", refreshToken, new CookieOptions
             {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTime.UtcNow.AddDays(7)
+                Expires = DateTime.UtcNow.AddDays(7),
+                Path = "/"
             });
         }
     }
