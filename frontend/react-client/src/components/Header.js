@@ -27,6 +27,8 @@ const Header = () => {
         </div>
 
         <nav className="flex space-x-4">
+          <Link to="/admin" className="hover:text-green-400">Панель администратора</Link>
+          <Link to="/moderator" className="hover:text-green-400">Панель модератора</Link>
           {user ? (
             <>
               <Link to={`/profile/${user.id}`} className="hover:text-green-400">Личный кабинет</Link>

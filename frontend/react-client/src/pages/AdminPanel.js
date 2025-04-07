@@ -7,7 +7,8 @@ import CategoryList from "../components/AdminPanel/CategoryList";
 import { useAuth } from "../context/AuthContext";
 
 const AdminPanel = () => {
-  const { user, isLoading } = useAuth();
+  // It is auth!!
+  // const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([
     { id: "road", title: "Дорожные проблемы", description: "Ямы, трещины, поврежденные знаки." },
@@ -17,19 +18,20 @@ const AdminPanel = () => {
     { id: "transport", title: "Общественный транспорт", description: "Поломанные остановки, нехватка маршрутов." },
   ]);
 
-  useEffect(() => {
-    if (!isLoading && (!user || !user.roles.includes("Admin"))) {
-      navigate("/");
-    }
-  }, [user, isLoading, navigate]);
+  // It is auth!!
+  // useEffect(() => {
+  //   if (!isLoading && (!user || !user.roles.includes("Admin"))) {
+  //     navigate("/");
+  //   }
+  // }, [user, isLoading, navigate]);
 
-  if (isLoading) {
-    return <div>Загрузка...</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Загрузка...</div>;
+  // }
 
-  if (!user || !user.roles.includes("Admin")) {
-    return null;
-  }
+  // if (!user || !user.roles.includes("Admin")) {
+  //   return null;
+  // }
 
 
   return (

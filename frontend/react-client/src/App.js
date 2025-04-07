@@ -12,6 +12,8 @@ import CategoryPage from './pages/CategoryPage';
 import AdminPanel from './pages/AdminPanel';
 import ProfilePage from './pages/ProfilePage';
 import { AuthProvider } from './context/AuthContext';
+import IssueDetailsPage from './pages/IssueDetailsPage';
+import ModeratorPanel from './pages/ModeratorPage';
 
 const App = () => {
   return (
@@ -22,13 +24,15 @@ const App = () => {
           <Route path="/report" element={<Layout><ReportPage/></Layout>} />
           <Route path="/map" element={<Layout><MapPage /></Layout>} />
           <Route path="/issues" element={<Layout><IssuesPage /></Layout>} />
+          <Route path="/issues/:id" element={<Layout><IssueDetailsPage /></Layout>} />
           <Route path="/categoryy" element={<Layout><CategoryPage/></Layout>} />
           <Route path="/about" element={<Layout><AboutPage/></Layout>} />
 
           <Route path="/login" element={<Layout><LoginPage/></Layout>} />
           <Route path="/register" element={<Layout><RegisterPage/></Layout>} />
-          <Route path="/admin" element={<Layout><AdminPanel/></Layout>} />
           <Route path="/profile/:id" element={<Layout><ProfilePage /></Layout>} />
+          <Route path="/admin" element={<Layout><AdminPanel/></Layout>} />
+          <Route path="/moderator" element={<Layout><ModeratorPanel /></Layout>} />
         </Routes>
       </Router>
     </AuthProvider>

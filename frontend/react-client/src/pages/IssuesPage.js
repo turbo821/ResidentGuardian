@@ -2,8 +2,27 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const IssuesPage = () => {
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("all");
+  const [searchText, setSearchText] = useState("");
+  const [status, setStatus] = useState("all");
+  const [category, setCategory] = useState("all");
+  const [timeRange, setTimeRange] = useState("all");
+
+  const handleReset = () => {
+    setSearchText("");
+    setStatus("all");
+    setCategory("all");
+    setTimeRange("all");
+  };
+
+  const handleSearch = () => {
+    console.log({
+      searchText,
+      status,
+      category,
+      timeRange,
+    });
+    alert("Поиск выполнен. (Заглушка)");
+  };
 
   const issues = [
     { id: 1, title: "Яма на дороге", status: "В ожидании", image: "https://via.placeholder.com/150" },
@@ -21,25 +40,85 @@ const IssuesPage = () => {
         <p className="mt-2 text-lg text-center text-gray-700">
           Ознакомьтесь с проблемами, о которых сообщили жители.
         </p>
+        <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">Фильтрация обращений</h2>
 
-        <div className="mt-6 flex flex-col md:flex-row gap-4">
-          <input 
-            type="text" 
-            placeholder="Поиск обращений..." 
-            value={search} 
-            onChange={(e) => setSearch(e.target.value)} 
-            className="w-full p-3 border rounded-lg"
-          />
-          <select 
-            value={filter} 
-            onChange={(e) => setFilter(e.target.value)} 
-            className="w-full md:w-1/3 p-3 border rounded-lg"
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          {/* Поиск */}
+          <div className="flex flex-col">
+            <label className="font-semibold mb-1 text-gray-700">Поиск по названию:</label>
+            <input
+              type="text"
+              placeholder="Введите текст"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              className="p-3 border border-gray-300 rounded-lg"
+            />
+          </div>
+
+          {/* Статус */}
+          <div className="flex flex-col">
+            <label className="font-semibold mb-1 text-gray-700">Статус:</label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="p-3 border border-gray-300 rounded-lg bg-white"
+            >
+              <option value="all">Все</option>
+              <option value="new">Новые</option>
+              <option value="in_progress">В обработке</option>
+              <option value="resolved">Решённые</option>
+              <option value="rejected">Отклонённые</option>
+            </select>
+          </div>
+
+          {/* Категория */}
+          <div className="flex flex-col">
+            <label className="font-semibold mb-1 text-gray-700">Категория:</label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="p-3 border border-gray-300 rounded-lg bg-white"
+            >
+              <option value="all">Все</option>
+              <option value="road">Дорожные проблемы</option>
+              <option value="lighting">Освещение</option>
+              <option value="garbage">Мусор</option>
+              <option value="landscaping">Благоустройство</option>
+              <option value="transport">Общественный транспорт</option>
+            </select>
+          </div>
+
+          {/* Временной фильтр */}
+          <div className="flex flex-col">
+            <label className="font-semibold mb-1 text-gray-700">Период:</label>
+            <select
+              value={timeRange}
+              onChange={(e) => setTimeRange(e.target.value)}
+              className="p-3 border border-gray-300 rounded-lg bg-white"
+            >
+              <option value="all">За всё время</option>
+              <option value="day">Последний день</option>
+              <option value="week">Последняя неделя</option>
+              <option value="month">Последний месяц</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Кнопки */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            onClick={handleSearch}
+            className="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition"
           >
-            <option value="all">Все</option>
-            <option value="pending">В ожидании</option>
-            <option value="in-progress">В процессе</option>
-            <option value="resolved">Решенные</option>
-          </select>
+            🔍 Поиск
+          </button>
+
+          <button
+            onClick={handleReset}
+            className="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition"
+          >
+            ♻️ Сбросить фильтры
+          </button>
         </div>
 
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

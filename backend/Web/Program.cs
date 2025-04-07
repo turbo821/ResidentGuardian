@@ -23,12 +23,6 @@ builder.Services.AddDbContext<AppGuardContext>(
 
 var originsArray = allowedOrigins?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? ["http://localhost:3000", "https://localhost:3000"];
 
-Console.WriteLine("Origins:");
-foreach (var item in originsArray)
-{
-    Console.WriteLine($"{item}");
-}
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowClientReGuanApp", policy =>
