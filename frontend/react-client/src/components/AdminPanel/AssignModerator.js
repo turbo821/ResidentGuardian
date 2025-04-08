@@ -73,7 +73,7 @@ const AssignModerator = ({ categories = []}) => {
         </button>
       </div>
     </div>
-    );
+  );
 }
 
 export default AssignModerator;

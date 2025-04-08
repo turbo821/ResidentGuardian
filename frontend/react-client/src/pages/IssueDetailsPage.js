@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import Answer from "../components/IssueDetailsPage/Answer";
+import ModalImage from "../components/ModalImage";
 
-// Временные данные
 const dummyIssues = [
   {
     id: 1,
@@ -12,17 +13,27 @@ const dummyIssues = [
       "https://via.placeholder.com/600x400?text=Фото+2"
     ],
     description: "Большая яма на главной улице, мешает проезду транспорта.",
-    category: "Дорожные проблемы"
+    category: "Дорожные проблемы",
+    moderatorResponses: [
+      {
+        text: "Работы запланированы на следующую неделю.",
+        images: ["https://via.placeholder.com/600x400?text=Исправлено"]
+      }
+    ]
   },
   {
     id: 2,
     title: "Не работает фонарь",
     status: "Решено",
-    images: [
-      "https://via.placeholder.com/600x400?text=Фонарь"
-    ],
+    images: ["https://via.placeholder.com/600x400?text=Фонарь"],
     description: "Фонарь не работает уже неделю во дворе дома 12.",
-    category: "Освещение"
+    category: "Освещение",
+    moderatorResponses: [
+      {
+        text: "Фонарь заменён.",
+        images: []
+      }
+    ]
   },
   {
     id: 3,
@@ -34,7 +45,8 @@ const dummyIssues = [
       "https://via.placeholder.com/600x400?text=Лавочка+3"
     ],
     description: "В парке рядом с домом сломана лавочка. Опасно для детей.",
-    category: "Другое"
+    category: "Другое",
+    moderatorResponses: []
   }
 ];
 
@@ -59,7 +71,6 @@ const IssueDetailsPage = () => {
   return (
     <div className="min-h-[90vh] bg-blue-100 flex flex-col items-center py-12 px-4">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full">
-        {/* Галерея изображений */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           {issue.images.map((img, index) => (
             <img
@@ -83,26 +94,22 @@ const IssueDetailsPage = () => {
         >
           Назад к обращениям
         </Link>
+
+        {issue.moderatorResponses && issue.moderatorResponses.length > 0 && (
+          <div className="mt-8">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">Ответ(ы) модератора</h3>
+            {issue.moderatorResponses.map((response, idx) => (
+              <Answer answer={response} idx={idx} openModal={openModal} />
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Модальное окно */}
       {modalImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-          <div className="relative max-w-3xl w-full px-4">
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-2 text-white text-2xl font-bold bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-70 transition"
-            >
-              &times;
-            </button>
-            <img
-              src={modalImage}
-              alt="Просмотр фото"
-              className="w-full max-h-[80vh] object-contain rounded-lg shadow-lg"
-            />
-          </div>
-        </div>
+        <ModalImage modalImage={modalImage} closeModal={closeModal} />
       )}
+
+
     </div>
   );
 };

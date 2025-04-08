@@ -14,6 +14,7 @@ const AddModerator = () => {
     setModeratorEmail("");
     setModeratorPassword("");
   };
+  
   return (
     <div className="bg-gray-100 p-4 rounded-lg shadow-md">
       <h3 className="text-xl font-bold text-gray-800">Добавление модератора</h3>

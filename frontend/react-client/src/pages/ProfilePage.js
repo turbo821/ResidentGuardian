@@ -7,11 +7,12 @@ const ProfilePage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if(!user || id !== user.id) {
-      navigate("/");
-    }
-  }, []);
+  // It is auth!!!
+  // useEffect(() => {
+  //   if(!user || id !== user.id) {
+  //     navigate("/");
+  //   }
+  // }, []);
 
 
   return (

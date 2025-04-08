@@ -43,12 +43,10 @@ const AdminPanel = () => {
         </p>
 
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-
           <AssignModerator categories={categories}/>
           <AddModerator />
           <AddCategory />
           <CategoryList categories={categories} setCategories={setCategories} />
-
         </div>
       </div>
     </div>
