@@ -25,7 +25,7 @@ const App = () => {
           <Route path="/map" element={<Layout><MapPage /></Layout>} />
           <Route path="/issues" element={<Layout><IssuesPage /></Layout>} />
           <Route path="/issues/:id" element={<Layout><IssueDetailsPage /></Layout>} />
-          <Route path="/categoryy" element={<Layout><CategoryPage/></Layout>} />
+          <Route path="/categories" element={<Layout><CategoryPage/></Layout>} />
           <Route path="/about" element={<Layout><AboutPage/></Layout>} />
 
           <Route path="/login" element={<Layout><LoginPage/></Layout>} />

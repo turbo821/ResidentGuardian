@@ -80,7 +80,6 @@ const IssuesPage = () => {
           Найдено обращений: {filteredIssues.length}
         </div>
         
-        {/* Список обращений */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {issues.map((issue) => (
             <IssueCard issue={issue} />
