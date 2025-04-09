@@ -6,16 +6,22 @@ import UserInfo from "../components/ProfilePage/UserInfo";
 
 const ProfilePage = () => {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const navigate = useNavigate();
 
-  // It is auth!!!
-  // useEffect(() => {
-  //   if(!user || id !== user.id) {
-  //     navigate("/");
-  //   }
-  // }, []);
+  useEffect(() => {
+    console.log("ProfilePage effect:", { user, id, isLoading });
+  
+    if (isLoading) return;
+  
+    if (!user || id !== user.id.toString()) {
+      navigate("/");
+    }
+  }, [user, id, isLoading, navigate]);
 
+  if (isLoading) {
+    return <div>Загрузка профиля...</div>;
+  }
 
   return (
     <div className="min-h-[90vh] bg-blue-100 flex flex-col items-center py-12 px-4">
@@ -46,7 +52,7 @@ const ProfilePage = () => {
           <h3 className="text-2xl font-bold text-gray-800 mb-4">Ваши последние обращения</h3>
           <div className="space-y-4">
             {[1, 2, 3].map((item) => (
-              <IssueItem item={item} />
+              <IssueItem item={item} key={item}/>
             ))}
           </div>
 

@@ -53,6 +53,13 @@ namespace Web.Controllers
             return Ok(response.Message);
         }
 
+        [Authorize]
+        [HttpGet("check-auth")]
+        public IActionResult CheckAuth()
+        {
+            return Ok(new { isAuthenticated = true });
+        }
+
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken()
         {
@@ -72,7 +79,7 @@ namespace Web.Controllers
             Response.Cookies.Delete("resident-cookies");
             Response.Cookies.Delete("guard-cookies");
 
-            var userId = User.FindFirstValue("id");
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null) return BadRequest("Not authorized");
 
             await _refreshTokenService.RevokeTokenAsync(Guid.Parse(userId!));
@@ -84,7 +91,7 @@ namespace Web.Controllers
         [HttpGet("profile")]
         public async Task<IActionResult> GetProfile()
         {
-            var userId = User.FindFirst("id")?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null) return Unauthorized();
 
             var isTokenRevoked = await _refreshTokenService.IsTokenRevokedAsync(Guid.Parse(userId));
