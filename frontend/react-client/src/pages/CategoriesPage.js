@@ -41,7 +41,7 @@ const categoriesData = [
   }
 ];
 
-const CategoryPage = () => {
+const CategoriesPage = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
 
@@ -79,4 +79,4 @@ const CategoryPage = () => {
   );
 };
 
-export default CategoryPage;
+export default CategoriesPage;

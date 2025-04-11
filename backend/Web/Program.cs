@@ -99,6 +99,8 @@ app.UseCookiePolicy(new CookiePolicyOptions
 
 });
 
+app.UseStaticFiles();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

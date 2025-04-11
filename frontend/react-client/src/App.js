@@ -8,7 +8,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AboutPage from './pages/AboutPage';
 import ReportPage from './pages/ReportPage';
-import CategoryPage from './pages/CategoryPage';
+import CategoriesPage from './pages/CategoriesPage';
 import AdminPanel from './pages/AdminPanel';
 import ProfilePage from './pages/ProfilePage';
 import { AuthProvider } from './context/AuthContext';
@@ -25,7 +25,7 @@ const App = () => {
           <Route path="/map" element={<Layout><MapPage /></Layout>} />
           <Route path="/issues" element={<Layout><IssuesPage /></Layout>} />
           <Route path="/issues/:id" element={<Layout><IssueDetailsPage /></Layout>} />
-          <Route path="/categories" element={<Layout><CategoryPage/></Layout>} />
+          <Route path="/categories" element={<Layout><CategoriesPage/></Layout>} />
           <Route path="/about" element={<Layout><AboutPage/></Layout>} />
 
           <Route path="/login" element={<Layout><LoginPage/></Layout>} />

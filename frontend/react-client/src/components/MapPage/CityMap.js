@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { YMaps, Map, Placemark, Clusterer, Circle } from "@pbe/react-yandex-maps";
+import { useState,   useRef } from "react";
+import { YMaps, Map, Placemark, Clusterer } from "@pbe/react-yandex-maps";
 import "./CityMap.css";
 
 const CityMap = ({ issues }) => {
@@ -7,14 +7,13 @@ const CityMap = ({ issues }) => {
     center: [47.517641, 42.160875],
     zoom: 14,
   };
-  const [mapCenter, setMapCenter] = useState(defaultState.center);
+
   const [hoveredPoint, setHoveredPoint] = useState(null);
   const mapRef = useRef(null);
 
   const handleMapClick = async (e) => {
     const coords = e.get("coords");
     alert(`${coords[0]} ${coords[1]}`);
-    
   };
 
   const handleMouseEnter = (issue) => {
@@ -50,7 +49,7 @@ const CityMap = ({ issues }) => {
       <YMaps query={{ apikey: "ef6ce2bf-6d1d-4567-aaf2-5ca3e0d8da70" }}>
         <Map
           defaultState={defaultState}
-          state={{ ...defaultState, center: mapCenter }}
+          state={{ ...defaultState, center: defaultState.center }}
           width="100%"
           height="100%"
           onClick={handleMapClick}
@@ -70,9 +69,9 @@ const CityMap = ({ issues }) => {
               <Placemark
                 key={index}
                 geometry={issue.coords}
-                // options={{
-                //   iconColor: issue.color || "#FFFFFF"
-                // }}
+                options={{
+                  iconColor: issue.color || "#1E90FF"
+                }}
                 onClick={() => handlePlacemarkClick(issue)}
                 onMouseEnter={() => handleMouseEnter(issue)}
                 onMouseLeave={handleMouseLeave}

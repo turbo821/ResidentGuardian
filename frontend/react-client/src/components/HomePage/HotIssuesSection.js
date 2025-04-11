@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const HotIssuesSection = ({ issues }) => {
+const   HotIssuesSection = ({ issues }) => {
   return (
           <section className="container mx-auto px-4 py-16 space-y-16">
           <div className="mb-6">
