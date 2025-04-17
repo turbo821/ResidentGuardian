@@ -1,6 +1,6 @@
 import axios from "axios";
 const baseURL = process.env.REACT_APP_API_URL ?? "http://localhost:5059";
-
+const imagesURL = process.env.REACT_APP_IMAGES_URL ?? "http://localhost:5059/upload"
 const api = axios.create({
   baseURL: baseURL,
   withCredentials: true
@@ -63,4 +63,4 @@ api.interceptors.response.use(
 );
 
 export default api;
-export { baseURL };
+export { baseURL, imagesURL };

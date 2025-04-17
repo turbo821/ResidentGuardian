@@ -38,10 +38,14 @@ namespace Infrastructure.Repositories
 
         public async Task<bool> Update(Category category)
         {
-            if (!await IsExist(category.Id))
+            Category? oldCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Id == category.Id);
+            if (oldCategory == null)
                 return false;
 
-            _context.Categories.Update(category);
+            oldCategory.Title = category.Title;
+            oldCategory.Description = category.Description;
+            oldCategory.ImageUri = category.ImageUri;
+
             return await Save();
         }
 

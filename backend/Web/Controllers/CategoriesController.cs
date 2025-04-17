@@ -42,27 +42,27 @@ namespace Web.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Not valid");
 
-            var id = await _createCaterogy.Execute(request);
+            var category = await _createCaterogy.Execute(request);
 
-            if (id is null)
+            if (category is null)
                 return BadRequest();
 
-            return Ok(id);
+            return Ok(category);
         }
 
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryRequest request)
+        public async Task<IActionResult> UpdateCategory([FromForm] UpdateCategoryRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var success = await _updateCategory.Execute(request);
+            var category = await _updateCategory.Execute(request);
 
-            if (!success)
+            if (category == null)
                 return NotFound();
 
-            return Ok();
+            return Ok(category);
         }
 
         [Authorize]

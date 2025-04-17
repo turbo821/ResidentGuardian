@@ -13,19 +13,25 @@ const AdminPanel = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
 
-  useEffect(async() => {
-    await fetchAllCategories(); 
+  useEffect(() => {
+    fetchAllCategories(); 
   }, []);
 
   const fetchAllCategories = async() => {
     try {
       const response = await api.get("/api/categories");
       setCategories(response.data);
+      console.log(response.data);
     }
     catch(err) {
       console.log(err.response);
     }
   }
+
+  const addCategory = (category) => {
+    setCategories((prev) => [...prev, category]);
+  };
+  
   // It is auth!!
   // useEffect(() => {
   //   if (!isLoading && (!user || !user.roles.includes("Admin"))) {
@@ -53,7 +59,7 @@ const AdminPanel = () => {
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
           <AssignModerator categories={categories}/>
           <AddModerator />
-          <AddCategory />
+          <AddCategory add={addCategory}/>
           <CategoryList categories={categories} setCategories={setCategories} />
         </div>
       </div>

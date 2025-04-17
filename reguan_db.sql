@@ -5,7 +5,7 @@
 -- Dumped from database version 16.1
 -- Dumped by pg_dump version 16.1
 
--- Started on 2025-03-31 02:43:37
+-- Started on 2025-04-18 01:37:23
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -27,7 +27,7 @@ CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA public;
 
 
 --
--- TOC entry 5845 (class 0 OID 0)
+-- TOC entry 5856 (class 0 OID 0)
 -- Dependencies: 2
 -- Name: EXTENSION postgis; Type: COMMENT; Schema: -; Owner: 
 --
@@ -209,12 +209,27 @@ ALTER TABLE public."AspNetUsers" OWNER TO postgres;
 
 CREATE TABLE public."Categories" (
     "Id" uuid NOT NULL,
-    "Name" text NOT NULL,
-    "Description" text
+    "Title" text NOT NULL,
+    "Description" text DEFAULT ''::text NOT NULL,
+    "ImageUri" text DEFAULT ''::text NOT NULL
 );
 
 
 ALTER TABLE public."Categories" OWNER TO postgres;
+
+--
+-- TOC entry 237 (class 1259 OID 116200)
+-- Name: IssueImages; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."IssueImages" (
+    "Id" uuid NOT NULL,
+    "Uri" text NOT NULL,
+    "IssueId" uuid NOT NULL
+);
+
+
+ALTER TABLE public."IssueImages" OWNER TO postgres;
 
 --
 -- TOC entry 232 (class 1259 OID 109124)
@@ -226,7 +241,6 @@ CREATE TABLE public."Issues" (
     "Title" text NOT NULL,
     "Description" text NOT NULL,
     "Status" character varying(30) NOT NULL,
-    "PhotoUrl" text,
     "Location" text,
     "Point" public.geometry,
     "CreatedAt" timestamp with time zone NOT NULL,
@@ -296,7 +310,7 @@ CREATE TABLE public."__EFMigrationsHistory" (
 ALTER TABLE public."__EFMigrationsHistory" OWNER TO postgres;
 
 --
--- TOC entry 5838 (class 0 OID 116149)
+-- TOC entry 5848 (class 0 OID 116149)
 -- Dependencies: 235
 -- Data for Name: Answers; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -306,7 +320,7 @@ COPY public."Answers" ("Id", "IssueId", "ModeratorId", "UpdatePhotoUrl", "Text",
 
 
 --
--- TOC entry 5829 (class 0 OID 109060)
+-- TOC entry 5839 (class 0 OID 109060)
 -- Dependencies: 226
 -- Data for Name: AspNetRoleClaims; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -316,7 +330,7 @@ COPY public."AspNetRoleClaims" ("Id", "RoleId", "ClaimType", "ClaimValue") FROM 
 
 
 --
--- TOC entry 5825 (class 0 OID 109038)
+-- TOC entry 5835 (class 0 OID 109038)
 -- Dependencies: 222
 -- Data for Name: AspNetRoles; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -329,7 +343,7 @@ COPY public."AspNetRoles" ("Id", "Name", "NormalizedName", "ConcurrencyStamp") F
 
 
 --
--- TOC entry 5831 (class 0 OID 109073)
+-- TOC entry 5841 (class 0 OID 109073)
 -- Dependencies: 228
 -- Data for Name: AspNetUserClaims; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -339,7 +353,7 @@ COPY public."AspNetUserClaims" ("Id", "UserId", "ClaimType", "ClaimValue") FROM 
 
 
 --
--- TOC entry 5832 (class 0 OID 109085)
+-- TOC entry 5842 (class 0 OID 109085)
 -- Dependencies: 229
 -- Data for Name: AspNetUserLogins; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -349,7 +363,7 @@ COPY public."AspNetUserLogins" ("LoginProvider", "ProviderKey", "ProviderDisplay
 
 
 --
--- TOC entry 5833 (class 0 OID 109097)
+-- TOC entry 5843 (class 0 OID 109097)
 -- Dependencies: 230
 -- Data for Name: AspNetUserRoles; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -360,11 +374,12 @@ COPY public."AspNetUserRoles" ("UserId", "RoleId") FROM stdin;
 8a4268b2-c39a-4562-b9be-f78dd3dc3a55	01957d08-0b49-76d4-8c31-e32b4ec63173
 0195cf1b-4450-77d8-8ada-87fdae2ba123	01957d08-0ab4-7282-959f-b9581cbd742c
 1d9da412-e926-499a-862c-d467f31e831a	01957d08-0b5c-7811-9905-27c4ac82cee9
+22325660-a1a2-45c0-bf8d-40a5a510b754	01957d08-0b5c-7811-9905-27c4ac82cee9
 \.
 
 
 --
--- TOC entry 5834 (class 0 OID 109112)
+-- TOC entry 5844 (class 0 OID 109112)
 -- Dependencies: 231
 -- Data for Name: AspNetUserTokens; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -374,7 +389,7 @@ COPY public."AspNetUserTokens" ("UserId", "LoginProvider", "Name", "Value") FROM
 
 
 --
--- TOC entry 5826 (class 0 OID 109045)
+-- TOC entry 5836 (class 0 OID 109045)
 -- Dependencies: 223
 -- Data for Name: AspNetUsers; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -385,36 +400,50 @@ COPY public."AspNetUsers" ("Id", "CreatedAt", "UserName", "NormalizedUserName", 
 8a4268b2-c39a-4562-b9be-f78dd3dc3a55	2025-03-18 00:25:56.304494+03	bob@gmail.com	BOB@GMAIL.COM	bob@gmail.com	BOB@GMAIL.COM	t	AQAAAAIAAYagAAAAEPP8mjO/JRYwvJ1E9+bGJHZh9b+ZXiOMLYp/rCpv6CYQ+4K2po5FR3NyNdVG8hVngw==	HHZRRF4SPUN2TX7PMWFSOEW2MRJWWO7N	a36bc9e2-1025-47bc-a02c-9353a0349184	\N	f	f	\N	t	0	Bob
 0195cf1b-4450-77d8-8ada-87fdae2ba123	2025-03-26 00:00:25.429795+03	admin@gmail.com	ADMIN@GMAIL.COM	admin@gmail.com	ADMIN@GMAIL.COM	t	AQAAAAIAAYagAAAAEGLoWoHRIsTGbBsTf6zpJxxwa0ZYJ+9Hs+Gt2W7evU1qDwjV22N7v0t7IDP61V4ylw==	VKVDT6RBZC3SRVKAHEHDFRPIVTVZ732H	8ecf4005-5be4-4904-8ac7-5200b73494e2	\N	f	f	\N	t	0	Admin
 1d9da412-e926-499a-862c-d467f31e831a	2025-03-31 01:33:29.993193+03	puser@gmail.com	PUSER@GMAIL.COM	puser@gmail.com	PUSER@GMAIL.COM	t	AQAAAAIAAYagAAAAEFfpEw8UXrMXotCZ1wb0XTEwhsQPPGpIAHV+IiI7nFlwkxQxX4gY73QtxQG5SUKaKg==	3UW2RYBCWX3SLUDK55545XONNR5GISOC	83b76662-2880-4d2b-a6c2-8d9eb8428094	\N	f	f	\N	t	0	puser
+22325660-a1a2-45c0-bf8d-40a5a510b754	2025-04-04 02:27:41.338915+03	biba@gmail.com	BIBA@GMAIL.COM	biba@gmail.com	BIBA@GMAIL.COM	t	AQAAAAIAAYagAAAAEOY5wyYouEYHm8aIKbruyD2H+Fe/LQj9G7EMFdtrZly1+1rHH7S9aw91ssBINnbJVw==	BR4PXXOURVVF3DICLY52EVBR6RZPSYMS	c310598b-628a-4ea3-84f0-b85145ec342d	\N	f	f	\N	t	0	Биба
 \.
 
 
 --
--- TOC entry 5827 (class 0 OID 109052)
+-- TOC entry 5837 (class 0 OID 109052)
 -- Dependencies: 224
 -- Data for Name: Categories; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public."Categories" ("Id", "Name", "Description") FROM stdin;
-3e8225ec-d424-4ea7-9a4d-40f400bed880	Дороги	Проблемы дорог
-3c8c2ae3-302f-4642-811b-b87e711c409e	ЖКХ	Проблемы жкх
-78b02b13-958f-4257-8b06-5378e1f6f3df	мусор	жесть
+COPY public."Categories" ("Id", "Title", "Description", "ImageUri") FROM stdin;
+78b02b13-958f-4257-8b06-5378e1f6f3df	Мусор	Несвоевременный вывоз мусора, переполненные урны, свалки.	5cc15e56-e907-4659-be2a-263476a685c6.png
+5f354cb0-fa60-40f9-81e7-ab15d1404218	Освещение	Неисправные фонари, отсутствие освещения на улицах и в парках.	6fde3bc8-29c3-4765-8289-952930fb271c.png
+01964131-f40e-78db-beb9-8f0d2c9b5dfb	Благоустройство	Сломанные лавочки, поврежденные детские площадки, отсутствие озеленения.	ce209f90-7f0d-42a8-9a92-122a369b2c8b.png
+0196410c-5015-7044-aa8d-1af8884879e1	Общественный транспорт	Поломанные остановки, нехватка маршрутов, нерегулярное движение транспорта.	9768d5e4-7393-4afa-a57b-4cb7eaac5315.png
+019645dc-f75a-7008-b083-e399eecd79e0	Другое	Все остальные проблемы, не входящие в указанные категории.	8b1c96fd-1513-483b-a66d-f05aac014ec1.png
+3e8225ec-d424-4ea7-9a4d-40f400bed880	Дорожные проблемы	Ямы, трещины, отсутствие разметки, поврежденные знаки!	b167edc4-b351-4bed-9839-d828740b9bf7.png
 \.
 
 
 --
--- TOC entry 5835 (class 0 OID 109124)
+-- TOC entry 5850 (class 0 OID 116200)
+-- Dependencies: 237
+-- Data for Name: IssueImages; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."IssueImages" ("Id", "Uri", "IssueId") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5845 (class 0 OID 109124)
 -- Dependencies: 232
 -- Data for Name: Issues; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public."Issues" ("Id", "Title", "Description", "Status", "PhotoUrl", "Location", "Point", "CreatedAt", "UserId", "CategoryId") FROM stdin;
-72a96f2b-8738-42f8-a2c6-6f892f4891d9	вода бл	прорвало трубу ааа	Pending	\N	\N	\N	2025-03-28 21:53:38.515364+03	\N	\N
-c1c4ed49-5035-4c1d-a0e5-8c7bd1c6545d	ямама	на дороге2	Pending	\N	\N	\N	2025-03-29 01:07:56.828673+03	\N	\N
+COPY public."Issues" ("Id", "Title", "Description", "Status", "Location", "Point", "CreatedAt", "UserId", "CategoryId") FROM stdin;
+72a96f2b-8738-42f8-a2c6-6f892f4891d9	вода бл	прорвало трубу ааа	Pending	\N	\N	2025-03-28 21:53:38.515364+03	\N	\N
+c1c4ed49-5035-4c1d-a0e5-8c7bd1c6545d	ямама	на дороге2	Pending	\N	\N	2025-03-29 01:07:56.828673+03	\N	\N
 \.
 
 
 --
--- TOC entry 5836 (class 0 OID 109141)
+-- TOC entry 5846 (class 0 OID 109141)
 -- Dependencies: 233
 -- Data for Name: ModeratorCategories; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -424,18 +453,33 @@ COPY public."ModeratorCategories" ("ModeratorId", "CategoryId") FROM stdin;
 
 
 --
--- TOC entry 5839 (class 0 OID 116185)
+-- TOC entry 5849 (class 0 OID 116185)
 -- Dependencies: 236
 -- Data for Name: RefreshTokens; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public."RefreshTokens" ("Id", "Token", "UserId", "Expires") FROM stdin;
-0195e96a-20f2-7068-881e-96bd2ba49a7e	e5993254-c752-4036-a998-b8b689fb8f30	1d9da412-e926-499a-862c-d467f31e831a	2025-04-07 02:36:41.458177+03
+01962694-5f51-71dc-869e-0853861a3f92	c12d8129-8101-4d50-8a0e-9c196bcb6a76	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-18 23:39:40.094221+03
+019626a3-1b2d-7ee0-a6df-868ac57c1beb	906cb44a-2243-4398-97f1-5e22ff69953d	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-18 23:55:45.708929+03
+019626c1-7013-7b51-991a-91c295a64b9a	85e1e073-face-4a2e-b58f-f3adfd8b88bc	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-19 00:28:53.523819+03
+01963ff7-4936-7dba-bc72-d3b50b2dce4b	f1d033f0-a836-4a62-a113-08384d15e142	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-23 21:58:12.89947+03
+01964100-496d-7ce4-9675-c52852a60ffa	9506037c-e196-4144-863b-586a41c03305	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-24 02:47:39.993934+03
+01964121-266c-718a-b2bc-602417ae560a	4f0995db-fffa-4553-8fd1-3d5d24cf538e	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-24 03:23:33.723678+03
+019644f0-9856-75b8-993d-9ae015a6e14c	c080885e-5354-4c9b-a3bf-3f76155e9db3	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-24 21:09:00.474582+03
+019644f0-9856-7d8d-8b01-26af27199c93	e839ee1e-9219-458b-8dcc-d83717589d53	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-24 21:09:00.474628+03
+019644f0-9856-7e30-882c-cd70b4f89870	120dfa1a-abec-4022-befd-d778a5da72dd	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-24 21:09:00.474636+03
+019644f0-ca17-7b99-b0fc-ced894514ae0	35bb6c65-c613-4d76-88fd-8c9d89eb5018	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-24 21:09:13.239004+03
+019644fe-8c23-7b08-b413-e54ba78cdddc	53926c90-e8ae-4762-a50a-0fef9177e496	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-24 21:24:14.88323+03
+0196459a-1ee7-7830-9e7d-5b20be260e7c	46c4554c-c96d-4062-ba24-f212136973ab	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-25 00:14:10.516983+03
+019645ae-e99e-7bd7-987e-9e3213027394	8c6e096e-7f07-492d-a663-d68a32d10ff2	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-25 00:36:53.150286+03
+019645cc-f0c2-76de-92cc-a92f396afe9a	7e4bbc44-7b0f-42bb-a967-ae8db2a6931c	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-25 01:09:41.020352+03
+019645db-1c74-7377-9ede-d6cab5486963	0aba49f3-553a-431b-879b-24161f5b94f3	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-25 01:25:09.725274+03
+019645db-1c74-7f47-855b-96e4d878e90f	dbce66be-413d-45a1-9acb-a2c7b29f1aa5	4fbd8498-115b-4194-94dd-249ed292bd80	2025-04-25 01:25:09.725268+03
 \.
 
 
 --
--- TOC entry 5837 (class 0 OID 109156)
+-- TOC entry 5847 (class 0 OID 109156)
 -- Dependencies: 234
 -- Data for Name: StatusHistories; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -445,7 +489,7 @@ COPY public."StatusHistories" ("Id", "OldStatus", "NewStatus", "ChangedAt", "Iss
 
 
 --
--- TOC entry 5824 (class 0 OID 109033)
+-- TOC entry 5834 (class 0 OID 109033)
 -- Dependencies: 221
 -- Data for Name: __EFMigrationsHistory; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -458,11 +502,13 @@ COPY public."__EFMigrationsHistory" ("MigrationId", "ProductVersion") FROM stdin
 20250328174208_UserAndCategoryInIssueIsNullTestTime	9.0.2
 20250328223938_AddCategoryDescription	9.0.2
 20250330231304_AddRefreshTokens	9.0.2
+20250416234535_RenamingAndAddImages	9.0.2
+20250417004007_RenameFromNameToTitleForCategories	9.0.2
 \.
 
 
 --
--- TOC entry 5610 (class 0 OID 108275)
+-- TOC entry 5614 (class 0 OID 108275)
 -- Dependencies: 217
 -- Data for Name: spatial_ref_sys; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -472,7 +518,7 @@ COPY public.spatial_ref_sys (srid, auth_name, auth_srid, srtext, proj4text) FROM
 
 
 --
--- TOC entry 5846 (class 0 OID 0)
+-- TOC entry 5857 (class 0 OID 0)
 -- Dependencies: 225
 -- Name: AspNetRoleClaims_Id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -481,7 +527,7 @@ SELECT pg_catalog.setval('public."AspNetRoleClaims_Id_seq"', 1, false);
 
 
 --
--- TOC entry 5847 (class 0 OID 0)
+-- TOC entry 5858 (class 0 OID 0)
 -- Dependencies: 227
 -- Name: AspNetUserClaims_Id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -490,7 +536,7 @@ SELECT pg_catalog.setval('public."AspNetUserClaims_Id_seq"', 1, false);
 
 
 --
--- TOC entry 5657 (class 2606 OID 116155)
+-- TOC entry 5663 (class 2606 OID 116155)
 -- Name: Answers PK_Answers; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -499,7 +545,7 @@ ALTER TABLE ONLY public."Answers"
 
 
 --
--- TOC entry 5630 (class 2606 OID 109066)
+-- TOC entry 5636 (class 2606 OID 109066)
 -- Name: AspNetRoleClaims PK_AspNetRoleClaims; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -508,7 +554,7 @@ ALTER TABLE ONLY public."AspNetRoleClaims"
 
 
 --
--- TOC entry 5619 (class 2606 OID 109044)
+-- TOC entry 5625 (class 2606 OID 109044)
 -- Name: AspNetRoles PK_AspNetRoles; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -517,7 +563,7 @@ ALTER TABLE ONLY public."AspNetRoles"
 
 
 --
--- TOC entry 5633 (class 2606 OID 109079)
+-- TOC entry 5639 (class 2606 OID 109079)
 -- Name: AspNetUserClaims PK_AspNetUserClaims; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -526,7 +572,7 @@ ALTER TABLE ONLY public."AspNetUserClaims"
 
 
 --
--- TOC entry 5636 (class 2606 OID 109091)
+-- TOC entry 5642 (class 2606 OID 109091)
 -- Name: AspNetUserLogins PK_AspNetUserLogins; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -535,7 +581,7 @@ ALTER TABLE ONLY public."AspNetUserLogins"
 
 
 --
--- TOC entry 5639 (class 2606 OID 109101)
+-- TOC entry 5645 (class 2606 OID 109101)
 -- Name: AspNetUserRoles PK_AspNetUserRoles; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -544,7 +590,7 @@ ALTER TABLE ONLY public."AspNetUserRoles"
 
 
 --
--- TOC entry 5641 (class 2606 OID 109118)
+-- TOC entry 5647 (class 2606 OID 109118)
 -- Name: AspNetUserTokens PK_AspNetUserTokens; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -553,7 +599,7 @@ ALTER TABLE ONLY public."AspNetUserTokens"
 
 
 --
--- TOC entry 5624 (class 2606 OID 109051)
+-- TOC entry 5630 (class 2606 OID 109051)
 -- Name: AspNetUsers PK_AspNetUsers; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -562,7 +608,7 @@ ALTER TABLE ONLY public."AspNetUsers"
 
 
 --
--- TOC entry 5627 (class 2606 OID 109058)
+-- TOC entry 5633 (class 2606 OID 109058)
 -- Name: Categories PK_Categories; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -571,7 +617,16 @@ ALTER TABLE ONLY public."Categories"
 
 
 --
--- TOC entry 5646 (class 2606 OID 109130)
+-- TOC entry 5669 (class 2606 OID 116206)
+-- Name: IssueImages PK_IssueImages; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."IssueImages"
+    ADD CONSTRAINT "PK_IssueImages" PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 5652 (class 2606 OID 109130)
 -- Name: Issues PK_Issues; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -580,7 +635,7 @@ ALTER TABLE ONLY public."Issues"
 
 
 --
--- TOC entry 5649 (class 2606 OID 109145)
+-- TOC entry 5655 (class 2606 OID 109145)
 -- Name: ModeratorCategories PK_ModeratorCategories; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -589,7 +644,7 @@ ALTER TABLE ONLY public."ModeratorCategories"
 
 
 --
--- TOC entry 5660 (class 2606 OID 116191)
+-- TOC entry 5666 (class 2606 OID 116191)
 -- Name: RefreshTokens PK_RefreshTokens; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -598,7 +653,7 @@ ALTER TABLE ONLY public."RefreshTokens"
 
 
 --
--- TOC entry 5653 (class 2606 OID 109160)
+-- TOC entry 5659 (class 2606 OID 109160)
 -- Name: StatusHistories PK_StatusHistories; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -607,7 +662,7 @@ ALTER TABLE ONLY public."StatusHistories"
 
 
 --
--- TOC entry 5617 (class 2606 OID 109037)
+-- TOC entry 5623 (class 2606 OID 109037)
 -- Name: __EFMigrationsHistory PK___EFMigrationsHistory; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -616,7 +671,7 @@ ALTER TABLE ONLY public."__EFMigrationsHistory"
 
 
 --
--- TOC entry 5621 (class 1259 OID 109176)
+-- TOC entry 5627 (class 1259 OID 109176)
 -- Name: EmailIndex; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -624,7 +679,7 @@ CREATE INDEX "EmailIndex" ON public."AspNetUsers" USING btree ("NormalizedEmail"
 
 
 --
--- TOC entry 5654 (class 1259 OID 116167)
+-- TOC entry 5660 (class 1259 OID 116167)
 -- Name: IX_Answers_IssueId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -632,7 +687,7 @@ CREATE INDEX "IX_Answers_IssueId" ON public."Answers" USING btree ("IssueId");
 
 
 --
--- TOC entry 5655 (class 1259 OID 116168)
+-- TOC entry 5661 (class 1259 OID 116168)
 -- Name: IX_Answers_ModeratorId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -640,7 +695,7 @@ CREATE INDEX "IX_Answers_ModeratorId" ON public."Answers" USING btree ("Moderato
 
 
 --
--- TOC entry 5628 (class 1259 OID 109171)
+-- TOC entry 5634 (class 1259 OID 109171)
 -- Name: IX_AspNetRoleClaims_RoleId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -648,7 +703,7 @@ CREATE INDEX "IX_AspNetRoleClaims_RoleId" ON public."AspNetRoleClaims" USING btr
 
 
 --
--- TOC entry 5631 (class 1259 OID 109173)
+-- TOC entry 5637 (class 1259 OID 109173)
 -- Name: IX_AspNetUserClaims_UserId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -656,7 +711,7 @@ CREATE INDEX "IX_AspNetUserClaims_UserId" ON public."AspNetUserClaims" USING btr
 
 
 --
--- TOC entry 5634 (class 1259 OID 109174)
+-- TOC entry 5640 (class 1259 OID 109174)
 -- Name: IX_AspNetUserLogins_UserId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -664,7 +719,7 @@ CREATE INDEX "IX_AspNetUserLogins_UserId" ON public."AspNetUserLogins" USING btr
 
 
 --
--- TOC entry 5637 (class 1259 OID 109175)
+-- TOC entry 5643 (class 1259 OID 109175)
 -- Name: IX_AspNetUserRoles_RoleId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -672,7 +727,7 @@ CREATE INDEX "IX_AspNetUserRoles_RoleId" ON public."AspNetUserRoles" USING btree
 
 
 --
--- TOC entry 5622 (class 1259 OID 109177)
+-- TOC entry 5628 (class 1259 OID 109177)
 -- Name: IX_AspNetUsers_Email; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -680,7 +735,15 @@ CREATE UNIQUE INDEX "IX_AspNetUsers_Email" ON public."AspNetUsers" USING btree (
 
 
 --
--- TOC entry 5642 (class 1259 OID 109179)
+-- TOC entry 5667 (class 1259 OID 116212)
+-- Name: IX_IssueImages_IssueId; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX "IX_IssueImages_IssueId" ON public."IssueImages" USING btree ("IssueId");
+
+
+--
+-- TOC entry 5648 (class 1259 OID 109179)
 -- Name: IX_Issues_CategoryId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -688,7 +751,7 @@ CREATE INDEX "IX_Issues_CategoryId" ON public."Issues" USING btree ("CategoryId"
 
 
 --
--- TOC entry 5643 (class 1259 OID 109180)
+-- TOC entry 5649 (class 1259 OID 109180)
 -- Name: IX_Issues_Status; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -696,7 +759,7 @@ CREATE INDEX "IX_Issues_Status" ON public."Issues" USING btree ("Status");
 
 
 --
--- TOC entry 5644 (class 1259 OID 109181)
+-- TOC entry 5650 (class 1259 OID 109181)
 -- Name: IX_Issues_UserId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -704,7 +767,7 @@ CREATE INDEX "IX_Issues_UserId" ON public."Issues" USING btree ("UserId");
 
 
 --
--- TOC entry 5647 (class 1259 OID 109182)
+-- TOC entry 5653 (class 1259 OID 109182)
 -- Name: IX_ModeratorCategories_CategoryId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -712,7 +775,7 @@ CREATE INDEX "IX_ModeratorCategories_CategoryId" ON public."ModeratorCategories"
 
 
 --
--- TOC entry 5658 (class 1259 OID 116197)
+-- TOC entry 5664 (class 1259 OID 116197)
 -- Name: IX_RefreshTokens_UserId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -720,7 +783,7 @@ CREATE INDEX "IX_RefreshTokens_UserId" ON public."RefreshTokens" USING btree ("U
 
 
 --
--- TOC entry 5650 (class 1259 OID 116166)
+-- TOC entry 5656 (class 1259 OID 116166)
 -- Name: IX_StatusHistories_ChangedByModeratorId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -728,7 +791,7 @@ CREATE INDEX "IX_StatusHistories_ChangedByModeratorId" ON public."StatusHistorie
 
 
 --
--- TOC entry 5651 (class 1259 OID 109184)
+-- TOC entry 5657 (class 1259 OID 109184)
 -- Name: IX_StatusHistories_IssueId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -736,7 +799,7 @@ CREATE INDEX "IX_StatusHistories_IssueId" ON public."StatusHistories" USING btre
 
 
 --
--- TOC entry 5620 (class 1259 OID 109172)
+-- TOC entry 5626 (class 1259 OID 109172)
 -- Name: RoleNameIndex; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -744,7 +807,7 @@ CREATE UNIQUE INDEX "RoleNameIndex" ON public."AspNetRoles" USING btree ("Normal
 
 
 --
--- TOC entry 5625 (class 1259 OID 109178)
+-- TOC entry 5631 (class 1259 OID 109178)
 -- Name: UserNameIndex; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -752,7 +815,7 @@ CREATE UNIQUE INDEX "UserNameIndex" ON public."AspNetUsers" USING btree ("Normal
 
 
 --
--- TOC entry 5673 (class 2606 OID 116156)
+-- TOC entry 5682 (class 2606 OID 116156)
 -- Name: Answers FK_Answers_AspNetUsers_ModeratorId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -761,7 +824,7 @@ ALTER TABLE ONLY public."Answers"
 
 
 --
--- TOC entry 5674 (class 2606 OID 116161)
+-- TOC entry 5683 (class 2606 OID 116161)
 -- Name: Answers FK_Answers_Issues_IssueId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -770,7 +833,7 @@ ALTER TABLE ONLY public."Answers"
 
 
 --
--- TOC entry 5661 (class 2606 OID 109067)
+-- TOC entry 5670 (class 2606 OID 109067)
 -- Name: AspNetRoleClaims FK_AspNetRoleClaims_AspNetRoles_RoleId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -779,7 +842,7 @@ ALTER TABLE ONLY public."AspNetRoleClaims"
 
 
 --
--- TOC entry 5662 (class 2606 OID 109080)
+-- TOC entry 5671 (class 2606 OID 109080)
 -- Name: AspNetUserClaims FK_AspNetUserClaims_AspNetUsers_UserId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -788,7 +851,7 @@ ALTER TABLE ONLY public."AspNetUserClaims"
 
 
 --
--- TOC entry 5663 (class 2606 OID 109092)
+-- TOC entry 5672 (class 2606 OID 109092)
 -- Name: AspNetUserLogins FK_AspNetUserLogins_AspNetUsers_UserId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -797,7 +860,7 @@ ALTER TABLE ONLY public."AspNetUserLogins"
 
 
 --
--- TOC entry 5664 (class 2606 OID 109102)
+-- TOC entry 5673 (class 2606 OID 109102)
 -- Name: AspNetUserRoles FK_AspNetUserRoles_AspNetRoles_RoleId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -806,7 +869,7 @@ ALTER TABLE ONLY public."AspNetUserRoles"
 
 
 --
--- TOC entry 5665 (class 2606 OID 109107)
+-- TOC entry 5674 (class 2606 OID 109107)
 -- Name: AspNetUserRoles FK_AspNetUserRoles_AspNetUsers_UserId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -815,7 +878,7 @@ ALTER TABLE ONLY public."AspNetUserRoles"
 
 
 --
--- TOC entry 5666 (class 2606 OID 109119)
+-- TOC entry 5675 (class 2606 OID 109119)
 -- Name: AspNetUserTokens FK_AspNetUserTokens_AspNetUsers_UserId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -824,7 +887,16 @@ ALTER TABLE ONLY public."AspNetUserTokens"
 
 
 --
--- TOC entry 5667 (class 2606 OID 116175)
+-- TOC entry 5685 (class 2606 OID 116207)
+-- Name: IssueImages FK_IssueImages_Issues_IssueId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."IssueImages"
+    ADD CONSTRAINT "FK_IssueImages_Issues_IssueId" FOREIGN KEY ("IssueId") REFERENCES public."Issues"("Id") ON DELETE CASCADE;
+
+
+--
+-- TOC entry 5676 (class 2606 OID 116175)
 -- Name: Issues FK_Issues_AspNetUsers_UserId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -833,7 +905,7 @@ ALTER TABLE ONLY public."Issues"
 
 
 --
--- TOC entry 5668 (class 2606 OID 116180)
+-- TOC entry 5677 (class 2606 OID 116180)
 -- Name: Issues FK_Issues_Categories_CategoryId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -842,7 +914,7 @@ ALTER TABLE ONLY public."Issues"
 
 
 --
--- TOC entry 5669 (class 2606 OID 109146)
+-- TOC entry 5678 (class 2606 OID 109146)
 -- Name: ModeratorCategories FK_ModeratorCategories_AspNetUsers_ModeratorId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -851,7 +923,7 @@ ALTER TABLE ONLY public."ModeratorCategories"
 
 
 --
--- TOC entry 5670 (class 2606 OID 109151)
+-- TOC entry 5679 (class 2606 OID 109151)
 -- Name: ModeratorCategories FK_ModeratorCategories_Categories_CategoryId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -860,7 +932,7 @@ ALTER TABLE ONLY public."ModeratorCategories"
 
 
 --
--- TOC entry 5675 (class 2606 OID 116192)
+-- TOC entry 5684 (class 2606 OID 116192)
 -- Name: RefreshTokens FK_RefreshTokens_AspNetUsers_UserId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -869,7 +941,7 @@ ALTER TABLE ONLY public."RefreshTokens"
 
 
 --
--- TOC entry 5671 (class 2606 OID 116169)
+-- TOC entry 5680 (class 2606 OID 116169)
 -- Name: StatusHistories FK_StatusHistories_AspNetUsers_ChangedByModeratorId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -878,7 +950,7 @@ ALTER TABLE ONLY public."StatusHistories"
 
 
 --
--- TOC entry 5672 (class 2606 OID 109166)
+-- TOC entry 5681 (class 2606 OID 109166)
 -- Name: StatusHistories FK_StatusHistories_Issues_IssueId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -886,7 +958,7 @@ ALTER TABLE ONLY public."StatusHistories"
     ADD CONSTRAINT "FK_StatusHistories_Issues_IssueId" FOREIGN KEY ("IssueId") REFERENCES public."Issues"("Id") ON DELETE CASCADE;
 
 
--- Completed on 2025-03-31 02:43:39
+-- Completed on 2025-04-18 01:37:25
 
 --
 -- PostgreSQL database dump complete

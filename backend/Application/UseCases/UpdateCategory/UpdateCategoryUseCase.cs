@@ -1,4 +1,5 @@
 ﻿using Application.Services.Interfaces;
+using Application.UseCases.GetCategories;
 using Application.UseCases.UpdateIssue;
 using AutoMapper;
 using Domain.Entities;
@@ -9,15 +10,17 @@ namespace Application.UseCases.UpdateCategory
     public class UpdateCategoryUseCase : IUpdateCategoryUseCase
     {
         private readonly ICategoryRepository _repo;
+        private readonly IMapper _mapper;
         private readonly IFileStorage _fileStorage;
 
-        public UpdateCategoryUseCase(ICategoryRepository repo, IFileStorage fileStorage)
+        public UpdateCategoryUseCase(ICategoryRepository repo, IMapper mapper, IFileStorage fileStorage)
         {
             _repo = repo;
+            _mapper = mapper;
             _fileStorage = fileStorage;
         }
 
-        public async Task<bool> Execute(UpdateCategoryRequest categoryDto)
+        public async Task<GetCategoriesResponse?> Execute(UpdateCategoryRequest categoryDto)
         {
             string imageUri = (await _repo.GetById(categoryDto.Id))!.ImageUri;
             if (categoryDto.Image != null)
@@ -35,7 +38,11 @@ namespace Application.UseCases.UpdateCategory
             };
 
             var success = await _repo.Update(category);
-            return success;
+            if(!success)
+                return null;
+
+            var editCategory = _mapper.Map<GetCategoriesResponse>(category);
+            return editCategory;
         }
     }
 }
