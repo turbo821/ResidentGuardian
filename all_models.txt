@@ -1,5 +1,16 @@
 API:
-
+  Issue:
+    id
+    title
+    description
+    status (IssueStatus)
+    photoUrl
+    location
+    point
+    (createAt)
+    user
+    category
+    answers
 
 
 Client:

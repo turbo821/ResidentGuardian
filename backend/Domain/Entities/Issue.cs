@@ -8,7 +8,6 @@ namespace Domain.Entities
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
         public IssueStatus Status { get; set; } = IssueStatus.Pending;
-        public string? PhotoUrl { get; set; }
         public string? Location { get; set; }
         public Point? Point { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -19,7 +18,8 @@ namespace Domain.Entities
         public Guid? CategoryId { get; set; }
         public Category? Category { get; set; } // = null!; -- its test
 
-        public List<Answer> Answer { get; set; } = new();
+        public List<IssueImage> Images { get; set; } = new();
+        public List<Answer> Answers { get; set; } = new();
         public List<StatusHistory> StatusHistories { get; set; } = new();
     }
 }

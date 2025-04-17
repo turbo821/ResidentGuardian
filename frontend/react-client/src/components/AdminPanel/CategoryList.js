@@ -4,6 +4,8 @@ const CategoryList = ({ categories = [], setCategories }) => {
 
   const [editCategory, setEditCategory] = useState(null);
 
+
+
   const handleEditCategory = (id) => {
     setEditCategory(categories.find((cat) => cat.id === id));
   };

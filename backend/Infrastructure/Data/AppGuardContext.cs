@@ -15,7 +15,7 @@ namespace Infrastructure.Data
         public DbSet<StatusHistory> StatusHistories => Set<StatusHistory>();
         public DbSet<ModeratorCategory> ModeratorCategories => Set<ModeratorCategory>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
-
+        public DbSet<IssueImage> IssueImages => Set<IssueImage>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

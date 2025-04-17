@@ -5,19 +5,27 @@ import AddModerator from "../components/AdminPanel/AddModerator";
 import AddCategory from "../components/AdminPanel/AddCategory";
 import CategoryList from "../components/AdminPanel/CategoryList";
 import { useAuth } from "../context/AuthContext";
+import api from "../api";
 
 const AdminPanel = () => {
   // It is auth!!
   // const { user, isLoading } = useAuth();
   const navigate = useNavigate();
-  const [categories, setCategories] = useState([
-    { id: "road", title: "Дорожные проблемы", description: "Ямы, трещины, поврежденные знаки." },
-    { id: "lighting", title: "Освещение", description: "Неисправные фонари, отсутствие освещения." },
-    { id: "garbage", title: "Мусор", description: "Несвоевременный вывоз мусора, свалки." },
-    { id: "landscaping", title: "Благоустройство", description: "Лавочки, детские площадки, озеленение." },
-    { id: "transport", title: "Общественный транспорт", description: "Поломанные остановки, нехватка маршрутов." },
-  ]);
+  const [categories, setCategories] = useState([]);
 
+  useEffect(async() => {
+    await fetchAllCategories(); 
+  }, []);
+
+  const fetchAllCategories = async() => {
+    try {
+      const response = await api.get("/api/categories");
+      setCategories(response.data);
+    }
+    catch(err) {
+      console.log(err.response);
+    }
+  }
   // It is auth!!
   // useEffect(() => {
   //   if (!isLoading && (!user || !user.roles.includes("Admin"))) {

@@ -3,14 +3,12 @@ using Application.UseCases.CreateIssue;
 using Application.UseCases.DeleteCategory;
 using Application.UseCases.GetCategories;
 using Application.UseCases.UpdateCategory;
-using Application.UseCases.UpdateIssue;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Update;
 
 namespace Web.Controllers
 {
-    [Route("api/caterogies")]
+    [Route("api/categories")]
     [ApiController]
     public class CategoriesController : ControllerBase
     {
@@ -39,7 +37,7 @@ namespace Web.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddCategory([FromBody] CreateCategoryRequest request)
+        public async Task<IActionResult> AddCategory([FromForm] CreateCategoryRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Not valid");

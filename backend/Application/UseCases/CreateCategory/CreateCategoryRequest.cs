@@ -1,4 +1,6 @@
-﻿namespace Application.UseCases.CreateCategory
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Application.UseCases.CreateCategory
 {
-    public record CreateCategoryRequest(string Name, string? Description);
+    public record CreateCategoryRequest(string Title, string Description, IFormFile Image);
 }

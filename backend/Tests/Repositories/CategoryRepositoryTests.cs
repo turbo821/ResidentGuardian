@@ -21,8 +21,8 @@ namespace Tests.Repositories
             // Arrange
             using var context = new AppGuardContext(GetDbOptions());
             context.Categories.AddRange(
-                new Category { Id = Guid.NewGuid(), Name = "Road Issues", Description = "Potholes and cracks" },
-                new Category { Id = Guid.NewGuid(), Name = "Garbage", Description = "Trash accumulation" }
+                new Category { Id = Guid.NewGuid(), Title = "Road Issues", Description = "Potholes and cracks" },
+                new Category { Id = Guid.NewGuid(), Title = "Garbage", Description = "Trash accumulation" }
             );
             await context.SaveChangesAsync();
 
@@ -41,7 +41,7 @@ namespace Tests.Repositories
             // Arrange
             var categoryId = Guid.NewGuid();
             using var context = new AppGuardContext(GetDbOptions());
-            context.Categories.Add(new Category { Id = categoryId, Name = "Test Category", Description = "Test description" });
+            context.Categories.Add(new Category { Id = categoryId, Title = "Test Category", Description = "Test description" });
             await context.SaveChangesAsync();
 
             // Act
@@ -71,7 +71,7 @@ namespace Tests.Repositories
         public async Task AddCategory_ReturnsCategoryId()
         {
             // Arrange
-            var category = new Category { Id = Guid.NewGuid(), Name = "New Category", Description = "Description" };
+            var category = new Category { Id = Guid.NewGuid(), Title = "New Category", Description = "Description" };
             using var context = new AppGuardContext(GetDbOptions());
             var repository = new CategoryRepository(context);
 
@@ -103,20 +103,20 @@ namespace Tests.Repositories
             // Arrange
             var categoryId = Guid.NewGuid();
             using var context = new AppGuardContext(GetDbOptions());
-            context.Categories.Add(new Category { Id = categoryId, Name = "Old Name", Description = "Old Description" });
+            context.Categories.Add(new Category { Id = categoryId, Title = "Old Name", Description = "Old Description" });
             await context.SaveChangesAsync();
            
             // Act
             var repository = new CategoryRepository(context);
             var category = await repository.GetById(categoryId);
-            category!.Name = "Updated Name";
+            category!.Title = "Updated Name";
 
             var result = await repository.Update(category);
 
             // Assert
             Assert.True(result);
             Assert.Equal("Old Description", category.Description);
-            Assert.Equal("Updated Name", category.Name);
+            Assert.Equal("Updated Name", category.Title);
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace Tests.Repositories
             // Arrange
             using var context = new AppGuardContext(GetDbOptions());
             var repository = new CategoryRepository(context);
-            var category = new Category { Id = Guid.NewGuid(), Name = "Non-Existent", Description = "Will not be found" };
+            var category = new Category { Id = Guid.NewGuid(), Title = "Non-Existent", Description = "Will not be found" };
 
             // Act
             var result = await repository.Update(category);
@@ -140,7 +140,7 @@ namespace Tests.Repositories
             // Arrange
             var categoryId = Guid.NewGuid();
             using var context = new AppGuardContext(GetDbOptions());
-            var category = new Category { Id = categoryId, Name = "To Delete", Description = "Description" };
+            var category = new Category { Id = categoryId, Title = "To Delete", Description = "Description" };
             context.Categories.Add(category);
             await context.SaveChangesAsync();
 
@@ -161,7 +161,7 @@ namespace Tests.Repositories
             using var context = new AppGuardContext(GetDbOptions());
             var repository = new CategoryRepository(context);
 
-            var category = new Category { Id = Guid.NewGuid(), Name = "Non-Existent", Description = "Will not be found" };
+            var category = new Category { Id = Guid.NewGuid(), Title = "Non-Existent", Description = "Will not be found" };
 
             // Act
             var result = await repository.Delete(category);
@@ -176,7 +176,7 @@ namespace Tests.Repositories
             // Arrange
             var categoryId = Guid.NewGuid();
             using var context = new AppGuardContext(GetDbOptions());
-            context.Categories.Add(new Category { Id = categoryId, Name = "Existing Category", Description = "Exists" });
+            context.Categories.Add(new Category { Id = categoryId, Title = " Existing Category", Description = "Exists" });
             await context.SaveChangesAsync();
 
             // Act

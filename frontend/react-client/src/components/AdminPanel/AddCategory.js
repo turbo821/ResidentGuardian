@@ -1,11 +1,31 @@
 import React, { useState } from "react";
+import api from "../../api";
 
 const AddCategory = () => {
-  const [newCategory, setNewCategory] = useState("");
+  const [newCategory, setNewCategory] = useState({
+    title: "",
+    description: "",
+    image: null
+  });
 
-  const handleAddCategory = () => {
-    alert(`Добавлена категория: ${newCategory}`);
-    setNewCategory("");
+  const handleAddCategory = async() => {
+    if (!newCategory.image) return alert('Выберите файл');
+
+    try {
+      const response = await api.post('/api/categories', newCategory, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      alert(`Добавлена категория: ${response.data} ${newCategory.title} ${newCategory.description}`);
+
+    } catch (err) {
+      alert('Ошибка загрузки: ' + err.response?.data || err.message);
+    }
+    
+    setNewCategory({
+      title: "",
+      description: "",
+      image: null
+    });
   };
   
   return (
@@ -15,9 +35,23 @@ const AddCategory = () => {
         <input 
           type="text" 
           placeholder="Название новой категории" 
-          value={newCategory} 
-          onChange={(e) => setNewCategory(e.target.value)} 
+          value={newCategory.title} 
+          onChange={e => setNewCategory({...newCategory, title: e.target.value})} 
           className="w-full p-2 border rounded-lg mb-3"
+        />
+        <input 
+          type="text" 
+          placeholder="Описание новой категории" 
+          value={newCategory.description} 
+          onChange={e => setNewCategory({...newCategory, description: e.target.value})} 
+          className="w-full p-2 border rounded-lg mb-3"
+        />
+        <label className="block text-gray-700 font-bold">Выбор картинки:</label>
+        <input 
+          type="file" 
+          accept="image/*"
+          onChange={e => setNewCategory({...newCategory, image: e.target.files[0]})} 
+          className="block text-gray-700 font-bold p-2 mb-3"
         />
         <button 
           onClick={handleAddCategory} 

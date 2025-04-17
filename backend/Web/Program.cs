@@ -9,6 +9,7 @@ using Infrastructure.Auth;
 using Web.Configurations;
 using Web.Extensions;
 using Infrastructure.Background;
+using Infrastructure.FileStorage;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,6 +50,7 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
     .AddDefaultTokenProviders();
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
+builder.Services.Configure<FileStorageOptions>(builder.Configuration.GetSection(nameof(FileStorageOptions)));
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
@@ -68,6 +70,8 @@ builder.Services.AddHostedService<TokenCleanupService>();
 
 builder.Services.AddScoped<IAdminCliService, AdminCliService>();
 builder.Services.AddScoped<RoleSetter>();
+
+builder.Services.AddScoped<IFileStorage, LocalFileStorage>();
 
 builder.Services.AddRepositories();
 builder.Services.AddUseCases();
