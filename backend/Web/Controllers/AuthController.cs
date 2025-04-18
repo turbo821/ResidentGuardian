@@ -42,6 +42,13 @@ namespace Web.Controllers
             return Ok(response.Message);
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPost("add-moderator-role")]
+        public async Task<IActionResult> AddModeratorRole([FromBody] string email)
+        {
+            throw new NotImplementedException();
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {

@@ -1,11 +1,12 @@
 import React from "react";
+import { imagesURL } from "../../api";
 
 const Category = ({ category, goToIssues = () => {}, goToMap = () => {} }) => {
   return (
     <div key={category.id} className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col">
       <img
-        src={category.image}
-        alt={category.title}
+        src={`${imagesURL}/${category.imageUri}`}
+        alt={category.imageUri}
         className="w-full h-40 object-cover"
       />
       <div className="p-4 flex flex-col flex-grow">
