@@ -9,20 +9,17 @@ const api = axios.create({
 let isRefreshing = false;
 let failedRequestsQueue = [];
 
-const isExcludedFromRetry = (url) => {
-  return url?.includes("/api/auth/check-auth") || url?.includes("/api/auth/refresh-token");
-};
-
 api.interceptors.response.use(
   response => response,
-  async error => {
+  async (error) => {
     const originalRequest = error.config;
+    const isAuthRequest = originalRequest.url.includes("/api/auth/");
+    
+    if (isAuthRequest) {
+      return Promise.reject(error);
+    }
 
-    if (
-      error.response?.status === 401 &&
-      !originalRequest._isRetry &&
-      !isExcludedFromRetry(originalRequest.url)
-    ) {
+    if (error.response?.status === 401 && !originalRequest._isRetry) {
       originalRequest._isRetry = true;
 
       if (isRefreshing) {
@@ -36,25 +33,21 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await api.post("/api/auth/refresh-token", {}, { withCredentials: true });
-
+        await api.post("/api/auth/refresh-token");
         const retryResponse = await api(originalRequest);
-
         failedRequestsQueue.forEach(req => req.resolve());
-        failedRequestsQueue = [];
-
         return retryResponse;
       } catch (refreshError) {
         failedRequestsQueue.forEach(req => req.reject(refreshError));
-        failedRequestsQueue = [];
-
-        if (refreshError.response?.status === 401) {
+        
+        if (!window.location.pathname.startsWith("/login")) {
           window.location.href = "/login";
         }
-
+        
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
+        failedRequestsQueue = [];
       }
     }
 

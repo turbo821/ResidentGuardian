@@ -10,8 +10,7 @@ const ProfilePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("ProfilePage effect:", { user, id, isLoading });
-  
+
     if (isLoading) return;
   
     if (!user || id !== user.id.toString()) {

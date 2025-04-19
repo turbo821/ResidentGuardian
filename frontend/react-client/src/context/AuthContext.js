@@ -8,87 +8,45 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [isRefreshing, setIsRefreshing] = useState(false);
-
-    const checkAuthState = useCallback(async () => {
-        try {
-            const response = await api.get("/api/auth/check-auth");
-            return response.data.isAuthenticated;
-        } catch {
-            return false;
-        }
-    }, []);
 
     const fetchUserProfile = useCallback(async () => {
         try {
             const response = await api.get("/api/auth/profile");
             return response.data;
         } catch (error) {
-            if (error.response?.status === 401) {
-                return null;
-            }
-            throw error;
+            return null;
         }
     }, []);
-
-    const refreshToken = useCallback(async () => {
-        if (isRefreshing) return false;
-        
-        setIsRefreshing(true);
-        try {
-            await api.post("/api/auth/refresh-token", {});
-            return true;
-        } catch (error) {
-            console.error("Refresh failed:", error.response);
-            return false;
-        } finally {
-            setIsRefreshing(false);
-        }
-    }, [isRefreshing]);
 
     const checkAuth = useCallback(async () => {
         setIsLoading(true);
         try {
-            let isAuthenticated = false;
-    
-            isAuthenticated = await checkAuthState();
-    
-            if (!isAuthenticated) {
-                const refreshed = await refreshToken();
-    
-                if (refreshed) {
-                    isAuthenticated = await checkAuthState();
-                }
-            }
-    
-            if (isAuthenticated) {
+            const checkResponse = await api.get("/api/auth/check-auth");
+            if (checkResponse.data.isAuthenticated) {
                 const userData = await fetchUserProfile();
                 setUser(userData);
-            } else {
-                setUser(null);
+                return true;
             }
-        } catch (error) {
-            console.error("Auth check error:", error);
+            await api.post("/api/auth/refresh-token");
+            
+            const retryResponse = await api.get("/api/auth/check-auth");
+            if (retryResponse.data.isAuthenticated) {
+                const userData = await fetchUserProfile();
+                setUser(userData);
+                return true;
+            }
             setUser(null);
+            return false;
+        } catch {
+            setUser(null);
+            return false;
         } finally {
             setIsLoading(false);
         }
-    }, [checkAuthState, fetchUserProfile, refreshToken]);
+    }, [fetchUserProfile]);
 
     useEffect(() => {
-        let isMounted = true;
-
-        const initializeAuth = async () => {
-            if (isMounted) {
-                await checkAuth();
-            }
-        };
-
-        initializeAuth();
-
-        return () => {
-            isMounted = false;
-        };
+        checkAuth();
     }, [checkAuth]);
 
     const login = useCallback(async (email, password) => {
@@ -131,7 +89,6 @@ export const AuthProvider = ({ children }) => {
         <AuthContext.Provider value={{ 
             user, 
             isLoading,
-            isRefreshing,
             login, 
             register,
             logout,

@@ -60,11 +60,22 @@ namespace Web.Controllers
             return Ok(response.Message);
         }
 
-        [Authorize]
         [HttpGet("check-auth")]
         public IActionResult CheckAuth()
         {
-            return Ok(new { isAuthenticated = true });
+            var refreshToken = Request.Cookies["guard-cookies"];
+            var accessToken = Request.Cookies["resident-cookies"];
+
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                Response.Cookies.Delete("resident-cookies");
+                return Unauthorized();
+            }
+
+            if(!string.IsNullOrEmpty(accessToken))
+                return Ok(new { isAuthenticated = true });
+
+            return Ok(new { isAuthenticated = false });
         }
 
         [HttpPost("refresh-token")]
