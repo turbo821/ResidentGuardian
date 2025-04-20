@@ -10,5 +10,8 @@ namespace Domain.Interfaces
         Task<bool> Update(Category category);
         Task<bool> Delete(Category category);
         Task<bool> IsExist(Guid id);
+
+        Task<bool> AddModeratorCategories(Guid moderatorId, IEnumerable<Guid> categoryIds);
+        Task<bool> RemoveModeratorCategories(Guid moderatorId);
     }
 }

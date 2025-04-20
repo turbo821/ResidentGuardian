@@ -8,7 +8,7 @@ namespace Infrastructure.Background
     public class TokenCleanupService : BackgroundService
     {
         private readonly IServiceProvider _services;
-        private readonly TimeSpan _cleanupInterval = TimeSpan.FromHours(6);
+        private readonly TimeSpan _cleanupInterval = TimeSpan.FromHours(1);
 
         public TokenCleanupService(IServiceProvider services)
         {

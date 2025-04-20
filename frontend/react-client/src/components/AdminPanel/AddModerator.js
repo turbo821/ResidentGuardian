@@ -1,20 +1,47 @@
 import React, { useState } from "react";
+import api from "../../api";
+import { useCallback } from "react";
 
-const AddModerator = () => {
+const AddModerator = ({ setModerators }) => {
   const [isNewModerator, setIsNewModerator] = useState(false);
+  const [moderatorFullName, setModeratorFullName] = useState("");
   const [moderatorEmail, setModeratorEmail] = useState("");
   const [moderatorPassword, setModeratorPassword] = useState("");
 
-  const handleRegisterModerator = () => {
+  const handleRegisterModerator = async() => {
     if (isNewModerator) {
-      alert(`Регистрация нового модератора: ${moderatorEmail}, пароль: ${moderatorPassword}`);
+      await fetchRegisterModerator(moderatorFullName, moderatorEmail, moderatorPassword);
     } else {
-      alert(`Пользователь ${moderatorEmail} теперь модератор`);
+      await fetchAssignModeratorrole(moderatorEmail);
     }
+    setModeratorFullName("");
     setModeratorEmail("");
     setModeratorPassword("");
   };
   
+  const fetchRegisterModerator = useCallback(async (fullName, email, password) => {
+    try {
+        const response = await api.post("/api/moderation", { fullName, email, password });
+        const newModerator = response.data;
+        console.log(newModerator);
+        setModerators((prev) => [...prev, newModerator]);
+    } catch (error) {
+        console.error("Register error: ", error.response);
+    }
+  }, []);
+
+  const fetchAssignModeratorrole = useCallback(async (email) => {
+    try {
+      console.log(email);
+      const response = await api.post("/api/moderation/assign-moderator", { email });
+      const newModerator = response.data;
+      console.log(newModerator);
+      setModerators((prev) => [...prev, newModerator]);
+    } catch (error) {
+      console.error("Assign moderator role error: ", error.response);
+    }
+  })
+
   return (
     <div className="bg-gray-100 p-4 rounded-lg shadow-md">
       <h3 className="text-xl font-bold text-gray-800">Добавление модератора</h3>
@@ -28,6 +55,16 @@ const AddModerator = () => {
           className="w-5 h-5 cursor-pointer"
         />
       </div>
+
+      {isNewModerator && (
+        <input 
+          type="text" 
+          placeholder="ФИО модератора" 
+          value={moderatorFullName} 
+          onChange={(e) => setModeratorFullName(e.target.value)} 
+          className="w-full p-2 border rounded-lg mt-4"
+        />
+      )}
 
       <input 
         type="email" 

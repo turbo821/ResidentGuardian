@@ -1,7 +1,6 @@
 ﻿using Application.Dtos;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
 namespace Web.Controllers
@@ -32,16 +31,6 @@ namespace Web.Controllers
             return Ok(response.Message);
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpPost("register-moderator")]
-        public async Task<IActionResult> RegisterModerator([FromBody] RegisterRequest request)
-        {
-            var response = await _authService.RegisterModerator(request);
-            if (!response.Success) return BadRequest(response.Message);
-
-            return Ok(response.Message);
-        }
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
@@ -53,11 +42,22 @@ namespace Web.Controllers
             return Ok(response.Message);
         }
 
-        [Authorize]
         [HttpGet("check-auth")]
         public IActionResult CheckAuth()
         {
-            return Ok(new { isAuthenticated = true });
+            var refreshToken = Request.Cookies["guard-cookies"];
+            var accessToken = Request.Cookies["resident-cookies"];
+
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                Response.Cookies.Delete("resident-cookies");
+                return Unauthorized();
+            }
+
+            if(!string.IsNullOrEmpty(accessToken))
+                return Ok(new { isAuthenticated = true });
+
+            return Ok(new { isAuthenticated = false });
         }
 
         [HttpPost("refresh-token")]
@@ -85,20 +85,6 @@ namespace Web.Controllers
             await _refreshTokenService.RevokeTokenAsync(Guid.Parse(userId!));
 
             return NoContent();
-        }
-
-        [Authorize]
-        [HttpGet("profile")]
-        public async Task<IActionResult> GetProfile()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null) return Unauthorized();
-
-            var isTokenRevoked = await _refreshTokenService.IsTokenRevokedAsync(Guid.Parse(userId));
-            if (isTokenRevoked) return Unauthorized("Token revoked");
-
-            var profile = await _authService.GetUserProfile(Guid.Parse(userId));
-            return Ok(profile);
         }
 
         private void SetAuthCookies(string accessToken, string refreshToken)

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import api from "../../api";
 
-const AssignModerator = ({ categories = []}) => {
+const AssignModerator = ({ categories = [], setModerators }) => {
   const [moderatorEmail, setModeratorEmail] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [moderatorCategories, setModeratorCategories] = useState({});
 
   const toggleCategory = (categoryId) => {
     setSelectedCategories((prev) =>
@@ -12,15 +12,17 @@ const AssignModerator = ({ categories = []}) => {
     );
   };
 
-  const handleAssignModerator = () => {
-    if (!moderatorEmail) return alert("Введите email модератора!");
-
-    setModeratorCategories((prev) => ({
-      ...prev,
-      [moderatorEmail]: [...selectedCategories],
-    }));
-
-    alert(`Категории для ${moderatorEmail} обновлены: ${selectedCategories.join(", ")}`);
+  const handleAssignModerator = async(email, categoryIds) => {
+    try {
+      const response = await api.post('/api/moderation/categories', {
+        email: email,
+        categoryIds: categoryIds
+      });
+      const updateModerator = response.data;
+      setModerators((prev) => prev.map((mod) => (mod.id === updateModerator.id ? updateModerator : mod)));
+    } catch (error) {
+      console.error('Error assigning categories:', error);
+    }
     setModeratorEmail("");
     setSelectedCategories([]);
     setIsDropdownOpen(false);
@@ -66,7 +68,7 @@ const AssignModerator = ({ categories = []}) => {
         </div>
 
         <button
-          onClick={handleAssignModerator}
+          onClick={() => handleAssignModerator(moderatorEmail, selectedCategories)}
           className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition mt-4"
         >
           Обновить права модератора

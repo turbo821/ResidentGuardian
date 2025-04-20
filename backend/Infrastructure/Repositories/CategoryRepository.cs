@@ -65,6 +65,36 @@ namespace Infrastructure.Repositories
             return _context.Categories.AnyAsync(x => x.Id == id);
         }
 
+        public async Task<bool> AddModeratorCategories(Guid moderatorId, IEnumerable<Guid> categoryIds)
+        {
+            var existingCategories = await _context.ModeratorCategories
+                .Where(mc => mc.ModeratorId == moderatorId)
+                .ToListAsync();
+
+            _context.ModeratorCategories.RemoveRange(existingCategories);
+
+            var newCategories = categoryIds.Select(categoryId => new ModeratorCategory
+            {
+                ModeratorId = moderatorId,
+                CategoryId = categoryId
+            });
+
+            await _context.ModeratorCategories.AddRangeAsync(newCategories);
+
+            return await Save();
+        }
+
+        public async Task<bool> RemoveModeratorCategories(Guid moderatorId)
+        {
+            var existingCategories = await _context.ModeratorCategories
+                .Where(mc => mc.ModeratorId == moderatorId)
+                .ToListAsync();
+
+            _context.ModeratorCategories.RemoveRange(existingCategories);
+
+            return await Save();
+        }
+
         private async Task<bool> Save()
         {
             var saved = await _context.SaveChangesAsync();

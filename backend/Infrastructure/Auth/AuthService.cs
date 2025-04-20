@@ -73,6 +73,7 @@ namespace Infrastructure.Auth
                 return new() { Success = false, Message = "Registration failed" };
 
             await _userManager.AddToRoleAsync(user, "Moderator");
+
             return new() { Success = true, Message = "Moderator successfully registered" };
         }
 

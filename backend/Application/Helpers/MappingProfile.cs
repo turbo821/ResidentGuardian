@@ -3,6 +3,7 @@ using Application.UseCases.CreateIssue;
 using Application.UseCases.GetAllIssues;
 using Application.UseCases.GetCategories;
 using Application.UseCases.GetIssue;
+using Application.UseCases.GetModerators;
 using Application.UseCases.UpdateCategory;
 using Application.UseCases.UpdateIssue;
 using AutoMapper;

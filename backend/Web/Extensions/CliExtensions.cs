@@ -6,7 +6,7 @@ namespace Web.Extensions
     {
         public static async Task UseAdminCliMode(this WebApplication app, string[] args)
         {
-            if (args.Length > 0 && args.Contains("create-admin") || args.Contains("create-roles"))
+            if (args.Length > 0 && args.Contains("create-admin"))
             {
                 using var scope = app.Services.CreateScope();
                 if (args.Contains("create-admin"))

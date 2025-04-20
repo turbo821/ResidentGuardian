@@ -34,7 +34,6 @@ namespace Web.Controllers
             return Ok(response);
         }
 
-
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddCategory([FromForm] CreateCategoryRequest request)
