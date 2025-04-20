@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchUserProfile = useCallback(async () => {
         try {
-            const response = await api.get("/api/auth/profile");
+            const response = await api.get("/api/user/profile");
             return response.data;
         } catch (error) {
             return null;

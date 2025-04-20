@@ -35,8 +35,9 @@ const AdminCategoryCard = ({ category, handleEditCategory, handleDeleteCategory 
 
       {confirmOpen && (
         <ConfirmOpen
-          category={category}
-          handleDeleteCategory={handleDeleteCategory}
+          itemTitle={"категорию"}
+          item={category}
+          handleDelete={handleDeleteCategory}
           setConfirmOpen={setConfirmOpen}
         />
       )}

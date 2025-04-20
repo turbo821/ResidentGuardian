@@ -4,26 +4,11 @@ import AdminCategoryEdit from "./AdminCategoryEdit";
 import AdminCategoryCard from "./AdminCategoryCard";
 
 const CategoryList = ({ categories = [], setCategories }) => {
-
   const [editCategory, setEditCategory] = useState(null);
 
   const handleEditCategory = (id) => {
     setEditCategory(categories.find((cat) => cat.id === id));
   };
-  
-  const handleDeleteCategory = async(id) => {
-    await fetchDeleteCategory(id);
-    setCategories(categories.filter((cat) => cat.id !== id));
-  };
-
-  const fetchDeleteCategory = async(id) => {
-    try {
-      await api.delete(`/api/categories/${id}`);
-    }
-    catch(err) {
-      console.log(err.response);
-    }
-  }
 
   const handleSaveCategory = async() => {
     const updateCategory = await fetchEditCategory(editCategory);
@@ -44,9 +29,19 @@ const CategoryList = ({ categories = [], setCategories }) => {
     }
   }
 
+  const handleDeleteCategory = async(id) => {
+    try {
+      await api.delete(`/api/categories/${id}`);
+    }
+    catch(err) {
+      console.log(err.response);
+    }
+    setCategories((prev) => prev.filter((cat) => cat.id !== id));
+  };
+  
   return (
     <div className="bg-gray-100 p-4 rounded-lg shadow-md md:col-span-2">
-      <h3 className="text-xl font-bold text-gray-800 mb-4">Редактирование категорий</h3>
+      <h3 className="text-xl font-bold text-gray-800 mb-4">Список категорий</h3>
 
       <div className="grid gap-4">
         {categories.length > 0 ? categories.map((cat) => (

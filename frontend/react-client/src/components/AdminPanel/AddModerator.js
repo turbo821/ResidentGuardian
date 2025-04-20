@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import api from "../../api";
 import { useCallback } from "react";
 
-const AddModerator = () => {
+const AddModerator = ({ setModerators }) => {
   const [isNewModerator, setIsNewModerator] = useState(false);
   const [moderatorFullName, setModeratorFullName] = useState("");
   const [moderatorEmail, setModeratorEmail] = useState("");
@@ -12,7 +12,7 @@ const AddModerator = () => {
     if (isNewModerator) {
       await fetchRegisterModerator(moderatorFullName, moderatorEmail, moderatorPassword);
     } else {
-      alert(`Пользователь ${moderatorEmail} теперь модератор`);
+      await fetchAssignModeratorrole(moderatorEmail);
     }
     setModeratorFullName("");
     setModeratorEmail("");
@@ -21,8 +21,10 @@ const AddModerator = () => {
   
   const fetchRegisterModerator = useCallback(async (fullName, email, password) => {
     try {
-        const response = await api.post("/api/auth/register-moderator-role", { fullName, email, password });
-        console.log(response.data);
+        const response = await api.post("/api/moderation/register-moderator", { fullName, email, password });
+        const newModerator = response.data;
+        console.log(newModerator);
+        //setModerators((prev) => [...prev, ])
     } catch (error) {
         console.error("Register error: ", error.response);
     }
@@ -30,8 +32,11 @@ const AddModerator = () => {
 
   const fetchAssignModeratorrole = useCallback(async (email) => {
     try {
-      const response = await api.post("/api/auth/add-moderator-role", email);
-      console.log(response.data);
+      console.log(email);
+      const response = await api.post("/api/moderation/assign-moderator", { email });
+      const newModerator = response.data;
+      console.log(newModerator);
+      setModerators((prev) => [...prev, newModerator]);
     } catch (error) {
       console.error("Assign moderator role error: ", error.response);
     }

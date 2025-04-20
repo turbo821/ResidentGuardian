@@ -6,46 +6,52 @@ import AddCategory from "../components/AdminPanel/AddCategory";
 import CategoryList from "../components/AdminPanel/CategoryList";
 import { useAuth } from "../context/AuthContext";
 import api from "../api";
+import ModeratorList from "../components/AdminPanel/ModeratorList";
 
 const AdminPanel = () => {
-  // It is auth!!
-  // const { user, isLoading } = useAuth();
+  const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
+  const [moderators, setModerators] = useState([]);
 
   useEffect(() => {
     fetchAllCategories(); 
+    fetchAllModerators();
   }, []);
 
   const fetchAllCategories = async() => {
     try {
       const response = await api.get("/api/categories");
       setCategories(response.data);
-      console.log(response.data);
     }
     catch(err) {
       console.log(err.response);
     }
   }
 
-  const addCategory = (category) => {
-    setCategories((prev) => [...prev, category]);
-  };
+  const fetchAllModerators = async() => {
+    try {
+      const response = await api.get("/api/moderation");
+      setModerators(response.data);
+    }
+    catch(err) {
+      console.log(err.response);
+    }
+  }
   
-  // It is auth!!
-  // useEffect(() => {
-  //   if (!isLoading && (!user || !user.roles.includes("Admin"))) {
-  //     navigate("/");
-  //   }
-  // }, [user, isLoading, navigate]);
+  useEffect(() => {
+    if (!isLoading && (!user || !user.roles.includes("Admin"))) {
+      navigate("/");
+    }
+  }, [user, isLoading, navigate]);
 
-  // if (isLoading) {
-  //   return <div>Загрузка...</div>;
-  // }
+  if (isLoading) {
+    return <div>Загрузка...</div>;
+  }
 
-  // if (!user || !user.roles.includes("Admin")) {
-  //   return null;
-  // }
+  if (!user || !user.roles.includes("Admin")) {
+    return null;
+  }
 
 
   return (
@@ -58,8 +64,9 @@ const AdminPanel = () => {
 
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
           <AssignModerator categories={categories}/>
-          <AddModerator />
-          <AddCategory add={addCategory}/>
+          <AddModerator setModerators={setModerators}/>
+          <ModeratorList moderators={moderators} setModerators={setModerators} />
+          <AddCategory setCategories={setCategories}/>
           <CategoryList categories={categories} setCategories={setCategories} />
         </div>
       </div>

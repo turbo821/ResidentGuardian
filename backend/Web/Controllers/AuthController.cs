@@ -1,7 +1,6 @@
 ﻿using Application.Dtos;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
 namespace Web.Controllers
@@ -30,23 +29,6 @@ namespace Web.Controllers
             SetAuthCookies(response.AccessToken!, response.RefreshToken!);
 
             return Ok(response.Message);
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpPost("register-moderator")]
-        public async Task<IActionResult> RegisterModerator([FromBody] RegisterRequest request)
-        {
-            var response = await _authService.RegisterModerator(request);
-            if (!response.Success) return BadRequest(response.Message);
-
-            return Ok(response.Message);
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpPost("add-moderator-role")]
-        public async Task<IActionResult> AddModeratorRole([FromBody] string email)
-        {
-            throw new NotImplementedException();
         }
 
         [HttpPost("login")]
@@ -103,20 +85,6 @@ namespace Web.Controllers
             await _refreshTokenService.RevokeTokenAsync(Guid.Parse(userId!));
 
             return NoContent();
-        }
-
-        [Authorize]
-        [HttpGet("profile")]
-        public async Task<IActionResult> GetProfile()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null) return Unauthorized();
-
-            var isTokenRevoked = await _refreshTokenService.IsTokenRevokedAsync(Guid.Parse(userId));
-            if (isTokenRevoked) return Unauthorized("Token revoked");
-
-            var profile = await _authService.GetUserProfile(Guid.Parse(userId));
-            return Ok(profile);
         }
 
         private void SetAuthCookies(string accessToken, string refreshToken)

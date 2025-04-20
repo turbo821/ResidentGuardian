@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import api from "../../api";
 
-const AddCategory = ({ add }) => {
+const AddCategory = ({ setCategories }) => {
   const [newCategory, setNewCategory] = useState({
     title: "",
     description: "",
@@ -16,7 +16,8 @@ const AddCategory = ({ add }) => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       console.log(`Добавлена категория: ${response.data}`);
-      add(response.data);
+      const category = response.data;
+      setCategories((prev) => [...prev, category]);
 
     } catch (err) {
       console.log(err.response);

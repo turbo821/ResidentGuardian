@@ -8,6 +8,7 @@ const Header = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  console.log(user?.roles);
   const handleLogout = async () => {
     await logout();
     navigate("/login");
@@ -44,50 +45,7 @@ const Header = () => {
             </svg>
           </button>
 
-          <nav className="hidden lg:flex items-center space-x-1 xl:space-x-2">
-            <div className="flex flex-wrap justify-center gap-1 xl:gap-2">
-              <NavLink to="/">Главная</NavLink>
-              <NavLink to="/issues">Обращения</NavLink>
-              <NavLink to="/map">Карта</NavLink>
-              <NavLink to="/report">Сообщить</NavLink>
-              <NavLink to="/categories">Категории</NavLink>
-              <NavLink to="/about">О портале</NavLink>
-              
-              {user?.roles.includes('Admin') && (
-                <NavLink to="/admin" className="bg-blue-600 hover:bg-blue-500">
-                  Админ
-                </NavLink>
-              )}
-              {user?.roles.includes('Moderator') && (
-                <NavLink to="/moderator" className="bg-blue-600 hover:bg-blue-500">
-                  Модератор
-                </NavLink>
-              )}
-            </div>
-
-            <div className="flex items-center ml-2 pl-2 border-l border-blue-500">
-              {user ? (
-                <>
-                  <NavLink to={`/profile/${user.id}`} className="min-w-max">
-                    Профиль
-                  </NavLink>
-                  <button 
-                    onClick={handleLogout} 
-                    className="px-3 py-1 rounded hover:bg-blue-500 transition whitespace-nowrap text-sm xl:text-base"
-                  >
-                    Выход
-                  </button>
-                </>
-              ) : (
-                <>
-                  <NavLink to="/login">Вход</NavLink>
-                  <NavLink to="/register">
-                    Регистрация
-                  </NavLink>
-                </>
-              )}
-            </div>
-          </nav>
+            <DesktopNav user={user} handleLogout={handleLogout} />
         </div>
 
         {isMenuOpen && (
@@ -98,6 +56,56 @@ const Header = () => {
       </div>
     </header>
   );
+};
+
+const DesktopNav = ({ user, handleLogout }) => {
+
+  return (
+    <nav className="hidden lg:flex items-center space-x-1 xl:space-x-2">
+    <div className="flex flex-wrap justify-center gap-1 xl:gap-2">
+      <NavLink to="/">Главная</NavLink>
+      <NavLink to="/issues">Обращения</NavLink>
+      <NavLink to="/map">Карта</NavLink>
+      <NavLink to="/report">Сообщить</NavLink>
+      <NavLink to="/categories">Категории</NavLink>
+      <NavLink to="/about">О портале</NavLink>
+      
+      {user?.roles.includes('Admin') && (
+        <NavLink to="/admin" className="bg-blue-600 hover:bg-blue-500">
+          Админ
+        </NavLink>
+      )}
+      {user?.roles.includes('Moderator') && (
+        <NavLink to="/moderator" className="bg-blue-600 hover:bg-blue-500">
+          Модератор
+        </NavLink>
+      )}
+    </div>
+
+    <div className="flex items-center ml-2 pl-2 border-l border-blue-500">
+      {user ? (
+        <>
+          <NavLink to={`/profile/${user.id}`} className="min-w-max">
+            Профиль
+          </NavLink>
+          <button 
+            onClick={handleLogout} 
+            className="px-3 py-1 rounded hover:bg-blue-500 transition whitespace-nowrap text-sm xl:text-base"
+          >
+            Выход
+          </button>
+        </>
+      ) : (
+        <>
+          <NavLink to="/login">Вход</NavLink>
+          <NavLink to="/register">
+            Регистрация
+          </NavLink>
+        </>
+      )}
+    </div>
+  </nav>
+  )
 };
 
 const NavLink = ({ to, children, className = '', ...props }) => (
