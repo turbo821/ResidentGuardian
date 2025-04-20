@@ -1,23 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import MapModal from "../components/MapModal";
 import axios from "axios";
+import api from "../api";
 
 const ReportPage = () => {
+  const fileInputRef = useRef(null);
+  const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("road");
+  const [selectCategory, setSelectCategory] = useState("1");
   const [images, setImages] = useState([]);
   const [location, setLocation] = useState({ text: "", coords: null });
   const [isMapOpen, setIsMapOpen] = useState(false);
+
+  useEffect(() => {
+    fetchAllCategories();
+  }, []);
+
+  const fetchAllCategories = async() => {
+    try {
+      const response = await api.get("/api/categories");
+      setCategories(response.data);
+    }
+    catch(err) {
+      console.log(err.response);
+    }
+  }
 
   const handleImageUpload = (e) => {
     setImages(Array.from(e.target.files));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log({ title, description, category, images, location });
-    alert("Обращение отправлено!");
+  const handleSubmit = async() => {
+    if (images.length === 0) return console.log("Not select images");
+  
+    const formData = new FormData();
+    
+    formData.append('title', title);
+    formData.append('description', description || "");
+    formData.append('categoryId', selectCategory);
+    formData.append('location', location.text);
+    formData.append('pointLatitude', location.coords !== null ? location?.coords[0] : null);
+    formData.append('pointLongitude', location.coords !== null ? location?.coords[1] : null);
+    
+    images.forEach((image, index) => {
+      formData.append(`Images`, image);
+    });
+    console.log(location.coords);
+    try {
+      const response = await api.post('/api/issues', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      alert(`Add issue: ${response.data}`);
+
+    } catch (err) {
+      console.log(err.response);
+    }
+    finally {
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+
+      setTitle("");
+      setDescription("");
+      setSelectCategory("1");
+      setImages([]);
+      setLocation({ text: "", coords: null });
+    }
   };
 
   const handleLocation = async(locality) => {
@@ -88,7 +137,7 @@ const ReportPage = () => {
           Опишите проблему и укажите её местоположение.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+        <div className="mt-6 space-y-4">
           <input
             type="text"
             placeholder="Название проблемы"
@@ -107,18 +156,21 @@ const ReportPage = () => {
           />
 
           <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            value={selectCategory}
+            onChange={(e) => setSelectCategory(e.target.value)}
             className="w-full p-3 border rounded-lg"
           >
-            <option value="road">Дорожные проблемы</option>
-            <option value="lighting">Освещение</option>
-            <option value="garbage">Мусор</option>
-            <option value="other">Другое</option>
+            <option key="1" value="1">Выберите категорию</option>
+            {categories.length > 0 ? categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>{cat.title}</option>
+            )) : (
+              <option key="0" disabled>Категорий нет</option>
+            )}
           </select>
 
           <label className="block text-gray-700 font-bold">Выбор фото:</label>
           <input
+            ref={fileInputRef}
             type="file"
             accept="image/*"
             multiple
@@ -144,12 +196,13 @@ const ReportPage = () => {
           </button>
 
           <button
+          onClick={handleSubmit}
             type="submit"
             className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition"
           >
             Отправить обращение
           </button>
-        </form>
+        </div>
       </div>
 
       <MapModal isMapOpen={isMapOpen} setIsMapOpen={setIsMapOpen}  hadleLocation={handleLocation}/>

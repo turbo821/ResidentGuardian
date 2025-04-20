@@ -16,13 +16,17 @@ namespace Infrastructure.Configurations
                 .HasConversion<string>()
                 .HasMaxLength(30);
 
-            builder
-                .HasOne(i => i.Category)
-                .WithMany(c => c.Issues);
+            builder.HasOne(i => i.Category)
+                .WithMany(c => c.Issues)
+                .HasForeignKey(i => i.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
 
-            builder
-                .HasOne(i => i.User)
-                .WithMany(u => u.Issues);
+            builder.HasOne(i => i.User)
+                .WithMany(u => u.Issues)
+                .HasForeignKey(i => i.UserId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
         }
     }
 }

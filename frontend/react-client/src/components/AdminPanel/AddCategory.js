@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import api from "../../api";
 
 const AddCategory = ({ setCategories }) => {
+  const fileInputRef = useRef(null);
   const [newCategory, setNewCategory] = useState({
     title: "",
     description: "",
@@ -9,13 +10,12 @@ const AddCategory = ({ setCategories }) => {
   });
 
   const handleAddCategory = async() => {
-    if (!newCategory.image) return alert('Выберите файл');
+    if (!newCategory.image) return alert('Выберите картинку');
 
     try {
       const response = await api.post('/api/categories', newCategory, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      console.log(`Добавлена категория: ${response.data}`);
       const category = response.data;
       setCategories((prev) => [...prev, category]);
 
@@ -23,6 +23,9 @@ const AddCategory = ({ setCategories }) => {
       console.log(err.response);
     }
     
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
     setNewCategory({
       title: "",
       description: "",
@@ -50,6 +53,7 @@ const AddCategory = ({ setCategories }) => {
         />
         <label className="block text-gray-700 font-bold">Выбор картинки:</label>
         <input 
+          ref={fileInputRef}
           type="file" 
           accept="image/*"
           onChange={e => setNewCategory({...newCategory, image: e.target.files[0]})} 

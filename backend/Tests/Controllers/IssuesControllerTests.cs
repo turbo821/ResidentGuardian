@@ -1,4 +1,5 @@
-﻿using Application.UseCases.CreateIssue;
+﻿using Application.Services.Interfaces;
+using Application.UseCases.CreateIssue;
 using Application.UseCases.DeleteIssue;
 using Application.UseCases.GetAllIssues;
 using Application.UseCases.GetIssue;
@@ -17,15 +18,17 @@ namespace Tests.Controllers
         private readonly IssuesController _controller;
         private readonly Mock<IIssueRepository> _mockIssueRepository;
         private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IFileStorage> _fileStorage;
 
         public IssuesControllerTests()
         {
             _mockIssueRepository = new Mock<IIssueRepository>();
             _mockMapper = new Mock<IMapper>();
+            _fileStorage = new Mock<IFileStorage>();
 
             var getAllIssue = new GetAllIssueUseCase(_mockIssueRepository.Object, _mockMapper.Object);
             var getIssue = new GetIssueUseCase(_mockIssueRepository.Object, _mockMapper.Object);
-            var createIssue = new CreateIssueUseCase(_mockIssueRepository.Object, _mockMapper.Object);
+            var createIssue = new CreateIssueUseCase(_mockIssueRepository.Object, _mockMapper.Object, _fileStorage.Object);
             var updateIssue = new UpdateIssueUseCase(_mockIssueRepository.Object, _mockMapper.Object);
             var deleteIssue = new DeleteIssueUseCase(_mockIssueRepository.Object);
 

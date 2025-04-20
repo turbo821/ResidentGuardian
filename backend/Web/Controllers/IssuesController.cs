@@ -3,7 +3,9 @@ using Application.UseCases.DeleteIssue;
 using Application.UseCases.GetAllIssues;
 using Application.UseCases.GetIssue;
 using Application.UseCases.UpdateIssue;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Web.Controllers
 {
@@ -52,14 +54,15 @@ namespace Web.Controllers
             return Ok(response);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddIssue([FromBody] CreateIssueRequest request)
+        public async Task<IActionResult> AddIssue([FromForm] CreateIssueRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Not valid");
 
-            var id = await _createIssue.Execute(request);
+            Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+            var id = await _createIssue.Execute(request, userId);
 
             if (id is null)
                 return BadRequest();
@@ -67,7 +70,7 @@ namespace Web.Controllers
             return Ok(id);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> UpdateIssue([FromBody] UpdateIssueRequest request)
         {
