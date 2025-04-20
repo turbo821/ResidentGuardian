@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import api from "../../api";
 import ModeratorCard from "./ModeratorCard";
 
-const ModeratorList = ({ moderators, setModerators }) => {
+const ModeratorList = ({ moderators, categories, setModerators }) => {
 
   const unassignModerator = async(id) => {
     try {
@@ -33,6 +33,7 @@ const ModeratorList = ({ moderators, setModerators }) => {
           <div key={mod.id} className="bg-white rounded-xl shadow-md p-4">
             <ModeratorCard
                 moderator={mod}
+                categories={categories}
                 handleDeleteModerator={handleDeleteModerator}
                 unassignModerator={unassignModerator}
             />

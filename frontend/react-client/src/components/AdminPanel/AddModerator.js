@@ -21,10 +21,10 @@ const AddModerator = ({ setModerators }) => {
   
   const fetchRegisterModerator = useCallback(async (fullName, email, password) => {
     try {
-        const response = await api.post("/api/moderation/register-moderator", { fullName, email, password });
+        const response = await api.post("/api/moderation", { fullName, email, password });
         const newModerator = response.data;
         console.log(newModerator);
-        //setModerators((prev) => [...prev, ])
+        setModerators((prev) => [...prev, newModerator]);
     } catch (error) {
         console.error("Register error: ", error.response);
     }

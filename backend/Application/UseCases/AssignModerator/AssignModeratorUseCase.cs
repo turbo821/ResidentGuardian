@@ -8,12 +8,10 @@ namespace Application.UseCases.AssignModerator
     public class AssignModeratorUseCase : IAssignModeratorUseCase
     {
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole<Guid>> _roleManager;
 
-        public AssignModeratorUseCase(UserManager<User> userManager, RoleManager<IdentityRole<Guid>> roleManager)
+        public AssignModeratorUseCase(UserManager<User> userManager)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
         }
 
         public async Task<GetModeratorsResponse?> Execute(AssignModeratorRequest request)
@@ -38,7 +36,7 @@ namespace Application.UseCases.AssignModerator
                 user.FullName,
                 user.Email!,
                 roles,
-                user.ModeratorCategories
+                user.ModeratorCategories.Select(mc => mc.CategoryId)
             );
 
             return userDto;

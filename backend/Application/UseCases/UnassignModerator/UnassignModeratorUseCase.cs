@@ -1,21 +1,18 @@
-﻿using Application.UseCases.AssignModerator;
-using Domain.Entities;
+﻿using Domain.Entities;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.UseCases.UnassignModerator
 {
     public class UnassignModeratorUseCase : IUnassignModeratorUseCase
     {
         private readonly UserManager<User> _userManager;
+        private readonly ICategoryRepository _repo;
 
-        public UnassignModeratorUseCase(UserManager<User> userManager)
+        public UnassignModeratorUseCase(UserManager<User> userManager, ICategoryRepository repo)
         {
             _userManager = userManager;
+            _repo = repo;
         }
 
         public async Task<bool> Execute(Guid id)
@@ -26,9 +23,15 @@ namespace Application.UseCases.UnassignModerator
             if (!await _userManager.IsInRoleAsync(user, "Moderator"))
                 return true;
 
+
             var result = await _userManager.RemoveFromRoleAsync(user, "Moderator");
 
-            return result.Succeeded;
+            if (!result.Succeeded)
+                return false;
+
+            var save = await _repo.RemoveModeratorCategories(user.Id);
+
+            return save;
         }
     }
 }

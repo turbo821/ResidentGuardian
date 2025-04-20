@@ -1,7 +1,9 @@
 ﻿using Application.Dtos;
-using Application.Services.Interfaces;
+using Application.UseCases.AddModeratorCategories;
 using Application.UseCases.AddModeratorRoles;
 using Application.UseCases.AssignModerator;
+using Application.UseCases.CreateModerator;
+using Application.UseCases.DeleteModerator;
 using Application.UseCases.GetModerators;
 using Application.UseCases.UnassignModerator;
 using Microsoft.AspNetCore.Authorization;
@@ -14,20 +16,26 @@ namespace Web.Controllers
     [ApiController]
     public class ModerationController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        private readonly ICreateModeratorUseCase _createModerator;
         private readonly IGetModeratorsUseCase _getModerators;
         private readonly IAssignModeratorUseCase _assignModerator;
         private readonly IUnassignModeratorUseCase _unassignModerator;
+        private readonly IAddModeratorCategoriesUseCase _addModeratorCategories;
+        private readonly IDeleteModeratorUseCase _deleteModerator;
 
-        public ModerationController(IAuthService authService,
+        public ModerationController(ICreateModeratorUseCase createModerator,
             IGetModeratorsUseCase getModerators,
             IAssignModeratorUseCase assignModerator,
-            IUnassignModeratorUseCase unassignModerator)
+            IUnassignModeratorUseCase unassignModerator,
+            IAddModeratorCategoriesUseCase addModeratorCategories,
+            IDeleteModeratorUseCase deleteModerator)
         {
-            _authService = authService;
+            _createModerator = createModerator;
             _getModerators = getModerators;
             _assignModerator = assignModerator;
             _unassignModerator = unassignModerator;
+            _addModeratorCategories = addModeratorCategories;
+            _deleteModerator = deleteModerator;
         }
 
         [HttpGet]
@@ -38,13 +46,13 @@ namespace Web.Controllers
             return Ok(response);
         }
 
-        [HttpPost("register-moderator")]
-        public async Task<IActionResult> RegisterModerator([FromBody] RegisterRequest request)
+        [HttpPost]
+        public async Task<IActionResult> CreateModerator([FromBody] RegisterRequest request)
         {
-            var response = await _authService.RegisterModerator(request);
-            if (!response.Success) return BadRequest(response.Message);
+            var response = await _createModerator.Execute(request);
+            if (response is null) return BadRequest();
 
-            return Ok(response.Message);
+            return Ok(response);
         }
 
         [HttpPost("assign-moderator")]
@@ -54,6 +62,16 @@ namespace Web.Controllers
 
             if(response is null)
                 return NotFound();
+
+            return Ok(response);
+        }
+
+        [HttpPost("categories")]
+        public async Task<IActionResult> AddModeratorCategories([FromBody] AddModeratorCategoriesRequest request)
+        {
+            var response = await _addModeratorCategories.Execute(request);
+
+            if (response is null) return BadRequest();
 
             return Ok(response);
         }
@@ -69,10 +87,15 @@ namespace Web.Controllers
             return Ok();
         }
 
-        [HttpPost("add-moderator-categories")]
-        public async Task<IActionResult> AddModeratorCategories([FromBody] AddModeratorCategoriesRequest request)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteModerator(Guid id)
         {
-            throw new NotImplementedException();
+            var response = await _deleteModerator.Execute(id);
+
+            if (!response)
+                return NotFound();
+
+            return Ok();
         }
     }
 }

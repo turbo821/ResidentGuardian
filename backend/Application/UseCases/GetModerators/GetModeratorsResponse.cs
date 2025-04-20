@@ -7,6 +7,6 @@ namespace Application.UseCases.GetModerators
         string FullName, 
         string Email, 
         IEnumerable<string> Roles, 
-        IEnumerable<ModeratorCategory> ModeratorCategories
+        IEnumerable<Guid> ModeratorCategories
     );
 }

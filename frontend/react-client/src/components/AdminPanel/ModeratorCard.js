@@ -1,10 +1,11 @@
 import { useState } from "react";
 import ConfirmOpen from "./ConfirmOpen";
 
-const ModeratorCard = ({ moderator, handleDeleteModerator, unassignModerator }) => {
+const ModeratorCard = ({ moderator, categories, handleDeleteModerator, unassignModerator }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-
+  console.log(moderator);
+  console.log(moderator.moderatorCategories.map(catId => categories.find(c => c.id === catId).title));
   return (
     <div className="flex flex-col md:flex-row items-center justify-around gap-4 p-4 border rounded-xl shadow-sm bg-white">
       <div className="flex flex-col">
@@ -12,11 +13,13 @@ const ModeratorCard = ({ moderator, handleDeleteModerator, unassignModerator }) 
         <p className="text-md font-bold text-gray-700">Почта: {moderator.email}</p>
       </div>
       <div className="flex flex-col">
-        {moderator?.moderatorCategories !== null && moderator?.moderatorCategories > 0 ? (<span className="text-gray-700">
-        {moderator.moderatorCategories.map((cat) => (
-          cat + ","
-        ))} </span>)
-          : <span className="text-gray-700">Категории не назначены</span>}
+        {moderator?.moderatorCategories !== null && moderator?.moderatorCategories.length > 0 ? (
+          moderator.moderatorCategories.map(catId => (
+            <p className="text-gray-700" key={catId}> {categories.find(c => c.id === catId)?.title} </p>
+          ))
+        ) : (
+          <span className="text-gray-700">Категории не назначены</span>
+        )}
       </div>
       <div className="flex flex-col md:flex-row gap-4">
         <button
