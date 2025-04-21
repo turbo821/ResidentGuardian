@@ -5,12 +5,12 @@ namespace Domain.Entities
     public enum IssueStatus
     {
         [Description("На рассмотрении")]
-        Pending,
+        Pending = 0,
         [Description("В работе")]
-        InProgress,
+        InProgress = 1,
         [Description("Решено")]
-        Resolved,
+        Resolved = 2,
         [Description("Отклонено")]
-        Rejected
+        Rejected = 3
     }
 }

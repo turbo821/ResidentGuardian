@@ -42,7 +42,7 @@ const CategoriesPage = () => {
           {categories.length > 0 ? categories.map((category) => (
             <Category category={category} goToIssues={goToIssues} goToMap={goToMap} key={category.id} />
           )) 
-            : <p>Категорий нет</p>
+            : <div className="text-center text-gray-700 text-xl">Категории не найдены</div>
           }
         </div>
       </div>

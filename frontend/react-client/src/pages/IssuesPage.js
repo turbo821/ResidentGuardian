@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import SearchFilterPanel from "../components/IssuesPage/SearchPanel";
 import Filters from "../components/IssuesPage/Filters";
 import IssueCard from "../components/IssuesPage/IssueCard";
+import api from "../api";
 
 const IssuesPage = () => {
   const [searchText, setSearchText] = useState("");
@@ -10,6 +11,21 @@ const IssuesPage = () => {
   const [category, setCategory] = useState("all");
   const [timeRange, setTimeRange] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
+  const [issues, setIssues] = useState([]);
+
+  useEffect(() => {
+    fetchAllIssues(); 
+  }, []);
+
+  const fetchAllIssues = async() => {
+    try {
+      const response = await api.get("/api/issues");
+      setIssues(response.data);
+    }
+    catch(err) {
+      console.log(err.response);
+    }
+  }
 
   const handleReset = () => {
     setStatus("all");
@@ -31,15 +47,6 @@ const IssuesPage = () => {
     console.log({ searchText, status, category, timeRange });
     alert("Фильтры применены (заглушка)");
   };
-
-  const issues = [
-    { id: 1, title: "Яма на дороге", status: "В ожидании", image: "https://via.placeholder.com/150" },
-    { id: 2, title: "Не работает фонарь", status: "Решено", image: "https://via.placeholder.com/150" },
-    { id: 3, title: "Сломанная лавочка", status: "В процессе", image: "https://via.placeholder.com/150" },
-    { id: 4, title: "Грязь на тротуаре", status: "В ожидании", image: "https://via.placeholder.com/150" },
-    { id: 5, title: "Разбитая урна", status: "Решено", image: "https://via.placeholder.com/150" },
-    { id: 6, title: "Неправильная парковка", status: "В процессе", image: "https://via.placeholder.com/150" },
-  ];
 
   const filteredIssues = issues.filter((issue) => {
     const matchesSearch = issue.title.toLowerCase().includes(searchText.toLowerCase());
@@ -81,9 +88,11 @@ const IssuesPage = () => {
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {issues.map((issue) => (
+          {issues.length > 0 ? issues.map((issue) => (
             <IssueCard issue={issue} key={issue.id} />
-          ))}
+          )) 
+          : 
+          <div className="text-center text-gray-700 text-xl">Обращения не найдено.</div>}
         </div>
 
         <div className="mt-8 text-center">

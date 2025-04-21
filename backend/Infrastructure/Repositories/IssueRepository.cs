@@ -15,13 +15,18 @@ namespace Infrastructure.Repositories
         }
         public async Task<IEnumerable<Issue>> GetAll()
         {
-            var issues = await _context.Issues.ToListAsync();
+            var issues = await _context.Issues
+                .Include(i => i.Images).ToListAsync();
+
             return issues;
         }
 
         public async Task<Issue?> GetById(Guid id)
         {
-            var issue = await _context.Issues.FirstOrDefaultAsync(x => x.Id == id);
+            var issue = await _context.Issues
+                .Include(i => i.Images).Include(i => i.Category).Include(i => i.Answers)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
             return issue;
         }
 

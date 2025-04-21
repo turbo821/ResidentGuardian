@@ -15,9 +15,6 @@ namespace Application.Helpers
     {
         public MappingProfile()
         {
-            CreateMap<Issue, GetAllIssueResponse>();
-            CreateMap<Issue, GetIssueResponse>();
-
             CreateMap<CreateIssueRequest, Issue>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid()));
             CreateMap<UpdateIssueRequest, Issue>();

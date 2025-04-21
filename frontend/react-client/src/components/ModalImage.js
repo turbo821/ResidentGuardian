@@ -1,3 +1,4 @@
+import { imagesURL } from "../api";
 
 const ModalImage = ({ modalImage, closeModal = () => {} }) => {
   return (
@@ -10,8 +11,8 @@ const ModalImage = ({ modalImage, closeModal = () => {} }) => {
         &times;
       </button>
       <img
-        src={modalImage}
-        alt="Просмотр фото"
+        src={`${imagesURL}/${modalImage}`}
+        alt={modalImage}
         className="w-full max-h-[80vh] object-contain rounded-lg shadow-lg"
       />
     </div>

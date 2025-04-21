@@ -1,4 +1,6 @@
-﻿namespace Application.UseCases.GetAllIssues
+﻿using Domain.Entities;
+
+namespace Application.UseCases.GetAllIssues
 {
-    public record GetAllIssueResponse(Guid Id, string Title);
+    public record GetAllIssueResponse(Guid Id, string Title, IssueStatus Status, string Image);
 }

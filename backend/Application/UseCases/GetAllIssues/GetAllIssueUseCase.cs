@@ -1,17 +1,14 @@
-﻿using AutoMapper;
-using Domain.Interfaces;
+﻿using Domain.Interfaces;
 
 namespace Application.UseCases.GetAllIssues
 {
     public class GetAllIssueUseCase : IGetAllIssueUseCase
     {
         private readonly IIssueRepository _repo;
-        private readonly IMapper _mapper;
 
-        public GetAllIssueUseCase(IIssueRepository repo, IMapper mapper)
+        public GetAllIssueUseCase(IIssueRepository repo)
         {
             _repo = repo;
-            _mapper = mapper;
         }
         public async Task<IEnumerable<GetAllIssueResponse>?> Execute()
         {
@@ -19,7 +16,14 @@ namespace Application.UseCases.GetAllIssues
             if(!issues.Any())
                 return null;
 
-            var issuesDtos = _mapper.Map<IEnumerable<GetAllIssueResponse>>(issues);
+            var issuesDtos = issues.Select(issue =>
+            new GetAllIssueResponse(
+                issue.Id,
+                issue.Title,
+                issue.Status,
+                issue.Images?.Select(img => img.Uri).FirstOrDefault()!
+            ));
+
             return issuesDtos;
         }
     }

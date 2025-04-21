@@ -6,17 +6,20 @@ namespace Application.UseCases.GetIssue
     public class GetIssueUseCase : IGetIssueUseCase
     {
         private readonly IIssueRepository _repo;
-        private readonly IMapper _mapper;
 
-        public GetIssueUseCase(IIssueRepository repo, IMapper mapper)
+        public GetIssueUseCase(IIssueRepository repo)
         {
             _repo = repo;
-            _mapper = mapper;
         }
         public async Task<GetIssueResponse?> Execute(Guid id)
         {
             var issue = await _repo.GetById(id);
-            var issueDto = _mapper.Map<GetIssueResponse?>(issue);
+            if (issue is null) return null;
+
+            var issueDto = new GetIssueResponse(issue.Id,
+                issue.Title, issue.Status, issue.Description, issue.Category.Title, 
+                issue.Images.Select(im => im.Uri).ToList(), issue.Answers);
+
             return issueDto;
         }
     }
