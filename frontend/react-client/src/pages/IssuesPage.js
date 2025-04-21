@@ -7,9 +7,6 @@ import api from "../api";
 
 const IssuesPage = () => {
   const [searchText, setSearchText] = useState("");
-  const [status, setStatus] = useState("all");
-  const [category, setCategory] = useState("all");
-  const [timeRange, setTimeRange] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
   const [issues, setIssues] = useState([]);
 
@@ -27,33 +24,6 @@ const IssuesPage = () => {
     }
   }
 
-  const handleReset = () => {
-    setStatus("all");
-    setCategory("all");
-    setTimeRange("all");
-  };
-
-  const handleSearch = () => {
-    console.log({
-      searchText,
-      status,
-      category,
-      timeRange,
-    });
-    alert("Поиск выполнен. (Заглушка)");
-  };
-
-  const handleApply = () => {
-    console.log({ searchText, status, category, timeRange });
-    alert("Фильтры применены (заглушка)");
-  };
-
-  const filteredIssues = issues.filter((issue) => {
-    const matchesSearch = issue.title.toLowerCase().includes(searchText.toLowerCase());
-    const matchesStatus = status === "all" || issue.status === status;
-    return matchesSearch && matchesStatus;
-  });
-
   return (
     <div className="min-h-[90vh] bg-blue-100 flex flex-col items-center py-10 px-4">
       <div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-7xl">
@@ -64,27 +34,22 @@ const IssuesPage = () => {
 
         <SearchFilterPanel
           searchText={searchText}
+          setIssues={setIssues}
           setSearchText={setSearchText}
-          handleSearch={handleSearch}
           showFilters={showFilters}
           setShowFilters={setShowFilters}
         />
         
         {showFilters && (
           <Filters
-            status={status}
-            setStatus={setStatus}
-            category={category}
-            setCategory={setCategory}
-            timeRange={timeRange}
-            setTimeRange={setTimeRange}
-            handleApply={handleApply}
-            handleReset={handleReset}
+          setIssues={setIssues}
+          searchText={searchText}
+          setSearchText={setSearchText}
           />
         )}
         
-        <div className="mt-6 text-gray-700 font-semibold text-center">
-          Найдено обращений: {filteredIssues.length}
+        <div className="my-3 text-gray-700 font-semibold text-center">
+          Найдено обращений: {issues.length}
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
@@ -92,7 +57,7 @@ const IssuesPage = () => {
             <IssueCard issue={issue} key={issue.id} />
           )) 
           : 
-          <div className="text-center text-gray-700 text-xl">Обращения не найдено.</div>}
+          <div className="text-center text-gray-700 text-xl">Обращения не найдены.</div>}
         </div>
 
         <div className="mt-8 text-center">

@@ -15,7 +15,6 @@ const CategoriesPage = () => {
     try {
       const response = await api.get("/api/categories");
       setCategories(response.data);
-      console.log(response.data);
     }
     catch(err) {
       console.log(err.response);

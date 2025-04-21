@@ -3,6 +3,7 @@ using Application.UseCases.DeleteIssue;
 using Application.UseCases.GetAllIssues;
 using Application.UseCases.GetIssue;
 using Application.UseCases.UpdateIssue;
+using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -32,9 +33,9 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllIssues()
+        public async Task<IActionResult> GetAllIssues([FromQuery] IssueFilterRequest request)
         {
-            var response = await _getAllIssues.Execute();
+            var response = await _getAllIssues.Execute(request);
 
             return Ok(response);
         }

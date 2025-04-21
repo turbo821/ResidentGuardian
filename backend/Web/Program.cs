@@ -79,6 +79,7 @@ builder.Services.AddScoped<IFileStorage, LocalFileStorage>();
 
 builder.Services.AddRepositories();
 builder.Services.AddUseCases();
+builder.Services.AddFilters();
 
 var app = builder.Build();
 

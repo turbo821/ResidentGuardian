@@ -1,6 +1,8 @@
 import { useState,   useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { YMaps, Map, Placemark, Clusterer } from "@pbe/react-yandex-maps";
 import "./CityMap.css";
+import MiniIssueCard from "./MiniIssueCard";
 
 const CityMap = ({ issues }) => {
   const defaultState = {
@@ -8,32 +10,12 @@ const CityMap = ({ issues }) => {
     zoom: 14,
   };
 
+  const navigate = useNavigate();
   const [hoveredPoint, setHoveredPoint] = useState(null);
   const mapRef = useRef(null);
 
-  const handleMapClick = async (e) => {
-    const coords = e.get("coords");
-    alert(`${coords[0]} ${coords[1]}`);
-  };
-
   const handleMouseEnter = (issue) => {
-    if (mapRef.current) {
-      const mapInstance = mapRef.current;
-      try {
-        const globalPixels = mapInstance.options.get("projection").toGlobalPixels(
-          [issue.coords[0], issue.coords[1]],
-          mapInstance.getZoom()
-        );
-        const screenPosition = mapInstance.converter.globalToPage(globalPixels);
-        setHoveredPoint({
-          ...issue,
-          screenPosition,
-        });
-
-      } catch (error) {
-        console.error("Error converting coordinates:", error);
-      }
-    }
+    setHoveredPoint(issue);
   };
 
   const handleMouseLeave = () => {
@@ -41,7 +23,11 @@ const CityMap = ({ issues }) => {
   };
 
   const handlePlacemarkClick = (issue) => {
-    alert(`${issue.coords[0]}, ${issue.coords[1]}`);
+    navigate(`/issues/${issue.id}`);
+  };
+
+  const handleMapClick = async (e) => {
+    // ?
   };
 
   return (
@@ -49,10 +35,10 @@ const CityMap = ({ issues }) => {
       <YMaps query={{ apikey: "ef6ce2bf-6d1d-4567-aaf2-5ca3e0d8da70" }}>
         <Map
           defaultState={defaultState}
-          state={{ ...defaultState, center: defaultState.center }}
           width="100%"
           height="100%"
           onClick={handleMapClick}
+          instanceRef={mapRef}
           options={{
             suppressMapOpenBlock: true,
             // restrictMapArea: true // Sets for one city only!
@@ -65,7 +51,7 @@ const CityMap = ({ issues }) => {
                 groupByCoordinates: true
               }}
             >
-            {issues.map((issue, index) => (
+            {issues !== null && issues.length > 0 ? issues.map((issue, index) => (
               <Placemark
                 key={index}
                 geometry={issue.coords}
@@ -76,26 +62,26 @@ const CityMap = ({ issues }) => {
                 onMouseEnter={() => handleMouseEnter(issue)}
                 onMouseLeave={handleMouseLeave}
               />
-            ))}
+            )) : <></>}
           </Clusterer>
         </Map>
       </YMaps>
 
-      {hoveredPoint && hoveredPoint.screenPosition && (
+      {hoveredPoint && (
         <div
-          className="hovered-point-window"
+          className="absolute bg-white p-4 rounded-lg shadow-lg border border-gray-300 z-50"
           style={{
-            top: `${hoveredPoint.screenPosition[1] - 230}px`,
-            left: `${hoveredPoint.screenPosition[0] + 20}px`,
+            top: '20px',
+            left: '20px',
+            maxWidth: '300px',
           }}
         >
-          <p><strong>{hoveredPoint.title}</strong></p>
-          <p>{hoveredPoint?.status}</p>
-          <p>Местонахождение: {`${hoveredPoint.coords[0]}, ${hoveredPoint.coords[1]}`}</p>
+          <MiniIssueCard issue={hoveredPoint} key={hoveredPoint.id} />
         </div>
       )}
     </div>
   )
 }
+
 
 export default CityMap;

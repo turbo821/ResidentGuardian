@@ -1,6 +1,26 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import api from "../../api";
+import IssueCard from "../IssuesPage/IssueCard";
 
-const   HotIssuesSection = ({ issues }) => {
+const   HotIssuesSection = () => {
+  const [issues, setIssues] = useState([]);
+  const SIZE = 3;
+
+  useEffect(() => {
+    fetchHotIssues(); 
+  }, []);
+
+  const fetchHotIssues = async() => {
+    try {
+      const response = await api.get(`/api/issues?size=${SIZE}`);
+      setIssues(response.data);
+    }
+    catch(err) {
+      console.log(err.response);
+    }
+  }
+
   return (
           <section className="container mx-auto px-4 py-16 space-y-16">
           <div className="mb-6">
@@ -21,17 +41,6 @@ const   HotIssuesSection = ({ issues }) => {
             </Link>
           </div>
         </section>
-  )
-};
-
-const IssueCard = ({ issue }) => {
-  return (
-    <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-      <img src={issue.image} alt={issue.title} className="w-full h-40 object-cover" />
-      <div className="p-4">
-        <h3 className="text-lg font-semibold">{issue.title}</h3>
-      </div>
-    </div>
   )
 };
 

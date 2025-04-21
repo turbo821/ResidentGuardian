@@ -1,5 +1,21 @@
+import api from "../../api";
 
-const SearchFilterPanel = ({ searchText, setSearchText, handleSearch, setShowFilters, showFilters }) => {
+const SearchFilterPanel = ({ searchText, setIssues, setSearchText, setShowFilters, showFilters }) => {
+
+  const handleSearch = async() => {
+    const params = new URLSearchParams();
+
+    if(!!searchText) {
+      params.append("search", searchText);
+    }
+    
+    try {
+      const response = await api.get(`/api/issues?${params.toString()}`);
+      setIssues(response.data);
+    } catch(err) {
+      console.log(err.response);
+    }
+  }
   return (
     <div className="flex flex-col sm:flex-row items-stretch gap-4 mt-6">
       <input
@@ -8,7 +24,6 @@ const SearchFilterPanel = ({ searchText, setSearchText, handleSearch, setShowFil
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
         onKeyDown={(e) => {
-          e.preventDefault();
           if (e.key === "Enter") {
             handleSearch();
           }

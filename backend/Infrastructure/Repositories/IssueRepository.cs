@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces;
+using Domain.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,14 +9,20 @@ namespace Infrastructure.Repositories
     public class IssueRepository : IIssueRepository
     {
         private readonly AppGuardContext _context;
+        private readonly IEnumerable<IFilter<Issue>> _filters;
 
-        public IssueRepository(AppGuardContext context)
+        public IssueRepository(AppGuardContext context, IEnumerable<IFilter<Issue>> filters)
         {
             _context = context;
+            _filters = filters;
         }
-        public async Task<IEnumerable<Issue>> GetAll()
+        public async Task<IEnumerable<Issue>> GetAll(IssueFilterRequest request)
         {
-            var issues = await _context.Issues
+            IQueryable<Issue> issuesQuery = _context.Issues.OrderByDescending(issue => issue.CreatedAt);
+            foreach(var filter in _filters)
+                issuesQuery = filter.Apply(issuesQuery, request);
+
+            var issues = await issuesQuery
                 .Include(i => i.Images).ToListAsync();
 
             return issues;

@@ -8,7 +8,6 @@ const Header = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  console.log(user?.roles);
   const handleLogout = async () => {
     await logout();
     navigate("/login");

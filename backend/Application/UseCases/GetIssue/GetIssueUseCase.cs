@@ -18,7 +18,7 @@ namespace Application.UseCases.GetIssue
 
             var issueDto = new GetIssueResponse(issue.Id,
                 issue.Title, issue.Status, issue.Description, issue.Category.Title, 
-                issue.Images.Select(im => im.Uri).ToList(), issue.Answers);
+                issue.Location, issue.Images.Select(im => im.Uri).ToList(), issue.Answers);
 
             return issueDto;
         }

@@ -1,10 +1,11 @@
 ﻿using Domain.Entities;
+using Domain.Models;
 
 namespace Domain.Interfaces
 {
     public interface IIssueRepository
     {
-        Task<IEnumerable<Issue>> GetAll();
+        Task<IEnumerable<Issue>> GetAll(IssueFilterRequest request);
         Task<Issue?> GetById(Guid id);
         Task<Guid?> Add(Issue issue);
         Task<bool> Update(Issue issue);

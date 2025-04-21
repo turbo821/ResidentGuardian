@@ -3,24 +3,3 @@
   flex: 1;
 }
 
-.hovered-point-window {
-  position: absolute;
-  top: 50px;
-  left: 50px;
-  background-color: #34495e;
-  color: #ecf0f1;
-  padding: 15px;
-  border: 1px solid #1abc9c;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
-  width: 300px;
-  transition: transform 0.2s ease, opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.hovered-point-window:hover {
-  transform: translateY(-5px); 
-  opacity: 0.9;
-}
-

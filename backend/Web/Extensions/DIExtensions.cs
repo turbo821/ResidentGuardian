@@ -1,4 +1,5 @@
-﻿using Application.UseCases.AddModeratorCategories;
+﻿using Application.Filters.IssueFilters;
+using Application.UseCases.AddModeratorCategories;
 using Application.UseCases.AssignModerator;
 using Application.UseCases.CreateCategory;
 using Application.UseCases.CreateIssue;
@@ -13,6 +14,7 @@ using Application.UseCases.GetModerators;
 using Application.UseCases.UnassignModerator;
 using Application.UseCases.UpdateCategory;
 using Application.UseCases.UpdateIssue;
+using Domain.Entities;
 using Domain.Interfaces;
 using Infrastructure.Repositories;
 
@@ -46,6 +48,15 @@ namespace Web.Extensions
             services.AddScoped<IIssueRepository, IssueRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+        }
+
+        public static void AddFilters(this IServiceCollection services)
+        {
+            services.AddScoped<IFilter<Issue>, TakeFilter>();
+            services.AddScoped<IFilter<Issue>, CategoryFilter>();
+            services.AddScoped<IFilter<Issue>, StatusFilter>();
+            services.AddScoped<IFilter<Issue>, TimeRangeFilter>();
+            services.AddScoped<IFilter<Issue>, SearchFilter>();
         }
     }
 }
