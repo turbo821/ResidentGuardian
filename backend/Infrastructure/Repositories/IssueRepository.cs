@@ -28,6 +28,15 @@ namespace Infrastructure.Repositories
             return issues;
         }
 
+        public async Task<IEnumerable<Issue>> GetAllByUser(Guid userId)
+        {
+            var issues = await _context.Issues
+                .Where(issue => issue.UserId == userId)
+                .OrderByDescending(issue => issue.CreatedAt)
+                .ToListAsync();
+
+            return issues;
+        }
         public async Task<Issue?> GetById(Guid id)
         {
             var issue = await _context.Issues

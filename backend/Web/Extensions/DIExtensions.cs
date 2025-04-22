@@ -11,6 +11,7 @@ using Application.UseCases.GetAllIssues;
 using Application.UseCases.GetCategories;
 using Application.UseCases.GetIssue;
 using Application.UseCases.GetModerators;
+using Application.UseCases.GetUserIssues;
 using Application.UseCases.UnassignModerator;
 using Application.UseCases.UpdateCategory;
 using Application.UseCases.UpdateIssue;
@@ -41,6 +42,8 @@ namespace Web.Extensions
             services.AddScoped<ICreateModeratorUseCase, CreateModeratorUseCase>();
             services.AddScoped<IAddModeratorCategoriesUseCase, AddModeratorCategoriesUseCase>();
             services.AddScoped<IDeleteModeratorUseCase, DeleteModeratorUseCase>();
+
+            services.AddScoped<IGetUserIssuesUseCase, GetUserIssuesUseCase>();
         }
 
         public static void AddRepositories(this IServiceCollection services)

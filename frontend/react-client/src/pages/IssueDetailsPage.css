@@ -1,0 +1,14 @@
+.slick-slider-custom .slick-prev:before,
+.slick-slider-custom .slick-next:before {
+  color: #3b82f6;
+}
+
+.slick-dots li button:before {
+  font-size: 9px !important;
+  color: #5591f1 !important;
+  opacity: 1 !important;
+}
+
+.slick-dots li.slick-active button:before {
+  color: #0e5cda !important;
+}

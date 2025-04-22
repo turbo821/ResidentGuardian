@@ -104,12 +104,13 @@ namespace Infrastructure.Auth
             var roles = await _userManager.GetRolesAsync(user);
 
             return new UserProfileDto
-            {
-                Id = user.Id,
-                FullName = user.FullName,
-                Email = user.Email!,
-                Roles = roles.ToList()
-            };
+            (
+                user.Id,
+                user.FullName,
+                user.Email!,
+                roles.ToList(),
+                user.CreatedAt
+            );
         }
     }
 }
