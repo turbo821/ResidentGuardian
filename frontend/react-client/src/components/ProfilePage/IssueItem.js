@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import viewStatus from "../../functions/viewStatus";
+import IssueStatus from "./IssueStatus";
 
 const IssueItem = ({ issue }) => {
   const createdDate = (new Date(issue?.createdAt)).toLocaleDateString();
@@ -12,17 +12,7 @@ const IssueItem = ({ issue }) => {
         <p className="text-gray-600 text-sm mt-1">{issue.location}</p>
         <p className="text-gray-600 text-sm">Создано: {createdDate}</p>
       </div>
-      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-        issue.status === 0 
-          ? "bg-green-100 text-green-800" 
-          : issue.status === 1 
-            ? "bg-yellow-100 text-yellow-800" 
-            : issue.status === 2 
-              ? "bg-blue-100 text-blue-800"
-              : "bg-red-100 text-red-800"
-      }`}>
-        {viewStatus(issue.status)}
-      </span>
+      <IssueStatus issue={issue} />
     </div>
     <Link 
       to={`/issues/${issue.id}`} 

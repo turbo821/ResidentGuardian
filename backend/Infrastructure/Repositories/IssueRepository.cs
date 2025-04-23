@@ -37,6 +37,17 @@ namespace Infrastructure.Repositories
 
             return issues;
         }
+
+        public async Task<IEnumerable<Issue>> GetAllByModerator(Guid moderatorId)
+        {
+            var issues = await _context.Issues
+                .Where(issue => issue.Category.ModeratorCategories.Any(mc => mc.ModeratorId == moderatorId))
+                .OrderByDescending(issue => issue.CreatedAt)
+                .ToListAsync();
+
+            return issues;
+        }
+
         public async Task<Issue?> GetById(Guid id)
         {
             var issue = await _context.Issues

@@ -11,6 +11,7 @@ namespace Domain.Interfaces
         Task<bool> Delete(Category category);
         Task<bool> IsExist(Guid id);
 
+        Task<IEnumerable<Category>?> GetModeratorCategories(Guid moderatorId);
         Task<bool> AddModeratorCategories(Guid moderatorId, IEnumerable<Guid> categoryIds);
         Task<bool> RemoveModeratorCategories(Guid moderatorId);
     }

@@ -4,8 +4,6 @@ import ConfirmOpen from "./ConfirmOpen";
 const ModeratorCard = ({ moderator, categories, handleDeleteModerator, unassignModerator }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  console.log(moderator);
-  console.log(moderator.moderatorCategories.map(catId => categories.find(c => c.id === catId).title));
   return (
     <div className="flex flex-col md:flex-row items-center justify-around gap-4 p-4 border rounded-xl shadow-sm bg-white">
       <div className="flex flex-col">

@@ -86,7 +86,7 @@ namespace Web.Controllers
             return Ok();
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> RemoveIssue(Guid id)

@@ -83,11 +83,11 @@ const Filters = ({ setIssues, searchText, setSearchText }) => {
             onChange={(e) => setSelectCategoryId(e.target.value)}
             className="p-3 border border-gray-300 rounded-lg bg-white"
           >
-            <option key="99" value={null}>Все</option>
+            <option key="99" value={"99"}>Все</option>
             {categories !== null && categories.length > 0 ? categories.map((cat, index) => (
               <option key={cat.id} value={cat.id}>{cat.title}</option>
             )) 
-            : <option key="98" value={null}>Категории не найдены</option>}
+            : <option key="98" value={"98"}>Категории не найдены</option>}
           </select>
         </div>
 

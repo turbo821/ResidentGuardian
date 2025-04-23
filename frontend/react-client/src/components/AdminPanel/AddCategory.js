@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import api from "../../api";
+import UploadImage from "../ReportPage/UploadImage";
 
 const AddCategory = ({ setCategories }) => {
   const fileInputRef = useRef(null);
@@ -33,6 +34,14 @@ const AddCategory = ({ setCategories }) => {
     });
   };
   
+  const handleImageUpload = (e) => {
+    setNewCategory({...newCategory, image: e.target.files[0]})
+  };
+
+  const removeImage = () => {
+    setNewCategory({...newCategory, image: null})
+  };
+
   return (
     <div className="bg-gray-100 p-4 rounded-lg shadow-md md:col-span-2">
       <h3 className="text-xl font-bold text-gray-800">Добавление категории</h3>
@@ -51,17 +60,27 @@ const AddCategory = ({ setCategories }) => {
           onChange={e => setNewCategory({...newCategory, description: e.target.value})} 
           className="w-full p-2 border rounded-lg mb-3"
         />
-        <label className="block text-gray-700 font-bold">Выбор картинки:</label>
+
+        {/* <label className="block text-gray-700 font-bold">Выбор картинки:</label>
         <input 
           ref={fileInputRef}
           type="file" 
           accept="image/*"
           onChange={e => setNewCategory({...newCategory, image: e.target.files[0]})} 
           className="block text-gray-700 font-bold p-2 mb-3"
+        /> */}
+
+        <UploadImage 
+          fileInputRef={fileInputRef} 
+          handleImageUpload={handleImageUpload} 
+          image={newCategory.image} 
+          removeImage={removeImage} 
+          multiple={false} 
         />
+
         <button 
           onClick={handleAddCategory} 
-          className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition"
+          className="mt-2 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition"
         >
           Добавить категорию
         </button>

@@ -9,15 +9,30 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import "./IssueDetailsPage.css";
+import { useAuth } from "../context/AuthContext";
+import ModeratorForm from "../components/IssueDetailsPage/ModeratorForm";
+import CommentForm from "../components/IssueDetailsPage/CommentForm";
+import Comment from "../components/IssueDetailsPage/Comment";
 
 const IssueDetailsPage = () => {
   const { id } = useParams();
+  const { user } = useAuth();
   const [issue, setIssue] = useState(null);
-
   const [modalImage, setModalImage] = useState(null);
+  const navigate = useNavigate();
+
+  const isModerator = user?.roles?.includes("Moderator");
+  const [newAnswer, setNewAnswer] = useState({
+    text: "",
+    images: [],
+    status: 0
+  });
+
+  const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState('');
+
   const openModal = (img) => setModalImage(img);
   const closeModal = () => setModalImage(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -36,18 +51,29 @@ const IssueDetailsPage = () => {
   }, [modalImage, setModalImage]);
 
   useEffect(() => {
-    const fetchIssue = async(id) => {
-      try {
-        const response = await api.get(`/api/issues/${id}`);
-        setIssue(response.data);
-      }
-      catch(err) {
-        console.log(err.response);
-      }
-    }
-
     fetchIssue(id); 
+    //fetchIssueComments(id);
   }, [id]);
+
+  const fetchIssue = async(id) => {
+    try {
+      const response = await api.get(`/api/issues/${id}`);
+      setIssue(response.data);
+    }
+    catch(err) {
+      console.log(err.response);
+    }
+  }
+
+  const fetchIssueComments = async(id) => {
+    try {
+      const response = await api.get(`/api/issues/${id}/comments`);
+      setComments(response.data);
+    }
+    catch(err) {
+      console.log(err.response);
+    }
+  }
 
   if (!issue) {
     return (
@@ -103,26 +129,96 @@ const IssueDetailsPage = () => {
           </Slider>
         </div>
   
-        <p className="text-gray-600 mb-2"><strong>Статус:</strong> {viewStatus(issue.status)}</p>
-        <p className="text-gray-600 mb-2"><strong>Категория:</strong> {issue.category}</p>
+        <div className="flex items-center gap-2">
+            <span className={`inline-block w-3 h-3 rounded-full ${
+              issue.status === 0 
+                ? "bg-green-500" 
+                : issue.status === 1 
+                  ? "bg-yellow-500" 
+                  : issue.status === 2 
+                    ? "bg-blue-500"
+                    : "bg-red-500"
+            }`}></span>
+            <p className="text-gray-700"><strong>Статус:</strong> {viewStatus(issue.status)}</p>
+          </div>
+        
+        <p className="text-gray-700 mb-2"><strong>Категория:</strong> {issue.category}</p>
         <p className="text-gray-700 mb-2"><strong>Местоположение:</strong> {issue.location}</p>
         <p className="text-gray-700 mb-6"><strong>Описание:</strong> {issue?.description}</p>
   
         <Link 
           onClick={() => navigate(-1)} 
-          className="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition"
+          className="inline-block hover:text-green-500 text-green-400 font-bold py-3 px-6 rounded-lg transition"
         >
           Назад к обращениям
         </Link>
-  
-        {issue.Answers && issue.Answers.length > 0 && (
-          <div className="mt-8">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Ответ(ы) модератора</h3>
-            {issue.Answers.map((response, idx) => (
-              <Answer answer={response} idx={idx} openModal={openModal} />
-            ))}
-          </div>
+
+        <div className="mt-8">
+          {issue.Answers && issue.Answers.length > 0 && (
+            <>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Ответы модератора</h3>
+              {issue.Answers.map((answer, idx) => (
+                <Answer key={idx} answer={answer} openModal={openModal} />
+              ))}
+            </>
+          )}
+
+          {isModerator && (
+            <Answer 
+              answer={{
+                text: "Пример ответа модератора. Мы рассмотрели ваше обращение и передали его в соответствующий отдел. Ожидайте ответа в течение 3 рабочих дней.",
+                images: [],
+                createdAt: new Date().toISOString(),
+                status: 2
+              }} 
+              openModal={openModal}
+              isExample={true}
+              previousStatus={0}
+            />
+          )}
+        </div>
+
+        {isModerator && (
+          <ModeratorForm answer={newAnswer} setAnswer={setNewAnswer} />
         )}
+
+        <div className="mt-8">
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">Комментарии</h3>
+          
+          <CommentForm commentText={commentText} setCommentText={setCommentText} />
+          
+          <div className="space-y-4">
+            {comments.length > 0 ? (
+              comments.map((comment, idx) => (
+                <Comment key={idx} comment={comment} />
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-4">Пока нет комментариев</p>
+            )}
+            
+            {comments.length === 0 && (
+              <>
+                <Comment 
+                  comment={{
+                    text: "Пример комментария пользователя. Я тоже сталкивался с этой проблемой в прошлом месяце!",
+                    user: { name: "Иван Петров" },
+                    createdAt: new Date().toISOString()
+                  }} 
+                  isExample={true}
+                />
+                <Comment 
+                  comment={{
+                    text: "Спасибо за обращение, надеюсь проблему решат быстро!",
+                    user: { name: "Мария Сидорова" },
+                    createdAt: new Date().toISOString()
+                  }} 
+                  isExample={true}
+                />
+              </>
+            )}
+          </div>
+        </div>
+
       </div>
   
       {modalImage && (

@@ -14,7 +14,7 @@ const AssignModerator = ({ categories = [], setModerators }) => {
 
   const handleAssignModerator = async(email, categoryIds) => {
     try {
-      const response = await api.post('/api/moderation/categories', {
+      const response = await api.post('/api/admin/moderator-categories', {
         email: email,
         categoryIds: categoryIds
       });

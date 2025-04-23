@@ -31,7 +31,7 @@ const AdminPanel = () => {
 
   const fetchAllModerators = async() => {
     try {
-      const response = await api.get("/api/moderation");
+      const response = await api.get("/api/admin/moderators");
       setModerators(response.data);
     }
     catch(err) {

@@ -21,9 +21,8 @@ const AddModerator = ({ setModerators }) => {
   
   const fetchRegisterModerator = useCallback(async (fullName, email, password) => {
     try {
-        const response = await api.post("/api/moderation", { fullName, email, password });
+        const response = await api.post("/api/admin/moderators", { fullName, email, password });
         const newModerator = response.data;
-        console.log(newModerator);
         setModerators((prev) => [...prev, newModerator]);
     } catch (error) {
         console.error("Register error: ", error.response);
@@ -32,10 +31,8 @@ const AddModerator = ({ setModerators }) => {
 
   const fetchAssignModeratorrole = useCallback(async (email) => {
     try {
-      console.log(email);
-      const response = await api.post("/api/moderation/assign-moderator", { email });
+      const response = await api.post("/api/admin/assign-moderator", { email });
       const newModerator = response.data;
-      console.log(newModerator);
       setModerators((prev) => [...prev, newModerator]);
     } catch (error) {
       console.error("Assign moderator role error: ", error.response);

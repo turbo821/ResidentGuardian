@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import api from "../../api";
 import ModeratorCard from "./ModeratorCard";
 
@@ -6,7 +5,7 @@ const ModeratorList = ({ moderators, categories, setModerators }) => {
 
   const unassignModerator = async(id) => {
     try {
-      await api.delete(`/api/moderation/unassign-moderator/${id}`);
+      await api.delete(`/api/admin/unassign-moderator/${id}`);
       setModerators((prev) => prev.filter((mod) => mod.id !== id));
     } catch(err) {
       console.log(err.response);
@@ -15,7 +14,7 @@ const ModeratorList = ({ moderators, categories, setModerators }) => {
 
   const handleDeleteModerator = async(id) => {
     try {
-      await api.delete(`/api/moderation/${id}`);
+      await api.delete(`/api/admin/moderators/${id}`);
     }
     catch(err) {
       console.log(err.response);

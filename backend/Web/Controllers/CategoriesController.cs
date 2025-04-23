@@ -1,5 +1,4 @@
 ﻿using Application.UseCases.CreateCategory;
-using Application.UseCases.CreateIssue;
 using Application.UseCases.DeleteCategory;
 using Application.UseCases.GetCategories;
 using Application.UseCases.UpdateCategory;
@@ -34,7 +33,7 @@ namespace Web.Controllers
             return Ok(response);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddCategory([FromForm] CreateCategoryRequest request)
         {
@@ -49,7 +48,7 @@ namespace Web.Controllers
             return Ok(category);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<IActionResult> UpdateCategory([FromForm] UpdateCategoryRequest request)
         {
@@ -64,7 +63,7 @@ namespace Web.Controllers
             return Ok(category);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> RemoveCategory(Guid id)

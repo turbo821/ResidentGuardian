@@ -1,101 +1,47 @@
-﻿using Application.Dtos;
-using Application.UseCases.AddModeratorCategories;
-using Application.UseCases.AddModeratorRoles;
-using Application.UseCases.AssignModerator;
-using Application.UseCases.CreateModerator;
-using Application.UseCases.DeleteModerator;
-using Application.UseCases.GetModerators;
-using Application.UseCases.UnassignModerator;
+﻿using Application.UseCases.GetModeratorCategories;
+using Application.UseCases.GetModeratorIssues;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Web.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Moderator")]
     [Route("api/moderation")]
     [ApiController]
     public class ModerationController : ControllerBase
     {
-        private readonly ICreateModeratorUseCase _createModerator;
-        private readonly IGetModeratorsUseCase _getModerators;
-        private readonly IAssignModeratorUseCase _assignModerator;
-        private readonly IUnassignModeratorUseCase _unassignModerator;
-        private readonly IAddModeratorCategoriesUseCase _addModeratorCategories;
-        private readonly IDeleteModeratorUseCase _deleteModerator;
+        private readonly IGetModeratorIssuesUseCase _getModeratorIssues;
+        private readonly IGetModeratorCategoriesUseCase _getModeratorCategories;
 
-        public ModerationController(ICreateModeratorUseCase createModerator,
-            IGetModeratorsUseCase getModerators,
-            IAssignModeratorUseCase assignModerator,
-            IUnassignModeratorUseCase unassignModerator,
-            IAddModeratorCategoriesUseCase addModeratorCategories,
-            IDeleteModeratorUseCase deleteModerator)
+        public ModerationController(IGetModeratorIssuesUseCase getModeratorIssues, IGetModeratorCategoriesUseCase getModeratorCategories)
         {
-            _createModerator = createModerator;
-            _getModerators = getModerators;
-            _assignModerator = assignModerator;
-            _unassignModerator = unassignModerator;
-            _addModeratorCategories = addModeratorCategories;
-            _deleteModerator = deleteModerator;
+            _getModeratorIssues = getModeratorIssues;
+            _getModeratorCategories = getModeratorCategories;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetModerators()
+        [HttpGet("issues")]
+        public async Task<IActionResult> GetModeratorIssues()
         {
-            var response = await _getModerators.Execute();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) return Unauthorized();
+
+            var userGuid = Guid.Parse(userId);
+            var response = await _getModeratorIssues.Execute(userGuid);
 
             return Ok(response);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateModerator([FromBody] RegisterRequest request)
+        [HttpGet("categories")]
+        public async Task<IActionResult> GetModeratorCategories()
         {
-            var response = await _createModerator.Execute(request);
-            if (response is null) return BadRequest();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) return Unauthorized();
+
+            var userGuid = Guid.Parse(userId);
+            var response = await _getModeratorCategories.Execute(userGuid);
 
             return Ok(response);
-        }
-
-        [HttpPost("assign-moderator")]
-        public async Task<IActionResult> AssignModerator([FromBody] AssignModeratorRequest request)
-        {
-            var response = await _assignModerator.Execute(request);
-
-            if(response is null)
-                return NotFound();
-
-            return Ok(response);
-        }
-
-        [HttpPost("categories")]
-        public async Task<IActionResult> AddModeratorCategories([FromBody] AddModeratorCategoriesRequest request)
-        {
-            var response = await _addModeratorCategories.Execute(request);
-
-            if (response is null) return BadRequest();
-
-            return Ok(response);
-        }
-
-        [HttpDelete("unassign-moderator/{id}")]
-        public async Task<IActionResult> UnassignModerator(Guid id)
-        {
-            var response = await _unassignModerator.Execute(id);
-
-            if (!response)
-                return NotFound();
-
-            return Ok();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteModerator(Guid id)
-        {
-            var response = await _deleteModerator.Execute(id);
-
-            if (!response)
-                return NotFound();
-
-            return Ok();
         }
     }
 }

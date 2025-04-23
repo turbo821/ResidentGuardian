@@ -13,7 +13,7 @@ import AdminPanel from './pages/AdminPanel';
 import ProfilePage from './pages/ProfilePage';
 import { AuthProvider } from './context/AuthContext';
 import IssueDetailsPage from './pages/IssueDetailsPage';
-import ModeratorPanel from './pages/ModeratorPage';
+import ModeratorPanel from './pages/ModeratorPanel';
 
 const App = () => {
   return (

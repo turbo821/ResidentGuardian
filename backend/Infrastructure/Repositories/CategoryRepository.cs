@@ -65,6 +65,16 @@ namespace Infrastructure.Repositories
             return _context.Categories.AnyAsync(x => x.Id == id);
         }
 
+        public async Task<IEnumerable<Category>?> GetModeratorCategories(Guid moderatorId)
+        {
+            var moderatorCategories = await _context.ModeratorCategories
+                .Where(mc => mc.ModeratorId == moderatorId)
+                .Select(mc => mc.Category)
+                .ToListAsync();
+
+            return moderatorCategories;
+        }
+
         public async Task<bool> AddModeratorCategories(Guid moderatorId, IEnumerable<Guid> categoryIds)
         {
             var existingCategories = await _context.ModeratorCategories
@@ -89,6 +99,8 @@ namespace Infrastructure.Repositories
             var existingCategories = await _context.ModeratorCategories
                 .Where(mc => mc.ModeratorId == moderatorId)
                 .ToListAsync();
+
+            if(existingCategories is null || existingCategories.Count == 0) return true;
 
             _context.ModeratorCategories.RemoveRange(existingCategories);
 

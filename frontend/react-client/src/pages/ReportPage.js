@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import MapModal from "../components/MapModal";
 import axios from "axios";
 import api from "../api";
+import UploadImage from "../components/ReportPage/UploadImage";
 
 const ReportPage = () => {
   const fileInputRef = useRef(null);
@@ -129,6 +130,10 @@ const ReportPage = () => {
     };
   };
 
+  const removeImage = (index) => {
+    setImages(images.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="min-h-[90vh] bg-blue-100 flex flex-col items-center py-12 px-4">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-3xl w-full">
@@ -167,15 +172,12 @@ const ReportPage = () => {
               <option key="0" disabled>Категорий нет</option>
             )}
           </select>
-
-          <label className="block text-gray-700 font-bold">Выбор фото:</label>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageUpload}
-            className="w-full p-2 border rounded-lg"
+          
+          <UploadImage 
+            fileInputRef={fileInputRef} 
+            handleImageUpload={handleImageUpload} 
+            images={images} 
+            removeImage={removeImage}
           />
 
           <input
