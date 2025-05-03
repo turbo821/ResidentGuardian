@@ -31,7 +31,13 @@ const Answer = ({ answer, openModal }) => {
           {statusChanged && (
             <div className="flex items-center mt-1 text-sm text-gray-600">
               <span className="mr-2">Статус изменён:</span>
-              <span className={`px-2 py-0.5 rounded bg-gray-200 text-gray-800`}>
+              <span className={`px-2 py-0.5 rounded ${
+                answer.oldStatus === 0 ? 'bg-green-100 text-green-800' :
+                answer.oldStatus === 1 ? 'bg-yellow-100 text-yellow-800' :
+                answer.oldStatus === 2 ? "bg-blue-100 text-blue-800" : 
+                answer.oldStatus === 3 ? "bg-red-100 text-red-800" :
+                'bg-blue-100 text-blue-800'
+              }`}>
                 {viewStatus(answer.oldStatus)}
               </span>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mx-1 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -69,15 +69,6 @@ namespace Infrastructure.Repositories
 
         public async Task<bool> Update(Issue issue)
         {
-            // TODO?
-            //int updatedRows = await _context.Issues
-            //    .Where(i => i.Id == issue.Id)
-            //    .ExecuteUpdateAsync(setters => setters
-            //        .SetProperty(i => i.Status, issue.Status)
-            //        .SetProperty(i => i.Description, issue.Description)
-            //    );
-
-            //return updatedRows > 0;
             if (!await IsExist(issue.Id))
                 return false;
 
@@ -110,6 +101,18 @@ namespace Infrastructure.Repositories
             issue.Status = newStatus;
             await Save();
             return oldStatus;
+        }
+
+        public async Task<bool> CheckModeratorToIssueAccess(Guid moderatorId, Guid issueId)
+        {
+            var moderatorCategoriesId = await _context.ModeratorCategories
+                .Where(mc => mc.ModeratorId == moderatorId).Select(mc => mc.CategoryId)
+                .ToListAsync();
+
+            var issue = await _context.Issues.FirstOrDefaultAsync(i => i.Id == issueId);
+
+            return issue is not null && moderatorCategoriesId.Contains(issue.CategoryId);
+                
         }
     }
 }

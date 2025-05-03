@@ -1,4 +1,5 @@
 ﻿using Application.UseCases.GetUserIssues;
+using Domain.Models;
 
 namespace Application.UseCases.GetModeratorIssues
 {

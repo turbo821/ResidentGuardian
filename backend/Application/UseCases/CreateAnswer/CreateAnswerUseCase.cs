@@ -20,6 +20,9 @@ namespace Application.UseCases.CreateAnswer
 
         public async Task<AnswerDto?> Execute(CreateAnswerRequest request)
         {
+            var access = await _issueRepo.CheckModeratorToIssueAccess(request.ModeratorId, request.IssueId);
+            if (!access) return null;
+
             List<AnswerImage> imageUris = new List<AnswerImage>();
             if (request.Images != null)
             {

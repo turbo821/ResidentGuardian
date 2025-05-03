@@ -8,28 +8,23 @@ const ModeratorPanel = () => {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const [issues, setIssues] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [activeTab, setActiveTab] = useState('new');
+  const [categories, setCategories] = useState(user?.moderatorCategories ?? []);
+  const [activeTab, setActiveTab] = useState('pending');
 
   useEffect(() => {
     fetchModerIssues();
-    fetchModerCategories();
   }, []);
+
+  useEffect(() => {
+    if (user?.moderatorCategories) {
+      setCategories(user.moderatorCategories);
+    }
+  }, [user?.moderatorCategories]);
 
   const fetchModerIssues = async() => {
     try {
       const response = await api.get("/api/moderation/issues");
       setIssues(response.data);
-    }
-    catch(err) {
-      console.log(err.response);
-    }
-  }
-
-  const fetchModerCategories = async() => {
-    try {
-      const response = await api.get("/api/moderation/categories");
-      setCategories(response.data);
     }
     catch(err) {
       console.log(err.response);
@@ -50,16 +45,19 @@ const ModeratorPanel = () => {
     return null;
   }
 
-  const newIssues = issues.filter(issue => issue.status === 0);
-  const inProgressIssues = issues.filter(issue => issue.status === 1);
-  const resolvedIssues = issues.filter(issue => issue.status === 2 || issue.status === 3);
+  const pendingIssues = issues ? issues.filter(issue => issue.status === 0) : [];
+  const inProgressIssues = issues ? issues.filter(issue => issue.status === 1) : [];
+  const resolvedIssues = issues ? issues.filter(issue => issue.status === 2) : [];
+  const rejectedIssues = issues ? issues.filter(issue => issue.status === 3) : [];
 
   const getActiveIssues = () => {
     switch(activeTab) {
-      case 'new': return newIssues;
+      case 'all': return issues;
+      case 'pending': return pendingIssues;
       case 'inProgress': return inProgressIssues;
       case 'resolved': return resolvedIssues;
-      default: return newIssues;
+      case 'rejected': return rejectedIssues;
+      default: return pendingIssues;
     }
   };
 
@@ -89,13 +87,13 @@ const ModeratorPanel = () => {
 
         <div className="flex border-b border-gray-200 mb-6">
           <button
-            onClick={() => setActiveTab('new')}
-            className={`px-4 py-2 font-medium text-sm flex items-center gap-2 ${activeTab === 'new' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+            onClick={() => setActiveTab('pending')}
+            className={`px-4 py-2 font-medium text-sm flex items-center gap-2 ${activeTab === 'pending' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
           >
             <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-            Новые
+            На рассмотрении
             <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-0.5 rounded-full">
-              {newIssues.length}
+              {pendingIssues.length}
             </span>
           </button>
           
@@ -104,7 +102,7 @@ const ModeratorPanel = () => {
             className={`px-4 py-2 font-medium text-sm flex items-center gap-2 ${activeTab === 'inProgress' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
           >
             <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
-            В обработке
+            В работе
             <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-0.5 rounded-full">
               {inProgressIssues.length}
             </span>
@@ -115,9 +113,31 @@ const ModeratorPanel = () => {
             className={`px-4 py-2 font-medium text-sm flex items-center gap-2 ${activeTab === 'resolved' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
           >
             <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-            Решенные
+            Решено
             <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-0.5 rounded-full">
               {resolvedIssues.length}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('rejected')}
+            className={`px-4 py-2 font-medium text-sm flex items-center gap-2 ${activeTab === 'rejected' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+          >
+            <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+            Отклонено
+            <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-0.5 rounded-full">
+              {rejectedIssues.length}
+            </span>
+          </button>
+
+          <button
+              onClick={() => setActiveTab('all')}
+              className={`px-4 py-2 font-medium text-sm flex items-center gap-2 ${activeTab === 'all' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+          >
+            <span className="w-2 h-2 bg-gray-500 rounded-full"></span>
+            Все
+            <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-0.5 rounded-full">
+              {issues.length}
             </span>
           </button>
         </div>
@@ -128,9 +148,11 @@ const ModeratorPanel = () => {
           ) : (
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
               <p className="text-gray-500">
-                {activeTab === 'new' && 'Нет новых обращений'}
+              {activeTab === 'all' && 'Нет обращений'}
+                {activeTab === 'pending' && 'Нет новых обращений'}
                 {activeTab === 'inProgress' && 'Нет обращений в обработке'}
                 {activeTab === 'resolved' && 'Нет решенных обращений'}
+                {activeTab === 'rejected' && 'Нет отклоненных обращений'}
               </p>
             </div>
           )}

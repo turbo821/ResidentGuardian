@@ -1,6 +1,4 @@
-﻿using Application.UseCases.GetModeratorIssues;
-
-namespace Application.UseCases.GetModeratorCategories
+﻿namespace Application.UseCases.GetModeratorCategories
 {
     public interface IGetModeratorCategoriesUseCase
     {

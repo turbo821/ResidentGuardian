@@ -2,6 +2,7 @@
 using Application.UseCases.GetUserIssues;
 using AutoMapper;
 using Domain.Interfaces;
+using Domain.Models;
 
 namespace Application.UseCases.GetModeratorIssues
 {

@@ -14,5 +14,6 @@ namespace Domain.Interfaces
         Task<bool> Delete(Issue issue);
         Task<bool> IsExist(Guid id);
         Task<IssueStatus?> ChangeStatus(Guid id, IssueStatus newStatus);
+        Task<bool> CheckModeratorToIssueAccess(Guid moderatorId, Guid issueId);
     }
 }

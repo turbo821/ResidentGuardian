@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
-  const { user, logout } = useAuth();
+  const { user, isLoading, logout } = useAuth();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -16,6 +16,23 @@ const Header = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  if (isLoading) {
+    return <header className="bg-blue-600 text-white shadow-md sticky top-0 z-50">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-3">
+            <img 
+              src="/problem-icon.png" 
+              className="w-10 h-10 lg:w-12 lg:h-12 object-contain" 
+              alt="Логотип"
+            />
+            <h1 className="text-lg lg:text-xl font-bold whitespace-nowrap">ResidentGuardian</h1>
+          </div>
+        </div>
+      </div>
+    </header>;
+  }
 
   return (
     <header className="bg-blue-600 text-white shadow-md sticky top-0 z-50">

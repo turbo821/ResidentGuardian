@@ -1,6 +1,7 @@
 import axios from "axios";
 const baseURL = process.env.REACT_APP_API_URL ?? "http://localhost:5059";
 const imagesURL = process.env.REACT_APP_IMAGES_URL ?? "http://localhost:5059/upload"
+
 const api = axios.create({
   baseURL: baseURL,
   withCredentials: true
@@ -9,6 +10,23 @@ const api = axios.create({
 let isRefreshing = false;
 let failedRequestsQueue = [];
 
+const retryRequest = async (fn, retriesLeft = 3, delay = 1000) => {
+  try {
+    return await fn();
+  } catch (error) {
+    if (retriesLeft <= 0) {
+      throw error;
+    }
+
+    if ([500, 502, 503, 504].includes(error.response?.status)) {
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      return retryRequest(fn, retriesLeft - 1, delay * 2);
+    }
+
+    throw error;
+  }
+};
+
 api.interceptors.response.use(
   response => response,
   async (error) => {
@@ -16,6 +34,10 @@ api.interceptors.response.use(
     const isAuthRequest = originalRequest.url.includes("/api/auth/");
     
     if (isAuthRequest) {
+      if (originalRequest.url.includes("/api/auth/refresh-token")) {
+        return retryRequest(() => api(originalRequest));
+      }
+
       return Promise.reject(error);
     }
 
@@ -33,7 +55,7 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await api.post("/api/auth/refresh-token");
+        await retryRequest(() => api.post("/api/auth/refresh-token"));
         const retryResponse = await api(originalRequest);
         failedRequestsQueue.forEach(req => req.resolve());
         return retryResponse;

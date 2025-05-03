@@ -22,7 +22,10 @@ const IssueDetailsPage = () => {
   const [modalImage, setModalImage] = useState(null);
   const navigate = useNavigate();
 
-  const isModerator = user?.roles?.includes("Moderator");
+  const isModerator = user?.roles?.includes("Moderator") && user.moderatorCategories.some(
+    (moderatorCategory) => moderatorCategory?.title === issue?.category
+  );
+
   const [newAnswer, setNewAnswer] = useState({
     text: "",
     images: [],

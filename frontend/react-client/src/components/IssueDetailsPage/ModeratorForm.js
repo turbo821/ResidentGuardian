@@ -1,7 +1,7 @@
 import viewStatus from "../../functions/viewStatus";
 import { imagesURL } from "../../api";
 
-const ModeratorForm = ({ issueId, answer, setAnswer, addAnswer, fileInputRef }) => {
+const ModeratorForm = ({ answer, setAnswer, addAnswer, fileInputRef }) => {
 
   const handleImageUpload = (e) => {
     setAnswer({...answer, images: Array.from(e.target.files)});
@@ -29,7 +29,7 @@ const ModeratorForm = ({ issueId, answer, setAnswer, addAnswer, fileInputRef }) 
                 className="w-full p-2 border border-gray-300 rounded-lg"
               >
                 {[0,1,2,3].map(updateStatus => (
-                  <option value={updateStatus}>{viewStatus(updateStatus)}</option>
+                  <option key={updateStatus} value={updateStatus}>{viewStatus(updateStatus)}</option>
                 ))}
               </select>
             </div>

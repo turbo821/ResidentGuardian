@@ -3,7 +3,7 @@ using Application.UseCases.AddComment;
 using Application.UseCases.CreateCategory;
 using Application.UseCases.CreateIssue;
 using Application.UseCases.GetCategories;
-using Application.UseCases.GetModeratorIssues;
+using Application.UseCases.GetModeratorCategories;
 using Application.UseCases.GetUserIssues;
 using Application.UseCases.UpdateCategory;
 using Application.UseCases.UpdateIssue;
