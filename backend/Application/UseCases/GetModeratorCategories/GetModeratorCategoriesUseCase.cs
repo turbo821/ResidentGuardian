@@ -1,6 +1,4 @@
-﻿using Application.UseCases.GetCategories;
-using Application.UseCases.GetUserIssues;
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.Interfaces;
 
 namespace Application.UseCases.GetModeratorCategories

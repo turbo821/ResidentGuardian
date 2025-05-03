@@ -32,9 +32,14 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const isAuthRequest = originalRequest.url.includes("/api/auth/");
-    
+    const isRefreshTokenRequest = originalRequest.url.includes("/api/auth/refresh-token");
+
+    if (error.response?.status === 401 && isRefreshTokenRequest) {
+      return Promise.reject(error);
+    }
+
     if (isAuthRequest) {
-      if (originalRequest.url.includes("/api/auth/refresh-token")) {
+      if (originalRequest.url.includes("/api/auth/refresh-token") ) {
         return retryRequest(() => api(originalRequest));
       }
 

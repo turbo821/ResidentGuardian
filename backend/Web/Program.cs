@@ -21,10 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 string connection = Environment.GetEnvironmentVariable("CONNECTION_STRING") ?? builder.Configuration.GetConnectionString("DefaultConnection")!;
 var allowedOrigins = Environment.GetEnvironmentVariable("ALLOWED_ORIGINS");
 
-builder.Services.AddDbContext<AppGuardContext>(
-    options => options.UseNpgsql(connection,
-        x => x.UseNetTopologySuite())
-);
+builder.Services.AddDatabase(connection);
 
 var originsArray = allowedOrigins?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? ["http://localhost:3000", "https://localhost:3000"];
 
@@ -83,13 +80,9 @@ builder.Services.AddFilters();
 
 var app = builder.Build();
 
-await app.UseAdminCliMode(args);
+await app.UseAdminCliMode(args); // fix..
 
-using (var scope = app.Services.CreateScope())
-{
-    var roleSetter = scope.ServiceProvider.GetRequiredService<RoleSetter>();
-    await roleSetter.Setup();
-}
+// await app.UseDatabaseRun();
 
 app.UseCors("AllowClientReGuanApp");
 if (app.Environment.IsDevelopment())
