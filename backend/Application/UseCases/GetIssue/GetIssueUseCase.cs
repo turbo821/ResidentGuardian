@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Application.Dtos;
 using Domain.Interfaces;
 
 namespace Application.UseCases.GetIssue
@@ -18,7 +18,7 @@ namespace Application.UseCases.GetIssue
 
             var issueDto = new GetIssueResponse(issue.Id,
                 issue.Title, issue.Status, issue.Description, issue.Category.Title, 
-                issue.Location, issue.Images.Select(im => im.Uri).ToList(), issue.Answers);
+                issue.Location, issue.Images.Select(im => im.Uri).ToList());
 
             return issueDto;
         }

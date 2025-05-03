@@ -1,9 +1,11 @@
-const CommentForm = ({ commentText, setCommentText }) => {
+const CommentForm = ({ commentText, setCommentText, submit }) => {
   const handleCommentSubmit = () => {
-    
+    console.log("Submit");
+    submit(commentText);
   }
+
   return (
-    <form onSubmit={handleCommentSubmit} className="mb-6">
+    <div className="mb-6">
       <textarea
         value={commentText}
         onChange={(e) => setCommentText(e.target.value)}
@@ -12,13 +14,12 @@ const CommentForm = ({ commentText, setCommentText }) => {
         rows="3"
         required
       />
-      <button
-        type="submit"
+      <button onClick={handleCommentSubmit}
         className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition"
       >
         Отправить комментарий
       </button>
-    </form>
+    </div>
   )
 }
 export default CommentForm;

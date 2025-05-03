@@ -20,6 +20,6 @@ namespace Domain.Entities
 
         public List<IssueImage> Images { get; set; } = new();
         public List<Answer> Answers { get; set; } = new();
-        public List<StatusHistory> StatusHistories { get; set; } = new();
+        public List<Comment> Comments { get; set; } = new();
     }
 }

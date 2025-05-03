@@ -5,14 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
-    public class CategoryRepository : ICategoryRepository
+    public class CategoryRepository(AppGuardContext context) 
+        : BaseRepository(context), ICategoryRepository
     {
-        private readonly AppGuardContext _context;
-
-        public CategoryRepository(AppGuardContext context)
-        {
-            _context = context;
-        }
         public async Task<IEnumerable<Category>> GetAll()
         {
             var categories = await _context.Categories.ToListAsync();
@@ -105,12 +100,6 @@ namespace Infrastructure.Repositories
             _context.ModeratorCategories.RemoveRange(existingCategories);
 
             return await Save();
-        }
-
-        private async Task<bool> Save()
-        {
-            var saved = await _context.SaveChangesAsync();
-            return saved > 0 ? true : false;
         }
     }
 }

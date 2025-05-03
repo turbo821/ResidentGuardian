@@ -8,7 +8,7 @@ namespace Domain.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         
         public List<Issue> Issues { get; set; } = new();
-        public List<StatusHistory> StatusHistories { get; set; } = new();
+        public List<Answer> Answers { get; set; } = new();
         public List<ModeratorCategory> ModeratorCategories { get; set; } = new();
     }
 }

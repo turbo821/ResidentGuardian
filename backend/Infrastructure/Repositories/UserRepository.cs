@@ -5,15 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository(AppGuardContext context)
+        : BaseRepository(context), IUserRepository
     {
-        private readonly AppGuardContext _context;
-
-        public UserRepository(AppGuardContext context)
-        {
-            _context = context;
-        }
-
         public async Task<IEnumerable<User>> GetUsersWithCategories(IEnumerable<Guid> userIds)
         {
             var users = await _context.Users
@@ -32,12 +26,6 @@ namespace Infrastructure.Repositories
 
             _context.Users.Remove(user);
             return await Save();
-        }
-
-        private async Task<bool> Save()
-        {
-            var saved = await _context.SaveChangesAsync();
-            return saved > 0 ? true : false;
         }
     }
 }

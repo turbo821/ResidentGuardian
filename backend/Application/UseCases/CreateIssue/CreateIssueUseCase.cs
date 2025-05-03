@@ -10,13 +10,11 @@ namespace Application.UseCases.CreateIssue
     public class CreateIssueUseCase : ICreateIssueUseCase
     {
         private readonly IIssueRepository _repo;
-        private readonly IMapper _mapper;
         private readonly IFileStorage _fileStorage;
 
-        public CreateIssueUseCase(IIssueRepository repo, IMapper mapper, IFileStorage fileStorage)
+        public CreateIssueUseCase(IIssueRepository repo, IFileStorage fileStorage)
         {
             _repo = repo;
-            _mapper = mapper;
             _fileStorage = fileStorage;
         }
         public async Task<Guid?> Execute(CreateIssueRequest issueDto, Guid userId)

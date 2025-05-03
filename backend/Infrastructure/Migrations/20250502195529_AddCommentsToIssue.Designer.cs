@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppGuardContext))]
-    partial class AppGuardContextModelSnapshot : ModelSnapshot
+    [Migration("20250502195529_AddCommentsToIssue")]
+    partial class AddCommentsToIssue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,13 +42,10 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("ModeratorId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("NewStatus")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("OldStatus")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Text")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UpdatePhotoUrl")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -55,26 +55,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("ModeratorId");
 
                     b.ToTable("Answers");
-                });
-
-            modelBuilder.Entity("Domain.Entities.AnswerImage", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AnswerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Uri")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AnswerId");
-
-                    b.ToTable("AnswerImage");
                 });
 
             modelBuilder.Entity("Domain.Entities.Category", b =>
@@ -109,7 +89,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("IssueId")
+                    b.Property<Guid?>("IssueId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Text")
@@ -229,6 +209,40 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("Domain.Entities.StatusHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ChangedByModeratorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("IssueId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("NewStatus")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<string>("OldStatus")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChangedByModeratorId");
+
+                    b.HasIndex("IssueId");
+
+                    b.ToTable("StatusHistories");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -445,7 +459,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.User", "Moderator")
-                        .WithMany("Answers")
+                        .WithMany()
                         .HasForeignKey("ModeratorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -455,32 +469,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Moderator");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AnswerImage", b =>
-                {
-                    b.HasOne("Domain.Entities.Answer", "Answer")
-                        .WithMany("Images")
-                        .HasForeignKey("AnswerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Answer");
-                });
-
             modelBuilder.Entity("Domain.Entities.Comment", b =>
                 {
-                    b.HasOne("Domain.Entities.Issue", "Issue")
+                    b.HasOne("Domain.Entities.Issue", null)
                         .WithMany("Comments")
-                        .HasForeignKey("IssueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IssueId");
 
                     b.HasOne("Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Issue");
 
                     b.Navigation("User");
                 });
@@ -545,6 +544,25 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.Entities.StatusHistory", b =>
+                {
+                    b.HasOne("Domain.Entities.User", "ChangedByModerator")
+                        .WithMany("StatusHistories")
+                        .HasForeignKey("ChangedByModeratorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Issue", "Issue")
+                        .WithMany("StatusHistories")
+                        .HasForeignKey("IssueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChangedByModerator");
+
+                    b.Navigation("Issue");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -596,11 +614,6 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.Answer", b =>
-                {
-                    b.Navigation("Images");
-                });
-
             modelBuilder.Entity("Domain.Entities.Category", b =>
                 {
                     b.Navigation("Issues");
@@ -615,15 +628,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Images");
+
+                    b.Navigation("StatusHistories");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.Navigation("Answers");
-
                     b.Navigation("Issues");
 
                     b.Navigation("ModeratorCategories");
+
+                    b.Navigation("StatusHistories");
                 });
 #pragma warning restore 612, 618
         }

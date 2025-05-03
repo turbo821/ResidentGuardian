@@ -6,14 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
-    public class IssueRepository : IIssueRepository
+    public class IssueRepository : BaseRepository, IIssueRepository
     {
-        private readonly AppGuardContext _context;
         private readonly IEnumerable<IFilter<Issue>> _filters;
 
         public IssueRepository(AppGuardContext context, IEnumerable<IFilter<Issue>> filters)
+            : base(context)
         {
-            _context = context;
             _filters = filters;
         }
         public async Task<IEnumerable<Issue>> GetAll(IssueFilterRequest request)
@@ -51,7 +50,7 @@ namespace Infrastructure.Repositories
         public async Task<Issue?> GetById(Guid id)
         {
             var issue = await _context.Issues
-                .Include(i => i.Images).Include(i => i.Category).Include(i => i.Answers)
+                .Include(i => i.Images).Include(i => i.Category)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return issue;
@@ -102,10 +101,15 @@ namespace Infrastructure.Repositories
             return _context.Issues.AnyAsync(x => x.Id == id);
         }
 
-        private async Task<bool> Save()
+        public async Task<IssueStatus?> ChangeStatus(Guid id, IssueStatus newStatus)
         {
-            var saved = await _context.SaveChangesAsync();
-            return saved > 0 ? true : false;
+            var issue = await GetById(id);
+            if (issue == null) return null;
+
+            var oldStatus = issue.Status;
+            issue.Status = newStatus;
+            await Save();
+            return oldStatus;
         }
     }
 }

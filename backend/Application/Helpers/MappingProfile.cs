@@ -1,10 +1,9 @@
-﻿using Application.UseCases.CreateCategory;
+﻿using Application.Dtos;
+using Application.UseCases.AddComment;
+using Application.UseCases.CreateCategory;
 using Application.UseCases.CreateIssue;
-using Application.UseCases.GetAllIssues;
 using Application.UseCases.GetCategories;
-using Application.UseCases.GetIssue;
 using Application.UseCases.GetModeratorIssues;
-using Application.UseCases.GetModerators;
 using Application.UseCases.GetUserIssues;
 using Application.UseCases.UpdateCategory;
 using Application.UseCases.UpdateIssue;
@@ -28,6 +27,10 @@ namespace Application.Helpers
 
             CreateMap<Issue, GetUserIssueResponse>();
             CreateMap<Category, GetModeratorCategoriesResponse>();
+
+            CreateMap<AddCommentRequest, Comment>();
+            CreateMap<Comment, CommentDto>()
+                .ForCtorParam(nameof(CommentDto.FullName), opt => opt.MapFrom(src => src.User.FullName));
         }
     }
 }

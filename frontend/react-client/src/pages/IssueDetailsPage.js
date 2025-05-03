@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Answer from "../components/IssueDetailsPage/Answer";
 import ModalImage from "../components/ModalImage";
@@ -15,6 +15,7 @@ import CommentForm from "../components/IssueDetailsPage/CommentForm";
 import Comment from "../components/IssueDetailsPage/Comment";
 
 const IssueDetailsPage = () => {
+  const fileInputRef = useRef(null);
   const { id } = useParams();
   const { user } = useAuth();
   const [issue, setIssue] = useState(null);
@@ -29,6 +30,7 @@ const IssueDetailsPage = () => {
   });
 
   const [comments, setComments] = useState([]);
+  const [answers, setAnswers] = useState([]);
   const [commentText, setCommentText] = useState('');
 
   const openModal = (img) => setModalImage(img);
@@ -52,7 +54,8 @@ const IssueDetailsPage = () => {
 
   useEffect(() => {
     fetchIssue(id); 
-    //fetchIssueComments(id);
+    fetchIssueComments(id);
+    fetchIssueAnswers(id);
   }, [id]);
 
   const fetchIssue = async(id) => {
@@ -72,6 +75,62 @@ const IssueDetailsPage = () => {
     }
     catch(err) {
       console.log(err.response);
+    }
+  }
+
+  const fetchIssueAnswers = async(id) => {
+    try {
+      const response = await api.get(`/api/issues/${id}/answers`);
+      setAnswers(response.data);
+    } catch(err) {
+      console.log(err.response);
+    }
+  }
+
+  const addComment = async(text) => {
+    try {
+      const request = { text: text };
+      const response = await api.post(`/api/issues/${id}/comments`, request);
+
+      console.log(response);
+      setCommentText("");
+      setComments(prev => [response.data, ...prev ]);
+
+    } catch(err) {
+      console.log(err.response);
+    }
+  }
+
+  const addAnswer = async() => {
+    const formData = new FormData();
+    
+    formData.append('updateStatus', newAnswer.updateStatus);
+    formData.append('text', newAnswer.text || "");
+    
+    newAnswer.images.forEach((image) => {
+      formData.append(`Images`, image);
+    });
+
+    try {
+      const response = await api.post(`/api/issues/${id}/answers`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      const newAnswer = response.data;
+      setAnswers(prev => [...prev, newAnswer]);
+    } catch (err) {
+      console.log(err.response);
+    }
+    finally {
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+
+      setNewAnswer({
+          text: "",
+          images: [],
+          status: 0
+      });
     }
   }
 
@@ -154,67 +213,32 @@ const IssueDetailsPage = () => {
         </Link>
 
         <div className="mt-8">
-          {issue.Answers && issue.Answers.length > 0 && (
+          {answers && answers?.length > 0 && (
             <>
               <h3 className="text-2xl font-bold text-gray-800 mb-4">Ответы модератора</h3>
-              {issue.Answers.map((answer, idx) => (
+              {answers.map((answer, idx) => (
                 <Answer key={idx} answer={answer} openModal={openModal} />
               ))}
             </>
           )}
-
-          {isModerator && (
-            <Answer 
-              answer={{
-                text: "Пример ответа модератора. Мы рассмотрели ваше обращение и передали его в соответствующий отдел. Ожидайте ответа в течение 3 рабочих дней.",
-                images: [],
-                createdAt: new Date().toISOString(),
-                status: 2
-              }} 
-              openModal={openModal}
-              isExample={true}
-              previousStatus={0}
-            />
-          )}
         </div>
 
         {isModerator && (
-          <ModeratorForm answer={newAnswer} setAnswer={setNewAnswer} />
+          <ModeratorForm issueId={id} answer={newAnswer} setAnswer={setNewAnswer} addAnswer={addAnswer} fileInputRef={fileInputRef}/>
         )}
 
         <div className="mt-8">
           <h3 className="text-2xl font-bold text-gray-800 mb-4">Комментарии</h3>
           
-          <CommentForm commentText={commentText} setCommentText={setCommentText} />
+          <CommentForm commentText={commentText} setCommentText={setCommentText} submit={addComment} />
           
           <div className="space-y-4">
-            {comments.length > 0 ? (
+            {comments?.length > 0 ? (
               comments.map((comment, idx) => (
                 <Comment key={idx} comment={comment} />
               ))
             ) : (
               <p className="text-gray-500 text-center py-4">Пока нет комментариев</p>
-            )}
-            
-            {comments.length === 0 && (
-              <>
-                <Comment 
-                  comment={{
-                    text: "Пример комментария пользователя. Я тоже сталкивался с этой проблемой в прошлом месяце!",
-                    user: { name: "Иван Петров" },
-                    createdAt: new Date().toISOString()
-                  }} 
-                  isExample={true}
-                />
-                <Comment 
-                  comment={{
-                    text: "Спасибо за обращение, надеюсь проблему решат быстро!",
-                    user: { name: "Мария Сидорова" },
-                    createdAt: new Date().toISOString()
-                  }} 
-                  isExample={true}
-                />
-              </>
             )}
           </div>
         </div>

@@ -1,6 +1,8 @@
 ﻿using Application.Filters.IssueFilters;
+using Application.UseCases.AddComment;
 using Application.UseCases.AddModeratorCategories;
 using Application.UseCases.AssignModerator;
+using Application.UseCases.CreateAnswer;
 using Application.UseCases.CreateCategory;
 using Application.UseCases.CreateIssue;
 using Application.UseCases.CreateModerator;
@@ -8,7 +10,9 @@ using Application.UseCases.DeleteCategory;
 using Application.UseCases.DeleteIssue;
 using Application.UseCases.DeleteModerator;
 using Application.UseCases.GetAllIssues;
+using Application.UseCases.GetAnswers;
 using Application.UseCases.GetCategories;
+using Application.UseCases.GetComments;
 using Application.UseCases.GetIssue;
 using Application.UseCases.GetModeratorCategories;
 using Application.UseCases.GetModeratorIssues;
@@ -49,6 +53,12 @@ namespace Web.Extensions
 
             services.AddScoped<IGetModeratorIssuesUseCase, GetModeratorIssuesUseCase>();
             services.AddScoped<IGetModeratorCategoriesUseCase, GetModeratorCategoriesUseCase>();
+
+            services.AddScoped<IAddCommentUseCase, AddCommentUseCase>();
+            services.AddScoped<IGetCommentsUseCase, GetCommentsUseCase>();
+
+            services.AddScoped<ICreateAnswerUseCase, CreateAnswerUseCase>();
+            services.AddScoped<IGetAnswersUseCase, GetAnswersUseCase>();
         }
 
         public static void AddRepositories(this IServiceCollection services)
@@ -56,6 +66,8 @@ namespace Web.Extensions
             services.AddScoped<IIssueRepository, IssueRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<IAnswerRepository, AnswerRepository>();
         }
 
         public static void AddFilters(this IServiceCollection services)

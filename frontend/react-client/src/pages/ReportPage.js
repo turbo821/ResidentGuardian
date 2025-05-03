@@ -44,15 +44,14 @@ const ReportPage = () => {
     formData.append('pointLatitude', location.coords !== null ? location?.coords[0] : null);
     formData.append('pointLongitude', location.coords !== null ? location?.coords[1] : null);
     
-    images.forEach((image, index) => {
+    images.forEach((image) => {
       formData.append(`Images`, image);
     });
     console.log(location.coords);
     try {
-      const response = await api.post('/api/issues', formData, {
+      await api.post('/api/issues', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      alert(`Add issue: ${response.data}`);
 
     } catch (err) {
       console.log(err.response);

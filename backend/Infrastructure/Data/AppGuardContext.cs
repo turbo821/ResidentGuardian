@@ -11,8 +11,8 @@ namespace Infrastructure.Data
     {
         public DbSet<Issue> Issues => Set<Issue>();
         public DbSet<Answer> Answers => Set<Answer>();
+        public DbSet<Comment> Comments => Set<Comment>();
         public DbSet<Category> Categories => Set<Category>();
-        public DbSet<StatusHistory> StatusHistories => Set<StatusHistory>();
         public DbSet<ModeratorCategory> ModeratorCategories => Set<ModeratorCategory>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
         public DbSet<IssueImage> IssueImages => Set<IssueImage>();
@@ -23,7 +23,6 @@ namespace Infrastructure.Data
             modelBuilder.ApplyConfiguration(new IssueConfiguration());
             modelBuilder.ApplyConfiguration(new ModeratorCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
-            modelBuilder.ApplyConfiguration(new StatusHistoryConfiguration());
 
             modelBuilder.HasPostgresExtension("postgis");
         }
