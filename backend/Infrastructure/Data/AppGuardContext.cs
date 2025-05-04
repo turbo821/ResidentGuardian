@@ -10,12 +10,14 @@ namespace Infrastructure.Data
         : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options)
     {
         public DbSet<Issue> Issues => Set<Issue>();
+        public DbSet<Grade> Grades => Set<Grade>();
         public DbSet<Answer> Answers => Set<Answer>();
         public DbSet<Comment> Comments => Set<Comment>();
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<ModeratorCategory> ModeratorCategories => Set<ModeratorCategory>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
         public DbSet<IssueImage> IssueImages => Set<IssueImage>();
+        public DbSet<AnswerImage> AnswerImages => Set<AnswerImage>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -10,5 +10,6 @@ namespace Domain.Entities
         public List<Issue> Issues { get; set; } = new();
         public List<Answer> Answers { get; set; } = new();
         public List<ModeratorCategory> ModeratorCategories { get; set; } = new();
+        public List<Grade> Grades { get; set; } = new();
     }
 }
