@@ -4,13 +4,13 @@ namespace Domain.Entities
 {
     public enum IssueStatus
     {
-        [Description("На рассмотрении")]
+        [Description("Pending")]
         Pending = 0,
-        [Description("В работе")]
+        [Description("In progress")]
         InProgress = 1,
-        [Description("Решено")]
+        [Description("Resolved")]
         Resolved = 2,
-        [Description("Отклонено")]
+        [Description("Rejected")]
         Rejected = 3
     }
 }

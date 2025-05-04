@@ -1,4 +1,5 @@
 ﻿using Application.Filters.IssueFilters;
+using Application.Services;
 using Application.UseCases.AddComment;
 using Application.UseCases.AddModeratorCategories;
 using Application.UseCases.AssignModerator;
@@ -72,11 +73,14 @@ namespace Web.Extensions
 
         public static void AddFilters(this IServiceCollection services)
         {
-            services.AddScoped<IFilter<Issue>, TakeFilter>();
+            services.AddScoped<ISort<Issue>, IssueSortService>();
+
             services.AddScoped<IFilter<Issue>, CategoryFilter>();
             services.AddScoped<IFilter<Issue>, StatusFilter>();
             services.AddScoped<IFilter<Issue>, TimeRangeFilter>();
             services.AddScoped<IFilter<Issue>, SearchFilter>();
+
+            services.AddScoped<IPagination<Issue>, IssuePaginationService>();
         }
     }
 }

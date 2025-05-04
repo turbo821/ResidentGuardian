@@ -1,7 +1,6 @@
-import { useState,   useRef } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { YMaps, Map, Placemark, Clusterer } from "@pbe/react-yandex-maps";
-import "./CityMap.css";
 import MiniIssueCard from "./MiniIssueCard";
 
 const CityMap = ({ issues }) => {
@@ -31,12 +30,12 @@ const CityMap = ({ issues }) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg w-full lg:w-3/4 flex items-center justify-center h-[750px] map-container">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-full lg:w-3/4 flex items-center justify-center h-[750px] relative flex-1">
       <YMaps query={{ apikey: "ef6ce2bf-6d1d-4567-aaf2-5ca3e0d8da70" }}>
         <Map
           defaultState={defaultState}
           width="100%"
-          height="100%"
+          height="700px"
           onClick={handleMapClick}
           instanceRef={mapRef}
           options={{

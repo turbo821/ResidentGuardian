@@ -5,7 +5,8 @@ import IssueCard from "../IssuesPage/IssueCard";
 
 const   HotIssuesSection = () => {
   const [issues, setIssues] = useState([]);
-  const SIZE = 3;
+  const PAGE_SIZE = 3;
+  const SORT_BY_RATING = 2;
 
   useEffect(() => {
     fetchHotIssues(); 
@@ -13,8 +14,8 @@ const   HotIssuesSection = () => {
 
   const fetchHotIssues = async() => {
     try {
-      const response = await api.get(`/api/issues?size=${SIZE}`);
-      setIssues(response.data);
+      const response = await api.get(`/api/issues?pageSize=${PAGE_SIZE}&sortOrder=${SORT_BY_RATING}`);
+      setIssues(response.data.items);
     }
     catch(err) {
       console.log(err.response);
@@ -30,7 +31,7 @@ const   HotIssuesSection = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {issues.map((issue) => (
+            {issues && issues.map((issue) => (
               <IssueCard key={issue.id} issue={issue} />
             ))}
           </div>

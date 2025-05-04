@@ -9,22 +9,31 @@ namespace Infrastructure.Repositories
     public class IssueRepository : BaseRepository, IIssueRepository
     {
         private readonly IEnumerable<IFilter<Issue>> _filters;
+        private readonly ISort<Issue> _sorted;
+        private readonly IPagination<Issue> _pagination;
 
-        public IssueRepository(AppGuardContext context, IEnumerable<IFilter<Issue>> filters)
+        public IssueRepository(AppGuardContext context, IEnumerable<IFilter<Issue>> filters, ISort<Issue> sorted, IPagination<Issue> pagination)
             : base(context)
         {
             _filters = filters;
+            _sorted = sorted;
+            _pagination = pagination;
         }
-        public async Task<IEnumerable<Issue>> GetAll(IssueFilterRequest request)
+        public async Task<(IEnumerable<Issue>, int)> GetAll(IssueFilterRequest request)
         {
-            IQueryable<Issue> issuesQuery = _context.Issues.OrderByDescending(issue => issue.CreatedAt);
+            IQueryable<Issue> issuesQuery = _context.Issues;
+
+            issuesQuery = _sorted.Apply(issuesQuery, request.SortOrder);
+
             foreach(var filter in _filters)
                 issuesQuery = filter.Apply(issuesQuery, request);
+
+            (issuesQuery, int totalCount) = await _pagination.Apply(issuesQuery, request);
 
             var issues = await issuesQuery
                 .Include(i => i.Images).ToListAsync();
 
-            return issues;
+            return (issues, totalCount);
         }
 
         public async Task<IEnumerable<Issue>> GetAllByUser(Guid userId)

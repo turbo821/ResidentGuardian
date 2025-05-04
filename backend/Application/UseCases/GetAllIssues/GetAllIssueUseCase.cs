@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Dtos;
+using Domain.Entities;
 using Domain.Interfaces;
 using Domain.Models;
 
@@ -12,9 +13,9 @@ namespace Application.UseCases.GetAllIssues
         {
             _repo = repo;
         }
-        public async Task<IEnumerable<GetAllIssueResponse>?> Execute(IssueFilterRequest request)
+        public async Task<PaginatedResult<GetAllIssueResponse>?> Execute(IssueFilterRequest request)
         {
-            var issues = await _repo.GetAll(request);
+            (var issues, int totalCount) = await _repo.GetAll(request);
             if(!issues.Any())
                 return null;
  
@@ -29,7 +30,8 @@ namespace Application.UseCases.GetAllIssues
                     : new List<double>()
             ));
 
-            return issuesDtos;
+            var response = new PaginatedResult<GetAllIssueResponse>(issuesDtos, totalCount, request.PageSize ?? 1);
+            return response;
         }
     }
 }
