@@ -1,7 +1,9 @@
 ﻿using Application.Dtos;
 using Application.UseCases.AddComment;
+using Application.UseCases.AddGrade;
 using Application.UseCases.CreateCategory;
 using Application.UseCases.CreateIssue;
+using Application.UseCases.DeleteGrade;
 using Application.UseCases.GetCategories;
 using Application.UseCases.GetModeratorCategories;
 using Application.UseCases.GetUserIssues;
@@ -31,6 +33,9 @@ namespace Application.Helpers
             CreateMap<AddCommentRequest, Comment>();
             CreateMap<Comment, CommentDto>()
                 .ForCtorParam(nameof(CommentDto.FullName), opt => opt.MapFrom(src => src.User.FullName));
+
+            CreateMap<AddGradeRequest, Grade>();
+            CreateMap<DeleteGradeRequest, Grade>();
         }
     }
 }

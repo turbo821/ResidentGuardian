@@ -6,7 +6,7 @@ namespace Domain.Models
     public class IssueFilterRequest
     {
         // Sort
-        public IssueSortOrder SortOrder { get; set; } = IssueSortOrder.NewestFirst;
+        public IssueSortOrder SortOrder { get; set; } = IssueSortOrder.ByRating;
 
         // Filter
         public Guid? CategoryId { get; set; }

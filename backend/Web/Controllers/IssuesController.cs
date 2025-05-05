@@ -1,13 +1,16 @@
 ﻿using Application.Dtos;
 using Application.UseCases.AddComment;
+using Application.UseCases.AddGrade;
 using Application.UseCases.CreateAnswer;
 using Application.UseCases.CreateIssue;
+using Application.UseCases.DeleteGrade;
 using Application.UseCases.DeleteIssue;
 using Application.UseCases.GetAllIssues;
 using Application.UseCases.GetAnswers;
 using Application.UseCases.GetComments;
 using Application.UseCases.GetIssue;
 using Application.UseCases.UpdateIssue;
+using Domain.Entities;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,13 +31,16 @@ namespace Web.Controllers
         private readonly IGetCommentsUseCase _getComments;
         private readonly ICreateAnswerUseCase _createAnswer;
         private readonly IGetAnswersUseCase _getAnswers;
+        private readonly IAddGradeUseCase _addGrade;
+        private readonly IDeleteGradeUseCase _deleteGrade;
 
         public IssuesController(
             IGetAllIssueUseCase getAllIssues, IGetIssueUseCase getIssue,
             ICreateIssueUseCase createIssue, IUpdateIssueUseCase updateIssue,
             IDeleteIssueUseCase deleteIssue, IAddCommentUseCase addComment,
             IGetCommentsUseCase getComments, ICreateAnswerUseCase createAnswer,
-            IGetAnswersUseCase getAnswers)
+            IGetAnswersUseCase getAnswers, IAddGradeUseCase addGrade,
+            IDeleteGradeUseCase deleteGrade)
         {
             _getAllIssues = getAllIssues;
             _getIssue = getIssue;
@@ -45,12 +51,22 @@ namespace Web.Controllers
             _getComments = getComments;
             _createAnswer = createAnswer;
             _getAnswers = getAnswers;
+            _addGrade = addGrade;
+            _deleteGrade = deleteGrade;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllIssues([FromQuery] IssueFilterRequest request)
         {
-            var response = await _getAllIssues.Execute(request);
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            Guid? userGuid = null;
+            if (userId != null) userGuid = Guid.Parse(userId);
+
+            var response = await _getAllIssues.Execute(request, userGuid);
 
             return Ok(response);
         }
@@ -62,7 +78,12 @@ namespace Web.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var response = await _getIssue.Execute(id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            Guid? userGuid = null;
+            if (userId != null) userGuid = Guid.Parse(userId);
+
+            var response = await _getIssue.Execute(id, userGuid);
 
             if(response == null)
                 return NotFound();
@@ -164,7 +185,6 @@ namespace Web.Controllers
             return Ok(response);
         }
 
-        // TODO Add Check moderator category!!!
         [Authorize(Roles = "Moderator")]
         [HttpPost]
         [Route("{id}/answers")]
@@ -183,6 +203,42 @@ namespace Web.Controllers
             if(response is null) return NotFound();
 
             return Ok(response);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("{id}/grades")]
+        public async Task<IActionResult> AddGrade(Guid id, [FromBody] bool like)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Not valid");
+
+            Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+
+            var request = new AddGradeRequest(id, userId, like);
+            var success = await _addGrade.Execute(request);
+
+            if (!success) return BadRequest();
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpDelete]
+        [Route("{id}/grades")]
+        public async Task<IActionResult> DeleteGrade(Guid id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Not valid");
+
+            Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+
+            var request = new DeleteGradeRequest(id, userId);
+            var success = await _deleteGrade.Execute(request);
+
+            if (!success) return BadRequest();
+
+            return Ok();
         }
     }
 }

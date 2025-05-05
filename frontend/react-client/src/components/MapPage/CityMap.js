@@ -2,8 +2,10 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { YMaps, Map, Placemark, Clusterer } from "@pbe/react-yandex-maps";
 import MiniIssueCard from "./MiniIssueCard";
+import { useAuth } from "../../context/AuthContext";
 
 const CityMap = ({ issues }) => {
+  const { user } = useAuth();
   const defaultState = {
     center: [47.517641, 42.160875],
     zoom: 14,
@@ -75,7 +77,7 @@ const CityMap = ({ issues }) => {
             maxWidth: '300px',
           }}
         >
-          <MiniIssueCard issue={hoveredPoint} key={hoveredPoint.id} />
+          <MiniIssueCard issue={hoveredPoint} key={hoveredPoint.id} user={user} />
         </div>
       )}
     </div>

@@ -5,6 +5,6 @@ namespace Application.UseCases.GetAllIssues
 {
     public interface IGetAllIssueUseCase
     {
-        Task<PaginatedResult<GetAllIssueResponse>?> Execute(IssueFilterRequest request);
+        Task<PaginatedResult<GetAllIssueResponse>?> Execute(IssueFilterRequest request, Guid? userId);
     }
 }

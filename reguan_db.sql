@@ -5,7 +5,7 @@
 -- Dumped from database version 16.1
 -- Dumped by pg_dump version 16.1
 
--- Started on 2025-05-05 01:15:03
+-- Started on 2025-05-06 01:53:07
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -498,6 +498,7 @@ ee5060b9-73f5-41b4-a518-02bf91ebb4a1	string	2025-05-03 00:06:16.443557+03	4fbd84
 805cfe5f-12b6-4536-9318-6ac577555edc	4 коммекн	2025-05-03 00:33:25.246361+03	4fbd8498-115b-4194-94dd-249ed292bd80	7ea991bb-5cde-4a7a-aa49-186b5848ac46
 3bec5897-d7fc-4ede-a72c-9af907b3d2a4	5 коомент	2025-05-03 00:39:41.172377+03	4fbd8498-115b-4194-94dd-249ed292bd80	7ea991bb-5cde-4a7a-aa49-186b5848ac46
 a960f8b9-6695-443a-be49-c7f120f36f9f	айайай	2025-05-03 03:26:11.59162+03	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	9c548d03-0acd-4c6b-8a72-ed7a74d476dd
+279c2160-c914-4c28-b5c0-58e597ea750f	бу	2025-05-06 01:21:39.715905+03	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	0f33876e-d306-469d-b73b-07d6381a86cf
 \.
 
 
@@ -508,6 +509,10 @@ a960f8b9-6695-443a-be49-c7f120f36f9f	айайай	2025-05-03 03:26:11.59162+03	8
 --
 
 COPY public."Grades" ("Id", "UserId", "IssueId", "Like") FROM stdin;
+66ee057e-cd26-446e-9adf-61a5efaec06b	4fbd8498-115b-4194-94dd-249ed292bd80	0f33876e-d306-469d-b73b-07d6381a86cf	t
+85dab29a-f423-424b-a3a6-dee655e881aa	4fbd8498-115b-4194-94dd-249ed292bd80	5900f9cb-f69f-4871-b178-462940eff52d	t
+b4a891c0-0da9-4a3b-a65e-fb8a0ec61d98	4fbd8498-115b-4194-94dd-249ed292bd80	9c548d03-0acd-4c6b-8a72-ed7a74d476dd	f
+aaf2f301-6bb8-4d40-82c7-f8dda53bb9b2	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	0f33876e-d306-469d-b73b-07d6381a86cf	t
 \.
 
 
@@ -585,12 +590,7 @@ COPY public."ModeratorCategories" ("ModeratorId", "CategoryId") FROM stdin;
 --
 
 COPY public."RefreshTokens" ("Id", "Token", "UserId", "Expires") FROM stdin;
-019697b2-2e42-7912-bd4f-6a84252d6f84	579abfdb-323d-495e-894b-fbce164f4405	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	2025-05-10 22:49:19.042255+03
-01969826-46e9-76b1-9077-39e40ea20e91	49d28df5-9a35-4def-8aa4-4bd2816ff291	4fbd8498-115b-4194-94dd-249ed292bd80	2025-05-11 00:56:07.528568+03
-01969826-5b4d-76de-9ab2-19d20090dd63	32c2099a-dffd-4e13-8db9-2aa4bd616a44	4fbd8498-115b-4194-94dd-249ed292bd80	2025-05-11 00:56:12.749162+03
-0196982a-67c0-72d0-92b0-dca0421b7068	4537edf6-7734-4fec-8def-c24cd89c5915	4fbd8498-115b-4194-94dd-249ed292bd80	2025-05-11 01:00:38.059053+03
-01969833-edb2-78b6-99bd-ebff92f9035c	4d512edf-2ea7-4d7b-9146-53db1e4a3378	4fbd8498-115b-4194-94dd-249ed292bd80	2025-05-11 01:11:02.193407+03
-01969834-99b8-7f09-8083-ecb622e7c27f	fdf4df17-cb70-4f9c-85ad-7c36db41ce7e	4fbd8498-115b-4194-94dd-249ed292bd80	2025-05-11 01:11:46.232156+03
+0196a299-9974-7983-ba1e-a2d02f835e00	99850589-fe04-4aec-9e1b-022575ffdcd4	4fbd8498-115b-4194-94dd-249ed292bd80	2025-05-13 01:38:17.46013+03
 \.
 
 
@@ -1139,7 +1139,7 @@ ALTER TABLE ONLY public."RefreshTokens"
     ADD CONSTRAINT "FK_RefreshTokens_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES public."AspNetUsers"("Id") ON DELETE CASCADE;
 
 
--- Completed on 2025-05-05 01:15:05
+-- Completed on 2025-05-06 01:53:08
 
 --
 -- PostgreSQL database dump complete

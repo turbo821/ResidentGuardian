@@ -1,6 +1,7 @@
 ﻿using Application.Filters.IssueFilters;
 using Application.Services;
 using Application.UseCases.AddComment;
+using Application.UseCases.AddGrade;
 using Application.UseCases.AddModeratorCategories;
 using Application.UseCases.AssignModerator;
 using Application.UseCases.CreateAnswer;
@@ -8,6 +9,7 @@ using Application.UseCases.CreateCategory;
 using Application.UseCases.CreateIssue;
 using Application.UseCases.CreateModerator;
 using Application.UseCases.DeleteCategory;
+using Application.UseCases.DeleteGrade;
 using Application.UseCases.DeleteIssue;
 using Application.UseCases.DeleteModerator;
 using Application.UseCases.GetAllIssues;
@@ -60,6 +62,9 @@ namespace Web.Extensions
 
             services.AddScoped<ICreateAnswerUseCase, CreateAnswerUseCase>();
             services.AddScoped<IGetAnswersUseCase, GetAnswersUseCase>();
+
+            services.AddScoped<IAddGradeUseCase, AddGradeUseCase>();
+            services.AddScoped<IDeleteGradeUseCase, DeleteGradeUseCase>();
         }
 
         public static void AddRepositories(this IServiceCollection services)
@@ -69,6 +74,7 @@ namespace Web.Extensions
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IAnswerRepository, AnswerRepository>();
+            services.AddScoped<IGradeRepository, GradeRepository>();
         }
 
         public static void AddFilters(this IServiceCollection services)
