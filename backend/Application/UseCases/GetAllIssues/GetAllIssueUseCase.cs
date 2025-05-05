@@ -13,21 +13,23 @@ namespace Application.UseCases.GetAllIssues
         {
             _repo = repo;
         }
-        public async Task<PaginatedResult<GetAllIssueResponse>?> Execute(IssueFilterRequest request)
+        public async Task<PaginatedResult<GetAllIssueResponse>?> Execute(IssueFilterRequest request, Guid? userId)
         {
             (var issues, int totalCount) = await _repo.GetAll(request);
             if(!issues.Any())
                 return null;
- 
+
             var issuesDtos = issues.Select(issue =>
             new GetAllIssueResponse(
                 issue.Id,
                 issue.Title,
                 issue.Status,
                 issue.Images?.Select(img => img.Uri).FirstOrDefault()!,
-                issue.Point != null 
+                Coords: issue.Point != null 
                     ? new List<double>() { issue.Point.Y, issue.Point.X } 
-                    : new List<double>()
+                    : new List<double>(), 
+                Like: userId != null ? issue.Grades.FirstOrDefault(g => g.UserId == userId)?.Like : null,
+                LikeCount: issue.Grades.Where(g => g.Like).Count(), DislikeCount: issue.Grades.Where(g => !g.Like).Count()
             ));
 
             var response = new PaginatedResult<GetAllIssueResponse>(issuesDtos, totalCount, request.PageSize ?? 1);

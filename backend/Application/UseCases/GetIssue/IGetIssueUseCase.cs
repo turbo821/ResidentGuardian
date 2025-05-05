@@ -2,6 +2,6 @@
 {
     public interface IGetIssueUseCase
     {
-        Task<GetIssueResponse?> Execute(Guid id);
+        Task<GetIssueResponse?> Execute(Guid id, Guid? userId);
     }
 }

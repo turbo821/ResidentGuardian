@@ -6,8 +6,10 @@ import IssueCard from "../components/IssuesPage/IssueCard";
 import Pagination from "../components/IssuesPage/Pagination";
 import api from "../api";
 import getTimeRange from "../functions/getDates";
+import { useAuth } from "../context/AuthContext";
 
 const IssuesPage = () => {
+  const { user } = useAuth();
   const [showFilters, setShowFilters] = useState(false);
   const [issues, setIssues] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -18,7 +20,7 @@ const IssuesPage = () => {
   const [selectCategoryId, setSelectCategoryId] = useState("99");
   const [selectStatus, setSelectStatus] = useState("99");
   const [timeRange, setTimeRange] = useState("all");
-  const [sortBy, setSortBy] = useState(0);
+  const [sortBy, setSortBy] = useState(2);
 
   const PAGE_SIZE=8;
 
@@ -97,7 +99,7 @@ const IssuesPage = () => {
       setSelectStatus("99");
       setTimeRange("all");
       setSearchText("");
-      setSortBy(0);
+      setSortBy(2);
     }
   }
 
@@ -139,7 +141,7 @@ const IssuesPage = () => {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {issues && issues.length > 0 ? issues.map((issue) => (
-            <IssueCard issue={issue} key={issue.id} />
+            <IssueCard issue={issue} key={issue.id} user={user} />
           )) 
           : 
           <div className="text-center text-gray-700 text-xl">Обращения не найдены.</div>}

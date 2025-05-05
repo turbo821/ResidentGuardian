@@ -2,11 +2,14 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../../api";
 import IssueCard from "../IssuesPage/IssueCard";
+import { useAuth } from "../../context/AuthContext";
 
 const   HotIssuesSection = () => {
+  const { user } = useAuth();
   const [issues, setIssues] = useState([]);
   const PAGE_SIZE = 3;
-  const SORT_BY_RATING = 2;
+  // const SORT_BY_RATING = 2;
+  const SORT_NEWEST = 0;
 
   useEffect(() => {
     fetchHotIssues(); 
@@ -14,7 +17,7 @@ const   HotIssuesSection = () => {
 
   const fetchHotIssues = async() => {
     try {
-      const response = await api.get(`/api/issues?pageSize=${PAGE_SIZE}&sortOrder=${SORT_BY_RATING}`);
+      const response = await api.get(`/api/issues?pageSize=${PAGE_SIZE}&sortOrder=${SORT_NEWEST}`);
       setIssues(response.data.items);
     }
     catch(err) {
@@ -32,7 +35,7 @@ const   HotIssuesSection = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {issues && issues.map((issue) => (
-              <IssueCard key={issue.id} issue={issue} />
+              <IssueCard key={issue.id} issue={issue} user={user} />
             ))}
           </div>
   

@@ -31,7 +31,7 @@ namespace Infrastructure.Repositories
             (issuesQuery, int totalCount) = await _pagination.Apply(issuesQuery, request);
 
             var issues = await issuesQuery
-                .Include(i => i.Images).ToListAsync();
+                .Include(i => i.Images).Include(i => i.Grades).ToListAsync();
 
             return (issues, totalCount);
         }
@@ -59,7 +59,8 @@ namespace Infrastructure.Repositories
         public async Task<Issue?> GetById(Guid id)
         {
             var issue = await _context.Issues
-                .Include(i => i.Images).Include(i => i.Category)
+                .Include(issue => issue.Images).Include(issue => issue.Category)
+                .Include(issue => issue.Grades)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return issue;
