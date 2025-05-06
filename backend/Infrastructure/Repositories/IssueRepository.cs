@@ -39,6 +39,7 @@ namespace Infrastructure.Repositories
         public async Task<IEnumerable<Issue>> GetAllByUser(Guid userId)
         {
             var issues = await _context.Issues
+                .Include(i => i.Grades)
                 .Where(issue => issue.UserId == userId)
                 .OrderByDescending(issue => issue.CreatedAt)
                 .ToListAsync();
@@ -49,6 +50,7 @@ namespace Infrastructure.Repositories
         public async Task<IEnumerable<Issue>> GetAllByModerator(Guid moderatorId)
         {
             var issues = await _context.Issues
+                .Include(i => i.Grades)
                 .Where(issue => issue.Category.ModeratorCategories.Any(mc => mc.ModeratorId == moderatorId))
                 .OrderByDescending(issue => issue.CreatedAt)
                 .ToListAsync();

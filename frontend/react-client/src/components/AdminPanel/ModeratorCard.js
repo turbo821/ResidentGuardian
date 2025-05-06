@@ -7,7 +7,7 @@ const ModeratorCard = ({ moderator, categories, handleDeleteModerator, unassignM
   return (
     <div className="flex flex-col md:flex-row items-center justify-around gap-4 p-4 border rounded-xl shadow-sm bg-white">
       <div className="flex flex-col">
-        <h4 className="text-md font-bold text-gray-800">ФИО: {moderator.fullName}</h4>
+        <h4 className="text-md font-bold text-gray-800">Имя: {moderator.fullName}</h4>
         <p className="text-md font-bold text-gray-700">Почта: {moderator.email}</p>
       </div>
       <div className="flex flex-col">

@@ -22,11 +22,7 @@ const CategoriesPage = () => {
   } 
 
   const goToIssues = (categoryId) => {
-    navigate(`/issues?category=${categoryId}`);
-  };
-
-  const goToMap = (categoryId) => {
-    navigate(`/map?category=${categoryId}`);
+    navigate(`/issues?categoryId=${categoryId}`);
   };
 
   return (
@@ -39,7 +35,7 @@ const CategoriesPage = () => {
 
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {categories.length > 0 ? categories.map((category) => (
-            <Category category={category} goToIssues={goToIssues} goToMap={goToMap} key={category.id} />
+            <Category category={category} goToIssues={goToIssues} key={category.id} />
           )) 
             : <div className="text-center text-gray-700 text-xl">Категории не найдены</div>
           }

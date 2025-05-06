@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces;
+﻿using Domain.Entities;
+using Domain.Interfaces;
 
 namespace Application.UseCases.GetUserIssues
 {
@@ -23,7 +24,9 @@ namespace Application.UseCases.GetUserIssues
                 issue.Title,
                 issue.Status,
                 issue.CreatedAt,
-                issue.Location
+                issue.Location,
+                Like: issue.Grades.FirstOrDefault(g => g.UserId == id)?.Like,
+                LikeCount: issue.Grades.Where(g => g.Like).Count(), DislikeCount: issue.Grades.Where(g => !g.Like).Count()
             ));
 
             return issuesDtos;

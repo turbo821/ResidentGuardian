@@ -52,7 +52,7 @@ const CityMap = ({ issues }) => {
                 groupByCoordinates: true
               }}
             >
-            {issues !== null && issues.length > 0 ? issues.map((issue, index) => (
+            {issues !== null && issues?.length > 0 ? issues.map((issue, index) => (
               <Placemark
                 key={index}
                 geometry={issue.coords}

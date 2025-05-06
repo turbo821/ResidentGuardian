@@ -7,41 +7,33 @@ import Pagination from "../components/IssuesPage/Pagination";
 import api from "../api";
 import getTimeRange from "../functions/getDates";
 import { useAuth } from "../context/AuthContext";
+import { useSearchParams } from "react-router-dom";
 
 const IssuesPage = () => {
   const { user } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [showFilters, setShowFilters] = useState(false);
   const [issues, setIssues] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(searchParams.get('pageNumber') || 1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const [searchText, setSearchText] = useState("");
-  const [selectCategoryId, setSelectCategoryId] = useState("99");
-  const [selectStatus, setSelectStatus] = useState("99");
-  const [timeRange, setTimeRange] = useState("all");
-  const [sortBy, setSortBy] = useState(2);
+  const [searchText, setSearchText] = useState(searchParams.get('search') || "");
+  const [selectCategoryId, setSelectCategoryId] = useState(searchParams.get('categoryId') || "99");
+  const [selectStatus, setSelectStatus] = useState(searchParams.get('status') || "99");
+  const [timeRange, setTimeRange] = useState(searchParams.get('date') || "all");
+  const [sortBy, setSortBy] = useState(searchParams.get('sortOrder') || 2);
 
   const PAGE_SIZE=8;
 
   useEffect(() => {
-    fetchAllIssues(1); 
+    handleFilterApply(currentPage); 
   }, []);
-
-  const fetchAllIssues = async(currentPage) => {
-    try {
-      const response = await api.get(`/api/issues?pageNumber=${currentPage}&pageSize=${PAGE_SIZE}`);
-      setIssues(response.data.items);
-      setTotalCount(response.data.totalItems);
-      setTotalPages(response.data.totalPages);
-    }
-    catch(err) {
-      console.log(err.response);
-    }
-  }
 
   const handlePageChange = async(page) => {
     setCurrentPage(page);
+    setSearchParams({...searchParams, pageNumber: page});
     await handleFilterApply(page);
   };
 
@@ -56,6 +48,16 @@ const IssuesPage = () => {
       params.append("status", selectStatus);
     }
 
+    if(!!searchText) {
+      params.append("search", searchText);
+    }
+    
+    params.append("sortOrder", sortBy);
+    params.append("pageNumber", page);
+    params.append("date", timeRange);
+
+    setSearchParams(params);
+
     if(timeRange && timeRange !== "all") {
       const range = getTimeRange(timeRange);
       if(range) {
@@ -64,12 +66,6 @@ const IssuesPage = () => {
       }
     }
 
-    if(!!searchText) {
-      params.append("search", searchText);
-    }
-    
-    params.append("sortOrder", sortBy);
-    params.append("pageNumber", page);
     params.append("pageSize", PAGE_SIZE);
 
     try {
@@ -90,7 +86,7 @@ const IssuesPage = () => {
       setIssues(response.data.items);
       setTotalCount(response.data.totalItems);
       setTotalPages(response.data.totalPages);
-
+      setSearchParams({});
     } catch(err) {
       console.log(err.response);
 

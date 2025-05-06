@@ -47,7 +47,7 @@ const MapFilters = ({ setIssues }) => {
     console.log(selectCategoryId);
     try {
       const response = await api.get(`/api/issues?${params.toString()}`);
-      setIssues(response.data);
+      setIssues(response.data.items);
     } catch(err) {
       console.log(err.response);
     }
@@ -57,7 +57,7 @@ const MapFilters = ({ setIssues }) => {
   const handleReset = async() => {
     try {
       const response = await api.get(`/api/issues`);
-      setIssues(response.data);
+      setIssues(response.data.items);
 
     } catch(err) {
       console.log(err.response);
@@ -80,7 +80,7 @@ const MapFilters = ({ setIssues }) => {
         className="w-full p-2 border rounded-lg mb-4"
       >
         <option key="99" value={"99"}>Все</option>
-        {categories !== null && categories.length > 0 ? categories.map((cat, index) => (
+        {categories !== null && categories?.length > 0 ? categories.map((cat, index) => (
           <option key={cat.id} value={cat.id}>{cat.title}</option>
         )) 
         : <option key="98" value={"98"}>Категории не найдены</option>}
@@ -93,7 +93,7 @@ const MapFilters = ({ setIssues }) => {
         className="w-full p-2 border rounded-lg mb-4"
       >
         <option key="99" value={"99"}>Все</option>
-        {STATUSES !== null && STATUSES.length > 0 ? STATUSES.map((status, index) => (
+        {STATUSES !== null && STATUSES?.length > 0 ? STATUSES.map((status, index) => (
           <option key={status} value={status}>{viewStatus(status)}</option>
         )) 
         : <option key="98" value={"98"}>Статусы не найдены</option>}

@@ -141,7 +141,7 @@ const ProfilePage = () => {
           
           <div className="space-y-4">
             {getActiveIssues().length > 0 ? getActiveIssues().map((issue) => (
-              <IssueItem issue={issue} key={issue.id}/>
+              <IssueItem issue={issue} key={issue.id} user={user}/>
             ))
           : <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition">
               <h4 className="text-lg">Здесь нет ваших обращений</h4>

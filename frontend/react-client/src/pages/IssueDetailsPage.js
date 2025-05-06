@@ -38,7 +38,7 @@ const IssueDetailsPage = () => {
 
   const [likes, setLikes] = useState(issue?.likeCount || 0);
   const [dislikes, setDislikes] = useState(issue?.dislikeCount || 0);
-  const [userVote, setUserVote] = useState(issue?.like || null);
+  const [userVote, setUserVote] = useState(issue?.like);
 
   const openModal = (img) => setModalImage(img);
   const closeModal = () => setModalImage(null);

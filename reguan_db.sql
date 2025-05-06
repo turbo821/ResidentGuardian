@@ -5,7 +5,7 @@
 -- Dumped from database version 16.1
 -- Dumped by pg_dump version 16.1
 
--- Started on 2025-05-06 01:53:07
+-- Started on 2025-05-07 01:58:57
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -511,8 +511,14 @@ a960f8b9-6695-443a-be49-c7f120f36f9f	айайай	2025-05-03 03:26:11.59162+03	8
 COPY public."Grades" ("Id", "UserId", "IssueId", "Like") FROM stdin;
 66ee057e-cd26-446e-9adf-61a5efaec06b	4fbd8498-115b-4194-94dd-249ed292bd80	0f33876e-d306-469d-b73b-07d6381a86cf	t
 85dab29a-f423-424b-a3a6-dee655e881aa	4fbd8498-115b-4194-94dd-249ed292bd80	5900f9cb-f69f-4871-b178-462940eff52d	t
-b4a891c0-0da9-4a3b-a65e-fb8a0ec61d98	4fbd8498-115b-4194-94dd-249ed292bd80	9c548d03-0acd-4c6b-8a72-ed7a74d476dd	f
 aaf2f301-6bb8-4d40-82c7-f8dda53bb9b2	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	0f33876e-d306-469d-b73b-07d6381a86cf	t
+dd5b5135-bfed-4ef3-bb4d-d59f2157b16b	4fbd8498-115b-4194-94dd-249ed292bd80	9c548d03-0acd-4c6b-8a72-ed7a74d476dd	f
+7600168f-a00f-40ed-a9f4-0d507f6e1960	4fbd8498-115b-4194-94dd-249ed292bd80	980f834a-ce93-449d-bd1c-94f48195086d	f
+a13e51e4-c6cd-4fc3-8791-4a27a425bec2	4fbd8498-115b-4194-94dd-249ed292bd80	39b48708-6035-40c4-98fc-a821ce655aa5	t
+4108af48-9bc6-4672-8fee-7fc9d6dd8cfb	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	0f33876e-d306-469d-b73b-07d6381a86cf	t
+49a1de3f-e0bf-4081-b382-68b59a55f124	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	5900f9cb-f69f-4871-b178-462940eff52d	t
+b554dbdd-10d3-4246-85c1-7994dd597297	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	980f834a-ce93-449d-bd1c-94f48195086d	t
+ae7035b2-eb20-4ebb-8998-bd2a91078242	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	9c548d03-0acd-4c6b-8a72-ed7a74d476dd	f
 \.
 
 
@@ -590,7 +596,6 @@ COPY public."ModeratorCategories" ("ModeratorId", "CategoryId") FROM stdin;
 --
 
 COPY public."RefreshTokens" ("Id", "Token", "UserId", "Expires") FROM stdin;
-0196a299-9974-7983-ba1e-a2d02f835e00	99850589-fe04-4aec-9e1b-022575ffdcd4	4fbd8498-115b-4194-94dd-249ed292bd80	2025-05-13 01:38:17.46013+03
 \.
 
 
@@ -1139,7 +1144,7 @@ ALTER TABLE ONLY public."RefreshTokens"
     ADD CONSTRAINT "FK_RefreshTokens_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES public."AspNetUsers"("Id") ON DELETE CASCADE;
 
 
--- Completed on 2025-05-06 01:53:08
+-- Completed on 2025-05-07 01:58:59
 
 --
 -- PostgreSQL database dump complete

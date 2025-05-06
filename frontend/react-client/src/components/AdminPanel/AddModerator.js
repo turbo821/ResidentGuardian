@@ -56,7 +56,7 @@ const AddModerator = ({ setModerators }) => {
       {isNewModerator && (
         <input 
           type="text" 
-          placeholder="ФИО модератора" 
+          placeholder="Имя модератора" 
           value={moderatorFullName} 
           onChange={(e) => setModeratorFullName(e.target.value)} 
           className="w-full p-2 border rounded-lg mt-4"

@@ -34,7 +34,7 @@ const RegisterPage = () => {
           <form onSubmit={handleRegister} className="mt-4">
             <input 
               type="text" 
-              placeholder="ФИО" 
+              placeholder="Имя" 
               value={fullName} 
               onChange={(e) => setFullName(e.target.value)} 
               required 

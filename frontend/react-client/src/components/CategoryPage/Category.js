@@ -1,7 +1,7 @@
 import React from "react";
 import { imagesURL } from "../../api";
 
-const Category = ({ category, goToIssues = () => {}, goToMap = () => {} }) => {
+const Category = ({ category, goToIssues = () => {} }) => {
   return (
     <div key={category.id} className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col">
       <img
@@ -19,12 +19,6 @@ const Category = ({ category, goToIssues = () => {}, goToMap = () => {} }) => {
             className="block text-green-500 hover:underline font-bold text-sm"
           >
             Смотреть обращения
-          </button>
-          <button 
-            onClick={() => goToMap(category.id)} 
-            className="block text-blue-500 hover:underline font-bold text-sm mt-1"
-          >
-            Смотреть на карте
           </button>
         </div>
       </div>
