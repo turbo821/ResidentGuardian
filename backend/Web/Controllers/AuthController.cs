@@ -82,7 +82,7 @@ namespace Web.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null) return BadRequest("Not authorized");
 
-            await _refreshTokenService.RevokeTokenAsync(Guid.Parse(userId!));
+            await _refreshTokenService.RevokeTokenAsync(Guid.Parse(userId));
 
             return NoContent();
         }

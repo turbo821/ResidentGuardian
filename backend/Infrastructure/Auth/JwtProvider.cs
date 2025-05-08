@@ -41,29 +41,5 @@ namespace Infrastructure.Auth
             var tokenHandler = new JsonWebTokenHandler();
             return tokenHandler.CreateToken(tokenDescriptor);
         }
-
-        public async Task<ClaimsPrincipal?> GetPrincipalFromToken(string token)
-        {
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),
-                ValidateIssuer = true,
-                ValidIssuer = _options.Issuer,
-                ValidateAudience = true,
-                ValidAudience = _options.Audience,
-                ValidateLifetime = false
-            };
-
-            var tokenHandler = new JsonWebTokenHandler();
-            var validationResult = await tokenHandler.ValidateTokenAsync(token, tokenValidationParameters);
-
-            if (!validationResult.IsValid)
-            {
-                throw new SecurityTokenValidationException("Token is invalid.");
-            }
-
-            return validationResult.ClaimsIdentity != null ? new ClaimsPrincipal(validationResult.ClaimsIdentity) : null;
-        }
     }
 }

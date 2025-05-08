@@ -9,15 +9,15 @@ namespace Web.Extensions
     {
         public static void AddDatabase(this IServiceCollection services, string connection)
         {
-            services.AddDbContext<AppGuardContext>(
-                options => options.UseNpgsql(connection, x =>
-                {
-                    x.UseNetTopologySuite();
-                    x.EnableRetryOnFailure(
-                        maxRetryCount: 5,
-                        maxRetryDelay: TimeSpan.FromSeconds(30),
-                        errorCodesToAdd: null);
-                }));
+                services.AddDbContext<AppGuardContext>(
+                    options => options.UseNpgsql(connection, x =>
+                    {
+                        x.UseNetTopologySuite();
+                        x.EnableRetryOnFailure(
+                            maxRetryCount: 5,
+                            maxRetryDelay: TimeSpan.FromSeconds(30),
+                            errorCodesToAdd: null);
+                    }));
         }
 
         public static async Task UseDatabaseRun(this WebApplication app)
