@@ -11,12 +11,14 @@ namespace Application.UseCases.CreateCategory
         private readonly ICategoryRepository _repo;
         private readonly IMapper _mapper;
         private readonly IFileStorage _fileStorage;
+        private readonly ICacheService _cache;
 
-        public CreateCategoryUseCase(ICategoryRepository repo, IMapper mapper, IFileStorage fileStorage)
+        public CreateCategoryUseCase(ICategoryRepository repo, IMapper mapper, IFileStorage fileStorage, ICacheService cache)
         {
             _repo = repo;
             _mapper = mapper;
             _fileStorage = fileStorage;
+            _cache = cache;
         }
         public async Task<GetCategoriesResponse?> Execute(CreateCategoryRequest categoryDto)
         {
@@ -35,6 +37,7 @@ namespace Application.UseCases.CreateCategory
             category.Id = id.Value;
 
             var newCategory = _mapper.Map<GetCategoriesResponse>(category);
+            await _cache.RemoveByPatternAsync("AllCategories");
             return newCategory;
         }
     }

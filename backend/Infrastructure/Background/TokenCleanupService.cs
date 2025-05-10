@@ -8,7 +8,7 @@ namespace Infrastructure.Background
     public class TokenCleanupService : BackgroundService
     {
         private readonly IServiceProvider _services;
-        private readonly TimeSpan _cleanupInterval = TimeSpan.FromHours(1);
+        private readonly TimeSpan _cleanupInterval = TimeSpan.FromMinutes(40);
 
         public TokenCleanupService(IServiceProvider services)
         {
@@ -17,6 +17,7 @@ namespace Infrastructure.Background
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            await Task.Delay(_cleanupInterval, stoppingToken);
             while (!stoppingToken.IsCancellationRequested)
             {
                 using (var scope = _services.CreateScope())
@@ -27,7 +28,6 @@ namespace Infrastructure.Background
                         .Where(rt => rt.Expires < DateTime.UtcNow)
                         .ExecuteDeleteAsync(stoppingToken);
                 }
-                await Task.Delay(_cleanupInterval, stoppingToken);
             }
         }
     }

@@ -22,6 +22,7 @@ string connection = Environment.GetEnvironmentVariable("CONNECTION_STRING") ?? b
 var allowedOrigins = Environment.GetEnvironmentVariable("ALLOWED_ORIGINS");
 
 builder.Services.AddDatabase(connection);
+builder.Services.AddOneCache(builder.Configuration);
 
 var originsArray = allowedOrigins?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? ["http://localhost:3000", "https://localhost:3000"];
 
@@ -80,7 +81,7 @@ builder.Services.AddFilters();
 
 var app = builder.Build();
 
-await app.UseAdminCliMode(args); // fix..
+// await app.UseAdminCliMode(args); // fix..
 
 // await app.UseDatabaseRun();
 
@@ -106,6 +107,7 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapGet("/api/health", () => Results.Ok());
 app.MapControllers();
 
 app.Run();

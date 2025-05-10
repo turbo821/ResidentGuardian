@@ -12,12 +12,14 @@ namespace Application.UseCases.UpdateCategory
         private readonly ICategoryRepository _repo;
         private readonly IMapper _mapper;
         private readonly IFileStorage _fileStorage;
+        private readonly ICacheService _cache;
 
-        public UpdateCategoryUseCase(ICategoryRepository repo, IMapper mapper, IFileStorage fileStorage)
+        public UpdateCategoryUseCase(ICategoryRepository repo, IMapper mapper, IFileStorage fileStorage, ICacheService cache)
         {
             _repo = repo;
             _mapper = mapper;
             _fileStorage = fileStorage;
+            _cache = cache;
         }
 
         public async Task<GetCategoriesResponse?> Execute(UpdateCategoryRequest categoryDto)
@@ -42,6 +44,7 @@ namespace Application.UseCases.UpdateCategory
                 return null;
 
             var editCategory = _mapper.Map<GetCategoriesResponse>(category);
+            await _cache.RemoveByPatternAsync("AllCategories");
             return editCategory;
         }
     }

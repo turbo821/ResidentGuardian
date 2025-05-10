@@ -1,5 +1,6 @@
 ﻿using Application.Filters.IssueFilters;
 using Application.Services;
+using Application.Services.Interfaces;
 using Application.UseCases.AddComment;
 using Application.UseCases.AddGrade;
 using Application.UseCases.AddModeratorCategories;
@@ -26,7 +27,9 @@ using Application.UseCases.UpdateCategory;
 using Application.UseCases.UpdateIssue;
 using Domain.Entities;
 using Domain.Interfaces;
+using Infrastructure.Cache;
 using Infrastructure.Repositories;
+using StackExchange.Redis;
 
 namespace Web.Extensions
 {
@@ -87,6 +90,33 @@ namespace Web.Extensions
             services.AddScoped<IFilter<Issue>, SearchFilter>();
 
             services.AddScoped<IPagination<Issue>, IssuePaginationService>();
+        }
+
+        public static IServiceCollection AddOneCache(this IServiceCollection services, IConfiguration configuration)
+        {
+            var redisAvailable = false;
+
+            var redisHost = Environment.GetEnvironmentVariable("REDIS_HOST") ?? configuration.GetSection("Redis:ConnectionString").Value!;
+
+            try
+            {
+                var redis = ConnectionMultiplexer.Connect(redisHost);
+                if (redis.IsConnected)
+                {
+                    services.AddSingleton<IConnectionMultiplexer>(redis);
+                    services.AddSingleton<ICacheService, DistributedCacheService>();
+                    redisAvailable = true;
+                }
+            }
+            catch { }
+
+            if (!redisAvailable)
+            {
+                services.AddMemoryCache();
+                services.AddSingleton<ICacheService, MemoryCacheService>();
+            }
+
+            return services;
         }
     }
 }
