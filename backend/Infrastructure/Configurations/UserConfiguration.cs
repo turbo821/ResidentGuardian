@@ -11,6 +11,10 @@ namespace Infrastructure.Configurations
             builder
                 .HasIndex(u => u.Email)
                 .IsUnique();
+
+            builder
+                .HasIndex(u => u.FullName)
+                .IsUnique();
         }
     }
 }

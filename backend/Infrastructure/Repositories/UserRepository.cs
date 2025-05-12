@@ -19,6 +19,10 @@ namespace Infrastructure.Repositories
             return users;
         }
 
+        public async Task<User?> FindByFullNameAsync(string fullName)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.FullName == fullName);
+        }
         public async Task<bool> RemoveUser(Guid id)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
