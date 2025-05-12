@@ -1,4 +1,6 @@
-﻿namespace Application.UseCases.AssignModerator
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Application.UseCases.AssignModerator
 {
-    public record AssignModeratorRequest(string Email);
+    public record AssignModeratorRequest([EmailAddress]string Email);
 }

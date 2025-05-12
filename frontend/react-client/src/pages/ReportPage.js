@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import MapModal from "../components/MapModal";
-import axios from "axios";
 import api from "../api";
 import UploadImage from "../components/ReportPage/UploadImage";
+import { fetchAddressFromCoordinates, extractDetailedAddress } from "../functions/addressFunctions";
+import { useAuth } from "../context/AuthContext";
 
 const ReportPage = () => {
+  const { user } = useAuth();
   const fileInputRef = useRef(null);
   const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("");
@@ -13,6 +15,8 @@ const ReportPage = () => {
   const [images, setImages] = useState([]);
   const [location, setLocation] = useState({ text: "", coords: null });
   const [isMapOpen, setIsMapOpen] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchAllCategories();
@@ -30,13 +34,16 @@ const ReportPage = () => {
 
   const handleImageUpload = (e) => {
     setImages(Array.from(e.target.files));
+    setErrors((prevErrors) => ({ ...prevErrors, "images": "" }));
   };
 
   const handleSubmit = async() => {
-    if (images.length === 0) return console.log("Not select images");
+    resetErrors();
+    if (!validateForm()) {
+      return;
+    }
   
     const formData = new FormData();
-    
     formData.append('title', title);
     formData.append('description', description || "");
     formData.append('categoryId', selectCategory);
@@ -47,16 +54,18 @@ const ReportPage = () => {
     images.forEach((image) => {
       formData.append(`Images`, image);
     });
-    console.log(location.coords);
+    
+    setIsLoading(true);
     try {
       await api.post('/api/issues', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
     } catch (err) {
-      console.log(err.response);
+      setErrors({general: "Произошла ошибка при отправлении обращения"});
     }
     finally {
+      setIsLoading(false);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -70,6 +79,7 @@ const ReportPage = () => {
   };
 
   const handleLocation = async(locality) => {
+    setErrors((prevErrors) => ({ ...prevErrors, "location": "" }));
     const geocodeData = await fetchAddressFromCoordinates(locality.coords);
     if (geocodeData) {
       const detailAddress = extractDetailedAddress(geocodeData).fullAddress;
@@ -79,58 +89,35 @@ const ReportPage = () => {
     }
   }
   
-  const fetchAddressFromCoordinates = async (coords) => {
-    const [latitude, longitude] = coords;
-    const apiKey = "78f10438-fb7e-4516-a20a-41c29d8f3b01";
-    const url = `https://geocode-maps.yandex.ru/1.x/?apikey=${apiKey}&geocode=${longitude},${latitude}&format=json`;
-    try {
-      const response = await axios.get(url);
-      const data = response.data;
-      return data;
-    } catch (error) {
-      console.error("Error requesting address:", error);
-    }
-  };
-
-  const extractDetailedAddress = (data) => {
-    const featureMembers = data?.response?.GeoObjectCollection?.featureMember;
-
-    if (featureMembers && featureMembers.length > 0) {
-      const firstGeoObject = featureMembers[0]?.GeoObject;
-      const components =
-        firstGeoObject?.metaDataProperty?.GeocoderMetaData?.Address?.Components;
-  
-      if (components) {
-        const city = components.find((comp) => comp.kind === "locality")?.name;
-        const district = components.find((comp) => comp.kind === "district")?.name;
-        const suburb = components.find((comp) => comp.kind === "suburb")?.name;
-        const street = components.find((comp) => comp.kind === "street")?.name;
-        const house = components.find((comp) => comp.kind === "house")?.name;
-  
-        return {
-          city: city || "-",
-          district: district || "-",
-          suburb: suburb || "-",
-          street: street || "-",
-          house: house || "-",
-          fullAddress: [city, district || suburb, street, house]
-            .filter(Boolean)
-            .join(", ") || "Адрес не найден",
-        };
-      }
-    }
-    return {
-      city: "-",
-      district: "-",
-      suburb: "-",
-      street: "-",
-      house: "-",
-      fullAddress: "Адрес не найден",
-    };
-  };
-
   const removeImage = (index) => {
     setImages(images.filter((_, i) => i !== index));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!title) {
+      newErrors.title = "Укажите название!";
+    }
+
+    if(selectCategory === '1' 
+      || selectCategory === '0' ) {
+      newErrors.selectCategory = "Укажите категорию!";
+    }
+    if(!location || !location.text || !location.coords) {
+      newErrors.location = "Выберите местоположение на карте!";
+    }
+
+    if (images.length === 0) {
+      newErrors.images = "Прикрепите фото!"
+    }
+
+    console.log(newErrors);
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const resetErrors = () => {
+    setErrors({});
   };
 
   return (
@@ -138,15 +125,19 @@ const ReportPage = () => {
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-3xl w-full">
         <h2 className="text-4xl font-bold text-center text-gray-800">Создать обращение</h2>
         <p className="mt-2 text-lg text-center text-gray-700">
-          Опишите проблему и укажите её местоположение.
+          {user ? "Опишите проблему и укажите её местоположение." : "Для создания и отправления обращения войдите в свой профиль."}
         </p>
 
-        <div className="mt-6 space-y-4">
+        <div className="mt-6 space-y-6 relative">
+          {errors.title && <p className="absolute mt-0 text-sm text-red-600">{errors.title}</p>}
           <input
             type="text"
             placeholder="Название проблемы"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(e.target.value)
+              setErrors((prevErrors) => ({ ...prevErrors, "title": "" }));
+            }}
             required
             className="w-full p-3 border rounded-lg"
           />
@@ -159,9 +150,13 @@ const ReportPage = () => {
             className="w-full p-3 border rounded-lg h-32"
           />
 
+          {errors.selectCategory && <p className="absolute top-52 mt-1 text-sm text-red-600">{errors.selectCategory}</p>}
           <select
             value={selectCategory}
-            onChange={(e) => setSelectCategory(e.target.value)}
+            onChange={(e) => {
+              setSelectCategory(e.target.value)
+              setErrors((prevErrors) => ({ ...prevErrors, "selectCategory": "" }));
+            }}
             className="w-full p-3 border rounded-lg"
           >
             <option key="1" value="1">Выберите категорию</option>
@@ -171,19 +166,22 @@ const ReportPage = () => {
               <option key="0" disabled>Категорий нет</option>
             )}
           </select>
-          
+          {errors.images && <p className="absolute bottom-30 left-40 mt-1 text-sm text-red-600">{errors.images}</p>}
           <UploadImage 
             fileInputRef={fileInputRef} 
             handleImageUpload={handleImageUpload} 
             images={images} 
             removeImage={removeImage}
           />
-
+          {errors.location && <p className="absolute bottom-[7.5rem] mt-1 text-sm text-red-600">{errors.location}</p>}
           <input
             type="text"
             placeholder="Местоположение"
             value={location.text}
-            onChange={(e) => setLocation({...location, text: e.target.value})}
+            onChange={(e) => {
+              setLocation({...location, text: e.target.value})
+              setErrors((prevErrors) => ({ ...prevErrors, "location": "" }));
+          }}
             required
             className="w-full p-3 border rounded-lg"
           />
@@ -196,12 +194,13 @@ const ReportPage = () => {
             Выбрать местоположение
           </button>
 
+          {errors.general && <p className="absolute bottom-12 text-sm text-red-600">{errors.general}</p>}
           <button
           onClick={handleSubmit}
             type="submit"
             className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition"
           >
-            Отправить обращение
+            { isLoading ? "Загрузка..." : "Отправить обращение" }
           </button>
         </div>
       </div>

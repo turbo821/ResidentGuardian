@@ -2,6 +2,6 @@
 {
     public interface IGetCategoriesUseCase
     {
-        Task<IEnumerable<GetCategoriesResponse>> Execute();
+        Task<IEnumerable<GetCategoriesResponse>?> Execute();
     }
 }

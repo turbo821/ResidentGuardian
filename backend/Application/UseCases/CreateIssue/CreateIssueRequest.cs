@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.UseCases.CreateIssue
 {
@@ -8,7 +9,11 @@ namespace Application.UseCases.CreateIssue
         Guid CategoryId,
         IEnumerable<IFormFile> Images,
         string Location,
+
+        [RegularExpression(@"^[0-9\.]+$")]
         string PointLatitude,
+
+        [RegularExpression(@"^[0-9\.]+$")]
         string PointLongitude
         );
 }
