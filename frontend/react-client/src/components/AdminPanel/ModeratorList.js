@@ -25,9 +25,9 @@ const ModeratorList = ({ moderators, setModerators, categories }) => {
     setModerators(moderators.filter((mod) => mod.id !== id));
   };
 
-  const fetchAddModeratorCategories = async(email, categoryIds) => {
+  const fetchUpdateModeratorCategories = async(email, categoryIds) => {
     try {
-      const response = await api.post('/api/admin/moderator-categories', {
+      const response = await api.put('/api/admin/moderator-categories', {
         email: email,
         categoryIds: categoryIds
       });
@@ -66,7 +66,7 @@ const ModeratorList = ({ moderators, setModerators, categories }) => {
                 categories={categories}
                 handleDeleteModerator={fetchDeleteModerator}
                 unassignModerator={fetchUnassignModerator}
-                updateModCategories={fetchAddModeratorCategories}
+                updateModCategories={fetchUpdateModeratorCategories}
               />
             </div>
           )) 
