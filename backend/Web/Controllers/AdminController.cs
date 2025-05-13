@@ -1,5 +1,5 @@
 ﻿using Application.Dtos;
-using Application.UseCases.AddModeratorCategories;
+using Application.UseCases.UpdateModeratorCategories;
 using Application.UseCases.AddModeratorRoles;
 using Application.UseCases.AssignModerator;
 using Application.UseCases.CreateModerator;
@@ -20,21 +20,21 @@ namespace Web.Controllers
         private readonly IGetModeratorsUseCase _getModerators;
         private readonly IAssignModeratorUseCase _assignModerator;
         private readonly IUnassignModeratorUseCase _unassignModerator;
-        private readonly IAddModeratorCategoriesUseCase _addModeratorCategories;
+        private readonly IUpdateModeratorCategoriesUseCase _updateModeratorCategories;
         private readonly IDeleteModeratorUseCase _deleteModerator;
 
         public AdminController(ICreateModeratorUseCase createModerator,
             IGetModeratorsUseCase getModerators,
             IAssignModeratorUseCase assignModerator,
             IUnassignModeratorUseCase unassignModerator,
-            IAddModeratorCategoriesUseCase addModeratorCategories,
+            IUpdateModeratorCategoriesUseCase updateModeratorCategories,
             IDeleteModeratorUseCase deleteModerator)
         {
             _createModerator = createModerator;
             _getModerators = getModerators;
             _assignModerator = assignModerator;
             _unassignModerator = unassignModerator;
-            _addModeratorCategories = addModeratorCategories;
+            _updateModeratorCategories = updateModeratorCategories;
             _deleteModerator = deleteModerator;
         }
 
@@ -66,10 +66,10 @@ namespace Web.Controllers
             return Ok(response);
         }
 
-        [HttpPost("moderator-categories")]
-        public async Task<IActionResult> AddModeratorCategories([FromBody] AddModeratorCategoriesRequest request)
+        [HttpPut("moderator-categories")]
+        public async Task<IActionResult> UpdateModeratorCategories([FromBody] UpdateModeratorCategoriesRequest request)
         {
-            var response = await _addModeratorCategories.Execute(request);
+            var response = await _updateModeratorCategories.Execute(request);
 
             if (response is null) return BadRequest();
 

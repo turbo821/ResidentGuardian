@@ -17,9 +17,9 @@ namespace Infrastructure.Background
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await Task.Delay(_cleanupInterval, stoppingToken);
             while (!stoppingToken.IsCancellationRequested)
             {
+                await Task.Delay(_cleanupInterval, stoppingToken);
                 using (var scope = _services.CreateScope())
                 {
                     var dbContext = scope.ServiceProvider.GetRequiredService<AppGuardContext>();

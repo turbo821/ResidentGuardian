@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AssignModerator from "../components/AdminPanel/AssignModerator";
-import AddModerator from "../components/AdminPanel/AddModerator";
 import AddCategory from "../components/AdminPanel/AddCategory";
 import CategoryList from "../components/AdminPanel/CategoryList";
 import { useAuth } from "../context/AuthContext";
 import api from "../api";
 import ModeratorList from "../components/AdminPanel/ModeratorList";
+import RegisterModerator from "../components/AdminPanel/RegisterModerator";
 
 const AdminPanel = () => {
   const { user, isLoading } = useAuth();
@@ -62,10 +62,12 @@ const AdminPanel = () => {
           Управляйте категориями и назначайте модераторов.
         </p>
 
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <AssignModerator categories={categories} setModerators={setModerators}/>
-          <AddModerator setModerators={setModerators} />
-          <ModeratorList moderators={moderators} setModerators={setModerators} categories={categories} />
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <AssignModerator setModerators={setModerators} categories={categories} />
+          <RegisterModerator setModerators={setModerators} />
+          <ModeratorList moderators={moderators} setModerators={setModerators} categories={categories} 
+          />
+
           <AddCategory setCategories={setCategories}/>
           <CategoryList categories={categories} setCategories={setCategories} />
         </div>

@@ -1,23 +1,18 @@
 import { useState } from "react";
 import ConfirmOpen from "./ConfirmOpen";
+import ModCategories from "./ModCategories";
 
-const ModeratorCard = ({ moderator, categories, handleDeleteModerator, unassignModerator }) => {
+const ModeratorCard = ({ moderator, categories, handleDeleteModerator, unassignModerator, updateModCategories }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-around gap-4 p-4 border rounded-xl shadow-sm bg-white">
+    <div className="flex flex-col md:flex-row items-center justify-around gap-1 p-4 border rounded-xl shadow-sm bg-white">
       <div className="flex flex-col">
         <h4 className="text-md font-bold text-gray-800">Имя: {moderator.fullName}</h4>
         <p className="text-md font-bold text-gray-700">Почта: {moderator.email}</p>
       </div>
       <div className="flex flex-col">
-        {moderator?.moderatorCategories !== null && moderator?.moderatorCategories.length > 0 ? (
-          moderator.moderatorCategories.map(catId => (
-            <p className="text-gray-700" key={catId}> {categories.find(c => c.id === catId)?.title} </p>
-          ))
-        ) : (
-          <span className="text-gray-700">Категории не назначены</span>
-        )}
+        <ModCategories categories={categories} moderator={moderator} updateModCategories={updateModCategories} />
       </div>
       <div className="flex flex-col md:flex-row gap-4">
         <button
