@@ -78,7 +78,7 @@ const ModCategories = ({ moderator, categories = [], updateModCategories }) => {
           </div>
         )}
 
-        {errors.general && <p className="absolute mt-1 bottom-[3.5rem] text-sm text-red-600">{errors.general}</p>}
+        {errors.general && <p className="absolute mt-1 top-[-0.5rem] text-sm text-red-600">{errors.general}</p>}
         <div className="flex flex-row gap-1">
           <button
             onClick={() => handleAssignModerator(moderator.email, selectedCategories)}
