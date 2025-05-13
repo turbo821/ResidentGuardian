@@ -4,14 +4,14 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.UseCases.AddModeratorCategories
+namespace Application.UseCases.UpdateModeratorCategories
 {
-    public class AddModeratorCategoriesUseCase : IAddModeratorCategoriesUseCase
+    public class UpdateModeratorCategoriesUseCase : IUpdateModeratorCategoriesUseCase
     {
         private readonly UserManager<User> _userManager;
         private readonly ICategoryRepository _repo;
 
-        public AddModeratorCategoriesUseCase(
+        public UpdateModeratorCategoriesUseCase(
             UserManager<User> userManager,
             ICategoryRepository repo)
         {
@@ -19,7 +19,7 @@ namespace Application.UseCases.AddModeratorCategories
             _repo = repo;
         }
 
-        public async Task<GetModeratorsResponse?> Execute(AddModeratorCategoriesRequest request)
+        public async Task<GetModeratorsResponse?> Execute(UpdateModeratorCategoriesRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
@@ -29,7 +29,7 @@ namespace Application.UseCases.AddModeratorCategories
             if (!isModerator)
                 return null;
 
-            await _repo.AddModeratorCategories(user.Id, request.CategoryIds);
+            await _repo.UpdateModeratorCategories(user.Id, request.CategoryIds);
 
             var roles = await _userManager.GetRolesAsync(user);
             var userDto = new GetModeratorsResponse(

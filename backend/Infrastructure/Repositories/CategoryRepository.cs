@@ -70,7 +70,7 @@ namespace Infrastructure.Repositories
             return moderatorCategories;
         }
 
-        public async Task<bool> AddModeratorCategories(Guid moderatorId, IEnumerable<Guid> categoryIds)
+        public async Task<bool> UpdateModeratorCategories(Guid moderatorId, IEnumerable<Guid> categoryIds)
         {
             var existingCategories = await _context.ModeratorCategories
                 .Where(mc => mc.ModeratorId == moderatorId)

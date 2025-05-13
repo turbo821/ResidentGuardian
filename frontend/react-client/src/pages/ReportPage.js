@@ -136,7 +136,7 @@ const ReportPage = () => {
             value={title}
             onChange={(e) => {
               setTitle(e.target.value)
-              setErrors((prevErrors) => ({ ...prevErrors, "title": "" }));
+              setErrors((prevErrors) => ({ ...prevErrors, title: "" }));
             }}
             required
             className="w-full p-3 border rounded-lg"
@@ -155,7 +155,7 @@ const ReportPage = () => {
             value={selectCategory}
             onChange={(e) => {
               setSelectCategory(e.target.value)
-              setErrors((prevErrors) => ({ ...prevErrors, "selectCategory": "" }));
+              setErrors((prevErrors) => ({ ...prevErrors, selectCategory: "" }));
             }}
             className="w-full p-3 border rounded-lg"
           >
@@ -180,7 +180,7 @@ const ReportPage = () => {
             value={location.text}
             onChange={(e) => {
               setLocation({...location, text: e.target.value})
-              setErrors((prevErrors) => ({ ...prevErrors, "location": "" }));
+              setErrors((prevErrors) => ({ ...prevErrors, location: "" }));
           }}
             required
             className="w-full p-3 border rounded-lg"

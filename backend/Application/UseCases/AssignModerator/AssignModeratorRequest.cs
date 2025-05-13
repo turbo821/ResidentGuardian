@@ -2,5 +2,5 @@
 
 namespace Application.UseCases.AssignModerator
 {
-    public record AssignModeratorRequest([EmailAddress]string Email);
+    public record AssignModeratorRequest([EmailAddress]string Email, IEnumerable<Guid>? CategoryIds);
 }

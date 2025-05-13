@@ -3,7 +3,7 @@ using Application.Services;
 using Application.Services.Interfaces;
 using Application.UseCases.AddComment;
 using Application.UseCases.AddGrade;
-using Application.UseCases.AddModeratorCategories;
+using Application.UseCases.UpdateModeratorCategories;
 using Application.UseCases.AssignModerator;
 using Application.UseCases.CreateAnswer;
 using Application.UseCases.CreateCategory;
@@ -52,7 +52,7 @@ namespace Web.Extensions
             services.AddScoped<IAssignModeratorUseCase, AssignModeratorUseCase>();
             services.AddScoped<IUnassignModeratorUseCase, UnassignModeratorUseCase>();
             services.AddScoped<ICreateModeratorUseCase, CreateModeratorUseCase>();
-            services.AddScoped<IAddModeratorCategoriesUseCase, AddModeratorCategoriesUseCase>();
+            services.AddScoped<IUpdateModeratorCategoriesUseCase, UpdateModeratorCategoriesUseCase>();
             services.AddScoped<IDeleteModeratorUseCase, DeleteModeratorUseCase>();
 
             services.AddScoped<IGetUserIssuesUseCase, GetUserIssuesUseCase>();

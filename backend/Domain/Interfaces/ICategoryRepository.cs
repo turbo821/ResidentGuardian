@@ -12,7 +12,7 @@ namespace Domain.Interfaces
         Task<bool> IsExist(Guid id);
 
         Task<IEnumerable<Category>?> GetModeratorCategories(Guid moderatorId);
-        Task<bool> AddModeratorCategories(Guid moderatorId, IEnumerable<Guid> categoryIds);
+        Task<bool> UpdateModeratorCategories(Guid moderatorId, IEnumerable<Guid> categoryIds);
         Task<bool> RemoveModeratorCategories(Guid moderatorId);
     }
 }
