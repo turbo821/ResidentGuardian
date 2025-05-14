@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { isValidEmail } from "../functions/textFunctions";
 import { Eye, EyeOff } from "lucide-react";
+import toast, { Toaster } from "react-hot-toast";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -24,11 +25,12 @@ const LoginPage = () => {
 
     try {
       await login(email, password);
-      navigate("/");
+      navigate(-1);
     } catch (err) {
-        setErrors({general: "Неверный логин или пароль"});
+      toast.error("Неверный логин или пароль", { duration: 2000 });
+      setErrors({general: "Неверный логин или пароль"});
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
     
@@ -107,6 +109,7 @@ const LoginPage = () => {
           Нет аккаунта? <a href="/register" className="text-green-500 hover:underline">Регистрация</a>
         </p>
       </div>
+      <Toaster/>
     </div>
   );
 };

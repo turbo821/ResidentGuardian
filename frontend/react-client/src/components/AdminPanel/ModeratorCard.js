@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ConfirmOpen from "./ConfirmOpen";
+import ConfirmDelete from "./ConfirmDelete";
 import ModCategories from "./ModCategories";
 
 const ModeratorCard = ({ moderator, categories, handleDeleteModerator, unassignModerator, updateModCategories }) => {
@@ -30,7 +30,7 @@ const ModeratorCard = ({ moderator, categories, handleDeleteModerator, unassignM
       </div>
 
       {confirmOpen && (
-        <ConfirmOpen
+        <ConfirmDelete
           itemTitle={"модератора"}
           item={moderator}
           handleDelete={handleDeleteModerator}

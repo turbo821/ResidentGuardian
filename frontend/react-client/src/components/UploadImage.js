@@ -1,4 +1,4 @@
-import { imagesURL } from "../../api";
+import { imagesURL } from "../api";
 import PropTypes from 'prop-types';
 
 const UploadImage = ({ 
@@ -103,7 +103,6 @@ const UploadImage = ({
                 alt={`Preview 1`}
                 className="h-24 w-full object-cover rounded-lg border border-gray-200"
               />
-              {multiple && (
                 <button
                   type="button"
                   onClick={() => removeImage()}
@@ -111,7 +110,6 @@ const UploadImage = ({
                 >
                   ×
                 </button>
-              )}
             </div>
           </div>
         </div>

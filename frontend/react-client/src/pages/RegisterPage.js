@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { isValidEmail } from "../functions/textFunctions";
 import { Eye, EyeOff } from "lucide-react";
+import toast, { Toaster } from "react-hot-toast";
 
 const RegisterPage = () => {
   const [fullName, setFullName] = useState("");
@@ -25,12 +26,15 @@ const RegisterPage = () => {
     
     try {
       await register(fullName, email, password);
-      navigate("/");
-      } catch (err) {
-          setErrors({general: "Такой пользователь уже существует"});
-      } finally {
-          setIsLoading(false);
-      }
+      // toast.success("Пользователь успешно зарегистрирован", { duration: 2000 });
+      navigate(-1);
+    } catch (err) {
+      toast.error("Такой пользователь уже существует", { duration: 2000 });
+      setErrors({general: "Такой пользователь уже существует"});
+    } finally {
+      setPassword("");
+      setIsLoading(false);
+    }
   };
 
   const validateForm = () => {
@@ -126,6 +130,7 @@ const RegisterPage = () => {
           Уже есть аккаунт? <a href="/login" className="text-green-500 hover:underline">Войти</a>
         </p>
       </div>
+      <Toaster/>
     </div>
   );
 };

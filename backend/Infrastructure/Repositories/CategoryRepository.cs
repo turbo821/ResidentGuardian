@@ -10,13 +10,21 @@ namespace Infrastructure.Repositories
     {
         public async Task<IEnumerable<Category>> GetAll()
         {
-            var categories = await _context.Categories.ToListAsync();
+            var categories = await _context.Categories
+                .OrderBy(c => c.Title)
+                .ToListAsync();
             return categories;
         }
 
         public async Task<Category?> GetById(Guid id)
         {
             var category = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
+            return category;
+        }
+
+        public async Task<Category?> GetByTitle(string title)
+        {
+            var category = await _context.Categories.FirstOrDefaultAsync(x => x.Title == title);
             return category;
         }
 

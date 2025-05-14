@@ -1,4 +1,4 @@
-const ConfirmOpen = ({ itemTitle, item, handleDelete, setConfirmOpen }) => {
+const ConfirmDelete = ({ itemTitle, item, handleDelete, setConfirmOpen }) => {
   const handleConfirmDelete = () => {
     handleDelete(item.id);
     setConfirmOpen(false);
@@ -11,7 +11,7 @@ const ConfirmOpen = ({ itemTitle, item, handleDelete, setConfirmOpen }) => {
       <p className="text-sm text-gray-700 mb-4">
         Вы уверены, что хотите удалить {itemTitle} <strong>{item.title}</strong>?
       </p>
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-center gap-2">
         <button
           onClick={() => setConfirmOpen(false)}
           className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-1 px-3 rounded transition"
@@ -30,4 +30,4 @@ const ConfirmOpen = ({ itemTitle, item, handleDelete, setConfirmOpen }) => {
   )
 }
 
-export default ConfirmOpen;
+export default ConfirmDelete;

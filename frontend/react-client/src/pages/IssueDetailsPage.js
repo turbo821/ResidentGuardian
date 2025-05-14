@@ -13,6 +13,7 @@ import { useAuth } from "../context/AuthContext";
 import ModeratorForm from "../components/IssueDetailsPage/ModeratorForm";
 import CommentForm from "../components/IssueDetailsPage/CommentForm";
 import Comment from "../components/IssueDetailsPage/Comment";
+import toast, { Toaster } from "react-hot-toast";
 
 const IssueDetailsPage = () => {
   const fileInputRef = useRef(null);
@@ -21,6 +22,7 @@ const IssueDetailsPage = () => {
   const [issue, setIssue] = useState(null);
   const [modalImage, setModalImage] = useState(null);
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
 
   const isModerator = user?.roles?.includes("Moderator") && user.moderatorCategories.some(
     (moderatorCategory) => moderatorCategory?.title === issue?.category
@@ -29,7 +31,7 @@ const IssueDetailsPage = () => {
   const [newAnswer, setNewAnswer] = useState({
     text: "",
     images: [],
-    status: 0
+    updateStatus: 0
   });
 
   const [comments, setComments] = useState([]);
@@ -100,21 +102,25 @@ const IssueDetailsPage = () => {
     try {
       const request = { text: text };
       const response = await api.post(`/api/issues/${id}/comments`, request);
-
-      console.log(response);
       setCommentText("");
-      setComments(prev => [response.data, ...prev ]);
-
+      setComments(prev => [...prev, response.data ]);
+      toast.success("Комментарий успешно создан", { duration: 2000 })
     } catch(err) {
+      toast.error("Ошибка при создании комментария", { duration: 2000 })
       console.log(err.response);
     }
   }
 
   const addAnswer = async() => {
+    resetErrors();
+    if (!validateAnswer()) {
+      return;
+    }
+
     const formData = new FormData();
     
     formData.append('updateStatus', newAnswer.updateStatus);
-    formData.append('text', newAnswer.text || "");
+    formData.append('text', newAnswer.text);
     
     newAnswer.images.forEach((image) => {
       formData.append(`Images`, image);
@@ -127,7 +133,9 @@ const IssueDetailsPage = () => {
 
       const newAnswer = response.data;
       setAnswers(prev => [...prev, newAnswer]);
+      toast.success("Ответ успешно отправлен", { duration: 2000 });
     } catch (err) {
+      toast.error("Ошибка при отправлении ответа", { duration: 2000 });
       console.log(err.response);
     }
     finally {
@@ -138,10 +146,24 @@ const IssueDetailsPage = () => {
       setNewAnswer({
           text: "",
           images: [],
-          status: 0
+          updateStatus: 0
       });
     }
   }
+
+  const validateAnswer = () => {
+    const newErrors = {};
+    if (!newAnswer.text) {
+      newErrors.text = "Укажите текст ответа!";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const resetErrors = () => {
+    setErrors({});
+  };
 
   const handleLike = async() => {
     if (!user) return;
@@ -318,7 +340,10 @@ const IssueDetailsPage = () => {
         </div>
 
         {isModerator && (
-          <ModeratorForm issueId={id} answer={newAnswer} setAnswer={setNewAnswer} addAnswer={addAnswer} fileInputRef={fileInputRef}/>
+          <div className="relative">
+            {errors.text && <p className="absolute mt-0 top-12 right-10 text-sm text-red-600">{errors.text}</p>}
+            <ModeratorForm issueId={id} answer={newAnswer} setAnswer={setNewAnswer} addAnswer={addAnswer} fileInputRef={fileInputRef}/>
+          </div>
         )}
 
         <div className="mt-8">
@@ -342,6 +367,7 @@ const IssueDetailsPage = () => {
       {modalImage && (
         <ModalImage modalImage={modalImage} closeModal={closeModal} />
       )}
+      <Toaster/>
     </div>
   );
 };

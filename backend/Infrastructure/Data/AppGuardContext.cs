@@ -22,6 +22,7 @@ namespace Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
             modelBuilder.ApplyConfiguration(new IssueConfiguration());
             modelBuilder.ApplyConfiguration(new ModeratorCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());

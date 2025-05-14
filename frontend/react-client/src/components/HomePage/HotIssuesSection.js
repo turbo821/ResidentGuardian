@@ -8,8 +8,8 @@ const   HotIssuesSection = () => {
   const { user } = useAuth();
   const [issues, setIssues] = useState([]);
   const PAGE_SIZE = 3;
-  // const SORT_BY_RATING = 2;
-  const SORT_NEWEST = 0;
+  const SORT_BY_RATING = 2;
+  // const SORT_NEWEST = 0;
 
   useEffect(() => {
     fetchHotIssues(); 
@@ -17,7 +17,7 @@ const   HotIssuesSection = () => {
 
   const fetchHotIssues = async() => {
     try {
-      const response = await api.get(`/api/issues?pageSize=${PAGE_SIZE}&sortOrder=${SORT_NEWEST}`);
+      const response = await api.get(`/api/issues?pageSize=${PAGE_SIZE}&sortOrder=${SORT_BY_RATING}`);
       setIssues(response.data.items);
     }
     catch(err) {

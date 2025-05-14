@@ -1,6 +1,7 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import api from "../../api";
-import UploadImage from "../ReportPage/UploadImage";
+import UploadImage from "../UploadImage";
+import toast from "react-hot-toast";
 
 const AddCategory = ({ setCategories }) => {
   const fileInputRef = useRef(null);
@@ -9,9 +10,15 @@ const AddCategory = ({ setCategories }) => {
     description: "",
     image: null
   });
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAddCategory = async() => {
-    if (!newCategory.image) return alert('Выберите картинку');
+    resetErrors();
+    if (!validateForm()) {
+      return;
+    }
+    setIsLoading(true);
 
     try {
       const response = await api.post('/api/categories', newCategory, {
@@ -19,57 +26,85 @@ const AddCategory = ({ setCategories }) => {
       });
       const category = response.data;
       setCategories((prev) => [...prev, category]);
-
+      toast.success("Категория успешно добавлена", { duration: 2000 });
     } catch (err) {
-      console.log(err.response);
+      toast.error("Ошибка при добавлении категории", { duration: 2000 });
+      setErrors({general: "Произошла ошибка при создании категории"});
     }
-    
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+    finally {
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      setNewCategory({
+        title: "",
+        description: "",
+        image: null
+      });
+      setIsLoading(false);
     }
-    setNewCategory({
-      title: "",
-      description: "",
-      image: null
-    });
   };
   
   const handleImageUpload = (e) => {
-    setNewCategory({...newCategory, image: e.target.files[0]})
+    setNewCategory({...newCategory, image: e.target.files[0]});
+    setErrors((prevErrors) => ({ ...prevErrors, image: "" }));
   };
 
   const removeImage = () => {
-    setNewCategory({...newCategory, image: null})
+    setNewCategory({...newCategory, image: null});
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!newCategory.title) {
+      newErrors.title = "Укажите название!";
+    }
+
+    if (!newCategory.description) {
+      newErrors.description = "Добавьте описание!";
+    }
+
+    if (!newCategory.image) {
+      newErrors.image = "Прикрепите фото!"
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const resetErrors = () => {
+    setErrors({});
   };
 
   return (
-    <div className="bg-gray-100 p-4 rounded-lg shadow-md md:col-span-2">
+    <div className="bg-gray-100 p-4 rounded-lg shadow-md md:col-span-2 relative">
       <h3 className="text-xl font-bold text-gray-800">Добавление категории</h3>
-      <div className="mt-4">
+
+        {errors.title && <p className="absolute mt-0 text-sm text-red-600">{errors.title}</p>}
         <input 
           type="text" 
           placeholder="Название новой категории" 
           value={newCategory.title} 
-          onChange={e => setNewCategory({...newCategory, title: e.target.value})} 
-          className="w-full p-2 border rounded-lg mb-3"
+          onChange={e => {
+            setNewCategory({...newCategory, title: e.target.value});
+            setErrors((prevErrors) => ({ ...prevErrors, title: "" }));
+          }}
+          className="w-full p-2 border rounded-lg mt-4"
         />
+
+        {errors.description && <p className="absolute mt-0 text-sm text-red-600">{errors.description}</p>}
         <input 
           type="text" 
           placeholder="Описание новой категории" 
           value={newCategory.description} 
-          onChange={e => setNewCategory({...newCategory, description: e.target.value})} 
-          className="w-full p-2 border rounded-lg mb-3"
+          onChange={e => {setNewCategory({...newCategory, description: e.target.value});
+            setErrors((prevErrors) => ({ ...prevErrors, description: "" }));
+          }}
+          className="w-full p-2 border rounded-lg mt-4 mb-2"
         />
-
-        {/* <label className="block text-gray-700 font-bold">Выбор картинки:</label>
-        <input 
-          ref={fileInputRef}
-          type="file" 
-          accept="image/*"
-          onChange={e => setNewCategory({...newCategory, image: e.target.files[0]})} 
-          className="block text-gray-700 font-bold p-2 mb-3"
-        /> */}
-
+        {errors.image && <p className="absolute mt-0 left-28 text-sm text-red-600">{errors.image}</p>}
         <UploadImage 
           fileInputRef={fileInputRef} 
           handleImageUpload={handleImageUpload} 
@@ -78,13 +113,13 @@ const AddCategory = ({ setCategories }) => {
           multiple={false} 
         />
 
+        {errors.general && <p className="absolute bottom-14 text-sm text-red-600">{errors.general}</p>}
         <button 
           onClick={handleAddCategory} 
-          className="mt-2 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition"
+          className="mt-6 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition"
         >
-          Добавить категорию
+          { isLoading ? "Загрузка..." : "Добавить категорию" }
         </button>
-      </div>
     </div>
     );
 }

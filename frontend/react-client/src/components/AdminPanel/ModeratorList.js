@@ -1,6 +1,7 @@
 import { useState } from "react";
 import api from "../../api";
 import ModeratorCard from "./ModeratorCard";
+import toast, { Toaster } from 'react-hot-toast';
 
 const ModeratorList = ({ moderators, setModerators, categories }) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -9,7 +10,9 @@ const ModeratorList = ({ moderators, setModerators, categories }) => {
     try {
       await api.delete(`/api/admin/unassign-moderator/${id}`);
       setModerators((prev) => prev.filter((mod) => mod.id !== id));
+      toast.success("Модератор снят с должности", { duration: 2000 });
     } catch(err) {
+      toast.error("Ошибка при попытке снять модератора с должности", { duration: 2000 });
       console.log(err.response);
     }
   }
@@ -17,8 +20,10 @@ const ModeratorList = ({ moderators, setModerators, categories }) => {
   const fetchDeleteModerator = async(id) => {
     try {
       await api.delete(`/api/admin/moderators/${id}`);
+      toast.success("Модератор успешно удален", { duration: 2000 });
     }
     catch(err) {
+      toast.error("Ошибка при удалении модератора", { duration: 2000 });
       console.log(err.response);
     }
 
@@ -73,6 +78,7 @@ const ModeratorList = ({ moderators, setModerators, categories }) => {
           : <p className="text-gray-500 mt-2">Модераторов нет</p>}
         </div>
       )}
+      <Toaster/>
     </div>
   );
 }

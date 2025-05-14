@@ -4,5 +4,5 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.UseCases.CreateAnswer
 {
-    public record AddAnswerRequest(string? Text, IssueStatus UpdateStatus, IEnumerable<IFormFile>? Images);
+    public record AddAnswerRequest(string Text, IssueStatus UpdateStatus, IEnumerable<IFormFile>? Images);
 }
