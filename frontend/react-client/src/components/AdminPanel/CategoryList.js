@@ -1,40 +1,20 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import api from "../../api";
 import AdminCategoryEdit from "./AdminCategoryEdit";
 import AdminCategoryCard from "./AdminCategoryCard";
+import toast, { Toaster } from 'react-hot-toast';
 
 const CategoryList = ({ categories = [], setCategories }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [editCategory, setEditCategory] = useState(null);
 
-  const handleEditCategory = (id) => {
-    setEditCategory(categories.find((cat) => cat.id === id));
-  };
-
-  const handleSaveCategory = async() => {
-    const updateCategory = await fetchEditCategory(editCategory);
-
-    setCategories(categories.map((cat) => (cat.id === updateCategory.id ? updateCategory : cat)));
-    setEditCategory(null);
-  };
-
-  const fetchEditCategory = async (category) => {
-    try {
-      const response = await api.put("/api/categories", category, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      return response.data;
-    }
-    catch(err) {
-      console.log('Ошибка загрузки: ' + err.response?.data || err.message);
-    }
-  }
-
   const handleDeleteCategory = async(id) => {
     try {
       await api.delete(`/api/categories/${id}`);
+      toast.success("Категория успешно удалена", { duration: 2000 });
     }
     catch(err) {
+      toast.error("Ошибка при удалении категории", { duration: 2000 });
       console.log(err.response);
     }
     setCategories((prev) => prev.filter((cat) => cat.id !== id));
@@ -66,13 +46,15 @@ const CategoryList = ({ categories = [], setCategories }) => {
                 <AdminCategoryEdit
                   editCategory={editCategory}
                   setEditCategory={setEditCategory}
-                  handleSaveCategory={handleSaveCategory}
+                  categories={categories}
+                  setCategories={setCategories}
                 />
               ) : (
                 <AdminCategoryCard
                   category={cat}
                   handleDeleteCategory={handleDeleteCategory}
-                  handleEditCategory={handleEditCategory}
+                  categories={categories}
+                  setEditCategory={setEditCategory}
                 />
               )}
             </div>
@@ -80,7 +62,7 @@ const CategoryList = ({ categories = [], setCategories }) => {
           : <p>Категорий нет</p>}
         </div>
       )}
-
+      <Toaster/>
     </div>
   );
 }

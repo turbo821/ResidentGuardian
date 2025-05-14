@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import api from "../../api";
+import { isValidEmail } from "../../functions/textFunctions";
+import toast, { Toaster } from 'react-hot-toast';
 
 const AssignModerator = ({ categories, setModerators }) => {
   const [moderatorEmail, setModeratorEmail] = useState("");
@@ -9,8 +11,12 @@ const AssignModerator = ({ categories, setModerators }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchAssignModerator = async (email, categories) => {
-
+    resetErrors();
+    if (!validateForm()) {
+      return;
+    }
     setIsLoading(true);
+
     try {
       const data = {
         email: email,
@@ -19,11 +25,14 @@ const AssignModerator = ({ categories, setModerators }) => {
       const response = await api.post("/api/admin/assign-moderator", data);
       const newModerator = response.data;
       setModerators((prev) => [...prev, newModerator]);
+      toast.success('Модератор успешно назначен', { duration: 2000 });
     } catch (error) {
-      console.error("Assign moderator role error: ", error.response);
+      toast.error('Ошибка при назначении модератора', { duration: 2000 });
+      setErrors({general: "Такой пользователь не найден"});
     }
     finally {
       setModeratorEmail("");
+      setSelectedCategories([]);
       setIsLoading(false);
     }
   };
@@ -34,21 +43,48 @@ const AssignModerator = ({ categories, setModerators }) => {
     );
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    if(!moderatorEmail) {
+      newErrors.moderatorEmail = "Укажите почту!";
+    }
+    if(moderatorEmail && !isValidEmail(moderatorEmail)) {
+      newErrors.moderatorEmail = "Неверный формат почты!";
+    }
+    if(selectedCategories.length === 0) {
+      newErrors.selectedCategories = "Назначьте категории!"
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const resetErrors = () => {
+    setErrors({});
+  };
+
   return (
     <div className="bg-gray-100 p-4 rounded-lg shadow-md relative">
-      <h3 className="text-xl font-bold text-gray-800 mb-4">Назначение модератора</h3>
+      <h3 className="text-xl font-bold text-gray-800">Назначение модератора</h3>
 
+      {errors.moderatorEmail && <p className="absolute top-10 mt-1 text-sm text-red-600">{errors.moderatorEmail}</p>}
       <input 
         type="email" 
         placeholder="Email пользователя" 
         value={moderatorEmail} 
-        onChange={(e) => setModeratorEmail(e.target.value)} 
-        className="w-full p-2 border rounded-lg mb-3"
+        onChange={(e) => {
+          setModeratorEmail(e.target.value);
+          setErrors((prevErrors) => ({ ...prevErrors, moderatorEmail: "" }));
+        }}
+        className="w-full p-2 border rounded-lg mt-5"
       />
 
+      {errors.selectedCategories && <p className="absolute top-[6.3rem] mt-1 text-sm text-red-600">{errors.selectedCategories}</p>}
       <button
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        className="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg flex justify-between items-center"
+        onClick={() => {
+          setIsDropdownOpen(!isDropdownOpen);
+        }}
+        className="mt-5 w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg flex justify-between items-center"
       >
         Категории
         <span>{isDropdownOpen ? "▲" : "▼"}</span>
@@ -73,13 +109,14 @@ const AssignModerator = ({ categories, setModerators }) => {
         </div>
       )}
 
-
+      {errors.general && <p className="absolute bottom-14 mt-1 text-sm text-red-600">{errors.general}</p>}
       <button 
         onClick={() => fetchAssignModerator(moderatorEmail, selectedCategories)} 
-        className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg transition mt-4"
+        className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg transition mt-5"
       >
         {isLoading ? "Загрузка..." : "Назначить модератором"}
       </button>
+      <Toaster/>
     </div>
     );
 }

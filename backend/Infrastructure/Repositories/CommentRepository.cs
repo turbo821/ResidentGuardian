@@ -14,7 +14,7 @@ namespace Infrastructure.Repositories
             var comments = await _context.Comments
                 .Include(c => c.User)
                 .Where(c => c.IssueId == issueId)
-                .OrderByDescending(c => c.CreatedAt)
+                .OrderBy(c => c.CreatedAt)
                 .ToListAsync();
 
             return comments;

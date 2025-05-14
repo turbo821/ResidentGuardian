@@ -22,6 +22,9 @@ namespace Application.UseCases.CreateCategory
         }
         public async Task<GetCategoriesResponse?> Execute(CreateCategoryRequest categoryDto)
         {
+            var existCategory = await _repo.GetByTitle(categoryDto.Title);
+            if (existCategory != null) return null;
+
             var imageUri = await _fileStorage.SaveImageAsync(categoryDto.Image);
             var category = new Category 
             { 

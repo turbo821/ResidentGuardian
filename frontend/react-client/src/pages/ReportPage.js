@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import MapModal from "../components/MapModal";
 import api from "../api";
-import UploadImage from "../components/ReportPage/UploadImage";
+import UploadImage from "../components/UploadImage";
 import { fetchAddressFromCoordinates, extractDetailedAddress } from "../functions/addressFunctions";
 import { useAuth } from "../context/AuthContext";
+import toast, { Toaster } from 'react-hot-toast';
 
 const ReportPage = () => {
   const { user } = useAuth();
@@ -34,7 +35,7 @@ const ReportPage = () => {
 
   const handleImageUpload = (e) => {
     setImages(Array.from(e.target.files));
-    setErrors((prevErrors) => ({ ...prevErrors, "images": "" }));
+    setErrors((prevErrors) => ({ ...prevErrors, images: "" }));
   };
 
   const handleSubmit = async() => {
@@ -61,20 +62,22 @@ const ReportPage = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
+      toast.success('Обращение успешно создалось', { duration: 2000 });
+
     } catch (err) {
+      toast.error('Ошибка при создании', { duration: 2000 });
       setErrors({general: "Произошла ошибка при отправлении обращения"});
     }
     finally {
-      setIsLoading(false);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
-
       setTitle("");
       setDescription("");
       setSelectCategory("1");
       setImages([]);
       setLocation({ text: "", coords: null });
+      setIsLoading(false);
     }
   };
 
@@ -111,7 +114,6 @@ const ReportPage = () => {
       newErrors.images = "Прикрепите фото!"
     }
 
-    console.log(newErrors);
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -205,6 +207,7 @@ const ReportPage = () => {
         </div>
       </div>
 
+      <Toaster />
       <MapModal isMapOpen={isMapOpen} setIsMapOpen={setIsMapOpen}  hadleLocation={handleLocation}/>
     </div>
   );

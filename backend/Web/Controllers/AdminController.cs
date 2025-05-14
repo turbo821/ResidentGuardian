@@ -58,7 +58,7 @@ namespace Web.Controllers
         [HttpPost("assign-moderator")]
         public async Task<IActionResult> AssignModerator([FromBody] AssignModeratorRequest request)
         {
-                var response = await _assignModerator.Execute(request);
+            var response = await _assignModerator.Execute(request);
 
             if (response is null)
                 return NotFound();
