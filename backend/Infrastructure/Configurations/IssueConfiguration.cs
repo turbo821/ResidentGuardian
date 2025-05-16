@@ -27,6 +27,16 @@ namespace Infrastructure.Configurations
                 .HasForeignKey(i => i.UserId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
+
+            builder.HasOne(i => i.ModifiedBy)
+                .WithMany(u => u.ModifiedIssues)
+                .HasForeignKey(i => i.ModifiedById)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasOne(i => i.RevokedBy)
+                .WithMany(u => u.RevokedIssues)
+                .HasForeignKey(i => i.RevokedById)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

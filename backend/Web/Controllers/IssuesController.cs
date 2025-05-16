@@ -1,16 +1,9 @@
-﻿using Application.Dtos;
-using Application.UseCases.AddComment;
-using Application.UseCases.AddGrade;
-using Application.UseCases.CreateAnswer;
-using Application.UseCases.CreateIssue;
-using Application.UseCases.DeleteGrade;
+﻿using Application.UseCases.CreateIssue;
 using Application.UseCases.DeleteIssue;
 using Application.UseCases.GetAllIssues;
-using Application.UseCases.GetAnswers;
-using Application.UseCases.GetComments;
 using Application.UseCases.GetIssue;
+using Application.UseCases.RestoreIssue;
 using Application.UseCases.UpdateIssue;
-using Domain.Entities;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,32 +20,19 @@ namespace Web.Controllers
         private readonly ICreateIssueUseCase _createIssue;
         private readonly IUpdateIssueUseCase _updateIssue;
         private readonly IDeleteIssueUseCase _deleteIssue;
-        private readonly IAddCommentUseCase _addComment;
-        private readonly IGetCommentsUseCase _getComments;
-        private readonly ICreateAnswerUseCase _createAnswer;
-        private readonly IGetAnswersUseCase _getAnswers;
-        private readonly IAddGradeUseCase _addGrade;
-        private readonly IDeleteGradeUseCase _deleteGrade;
+        private readonly IRestoreIssueUseCase _restoreIssue;
 
         public IssuesController(
             IGetAllIssueUseCase getAllIssues, IGetIssueUseCase getIssue,
             ICreateIssueUseCase createIssue, IUpdateIssueUseCase updateIssue,
-            IDeleteIssueUseCase deleteIssue, IAddCommentUseCase addComment,
-            IGetCommentsUseCase getComments, ICreateAnswerUseCase createAnswer,
-            IGetAnswersUseCase getAnswers, IAddGradeUseCase addGrade,
-            IDeleteGradeUseCase deleteGrade)
+            IDeleteIssueUseCase deleteIssue, IRestoreIssueUseCase restoreIssue)
         {
             _getAllIssues = getAllIssues;
             _getIssue = getIssue;
             _createIssue = createIssue;
             _updateIssue = updateIssue;
             _deleteIssue = deleteIssue;
-            _addComment = addComment;
-            _getComments = getComments;
-            _createAnswer = createAnswer;
-            _getAnswers = getAnswers;
-            _addGrade = addGrade;
-            _deleteGrade = deleteGrade;
+            _restoreIssue = restoreIssue;
         }
 
         [HttpGet]
@@ -67,6 +47,23 @@ namespace Web.Controllers
             if (userId != null) userGuid = Guid.Parse(userId);
 
             var response = await _getAllIssues.Execute(request, userGuid);
+
+            return Ok(response);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("revored")]
+        public async Task<IActionResult> GetAllRevoredIssues([FromQuery] IssueFilterRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            Guid? userGuid = null;
+            if (userId != null) userGuid = Guid.Parse(userId);
+
+            var response = await _getAllIssues.Execute(request, userGuid, true);
 
             return Ok(response);
         }
@@ -125,12 +122,18 @@ namespace Web.Controllers
         [Authorize]
         [HttpDelete]
         [Route("{id}")]
-        public async Task<IActionResult> RemoveIssue(Guid id)
+        public async Task<IActionResult> RemoveIssue(Guid id, [FromQuery] bool softDeletion = true)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var success = await _deleteIssue.Execute(id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) return Unauthorized("Not authorized");
+
+            var userGuid = Guid.Parse(userId);
+            DeleteIssueRequest request = new(userGuid, softDeletion);
+
+            var success = await _deleteIssue.Execute(id, request);
 
             if (!success)
                 return NotFound();
@@ -138,107 +141,21 @@ namespace Web.Controllers
             return Ok();
         }
 
-        [HttpGet]
-        [Route("{id}/comments")]
-        public async Task<IActionResult> GetComments(Guid id)
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{id}/restore")]
+        public async Task<IActionResult> Restore(Guid id)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
-            var commentDtos = await _getComments.Execute(id);
-
-            return Ok(commentDtos);
-        }
-
-        [Authorize]
-        [HttpPost]
-        [Route("{id}/comments")]
-        public async Task<IActionResult> AddComment(Guid id, [FromBody] CommentRequest textRequest)
-        {
-                if (!ModelState.IsValid)
-                return BadRequest();
-
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null) return Unauthorized();
+            if (userId == null) return Unauthorized("Not authorized");
 
             var userGuid = Guid.Parse(userId);
 
-            var request = new AddCommentRequest(id, userGuid, textRequest.Text);
+            var response = await _restoreIssue.Execute(id);
 
-            var response = await _addComment.Execute(request);
-
-            if (response is null)
+            if (!response)
                 return NotFound();
 
             return Ok(response);
-        }
-
-        [HttpGet]
-        [Route("{id}/answers")]
-        public async Task<IActionResult> GetAnswers(Guid id)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
-            var response = await _getAnswers.Execute(id);
-
-            return Ok(response);
-        }
-
-        [Authorize(Roles = "Moderator")]
-        [HttpPost]
-        [Route("{id}/answers")]
-        public async Task<IActionResult> AddAnswer(Guid id, [FromForm] AddAnswerRequest addRequest)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null) return Unauthorized();
-
-            var userGuid = Guid.Parse(userId);
-
-            var request = new CreateAnswerRequest(id, userGuid, addRequest.Text, 
-                addRequest.UpdateStatus, addRequest.Images);
-
-            var response = await _createAnswer.Execute(request);
-
-            if(response is null) return NotFound();
-
-            return Ok(response);
-        }
-
-        [Authorize]
-        [HttpPost]
-        [Route("{id}/grades")]
-        public async Task<IActionResult> AddGrade(Guid id, [FromBody] bool like)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest("Not valid");
-
-            Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-
-            var request = new AddGradeRequest(id, userId, like);
-            var success = await _addGrade.Execute(request);
-
-            if (!success) return BadRequest();
-
-            return Ok();
-        }
-
-        [Authorize]
-        [HttpDelete]
-        [Route("{id}/grades")]
-        public async Task<IActionResult> DeleteGrade(Guid id)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest("Not valid");
-
-            Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-
-            var request = new DeleteGradeRequest(id, userId);
-            var success = await _deleteGrade.Execute(request);
-
-            if (!success) return BadRequest();
-
-            return Ok();
         }
     }
 }

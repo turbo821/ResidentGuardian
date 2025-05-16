@@ -30,6 +30,7 @@ using Domain.Interfaces;
 using Infrastructure.Cache;
 using Infrastructure.Repositories;
 using StackExchange.Redis;
+using Application.UseCases.RestoreIssue;
 
 namespace Web.Extensions
 {
@@ -47,6 +48,7 @@ namespace Web.Extensions
             services.AddScoped<ICreateIssueUseCase, CreateIssueUseCase>();
             services.AddScoped<IUpdateIssueUseCase, UpdateIssueUseCase>();
             services.AddScoped<IDeleteIssueUseCase, DeleteIssueUseCase>();
+            services.AddScoped<IRestoreIssueUseCase, RestoreIssueUseCase>();
 
             services.AddScoped<IGetModeratorsUseCase, GetModeratorsUseCase>();
             services.AddScoped<IAssignModeratorUseCase, AssignModeratorUseCase>();

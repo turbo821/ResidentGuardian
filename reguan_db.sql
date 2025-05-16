@@ -5,7 +5,7 @@
 -- Dumped from database version 16.1
 -- Dumped by pg_dump version 16.1
 
--- Started on 2025-05-15 02:02:54
+-- Started on 2025-05-17 00:47:20
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -27,7 +27,7 @@ CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA public;
 
 
 --
--- TOC entry 5883 (class 0 OID 0)
+-- TOC entry 5887 (class 0 OID 0)
 -- Dependencies: 2
 -- Name: EXTENSION postgis; Type: COMMENT; Schema: -; Owner: 
 --
@@ -291,7 +291,11 @@ CREATE TABLE public."Issues" (
     "Point" public.geometry,
     "CreatedAt" timestamp with time zone NOT NULL,
     "UserId" uuid DEFAULT '00000000-0000-0000-0000-000000000000'::uuid NOT NULL,
-    "CategoryId" uuid DEFAULT '00000000-0000-0000-0000-000000000000'::uuid NOT NULL
+    "CategoryId" uuid DEFAULT '00000000-0000-0000-0000-000000000000'::uuid NOT NULL,
+    "ModifiedById" uuid,
+    "ModifiedOn" timestamp with time zone,
+    "RevokedById" uuid,
+    "RevokedOn" timestamp with time zone
 );
 
 
@@ -339,7 +343,7 @@ CREATE TABLE public."__EFMigrationsHistory" (
 ALTER TABLE public."__EFMigrationsHistory" OWNER TO postgres;
 
 --
--- TOC entry 5876 (class 0 OID 116681)
+-- TOC entry 5880 (class 0 OID 116681)
 -- Dependencies: 238
 -- Data for Name: AnswerImages; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -357,7 +361,7 @@ fafcc6d5-0436-4a1d-8cad-4bd2044b5330	7c4a64c2-2414-4fd7-9132-25e97942b461.jpg	01
 
 
 --
--- TOC entry 5872 (class 0 OID 116149)
+-- TOC entry 5876 (class 0 OID 116149)
 -- Dependencies: 234
 -- Data for Name: Answers; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -381,7 +385,7 @@ COPY public."Answers" ("Id", "IssueId", "ModeratorId", "Text", "CreatedAt", "New
 
 
 --
--- TOC entry 5864 (class 0 OID 109060)
+-- TOC entry 5868 (class 0 OID 109060)
 -- Dependencies: 226
 -- Data for Name: AspNetRoleClaims; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -391,7 +395,7 @@ COPY public."AspNetRoleClaims" ("Id", "RoleId", "ClaimType", "ClaimValue") FROM 
 
 
 --
--- TOC entry 5860 (class 0 OID 109038)
+-- TOC entry 5864 (class 0 OID 109038)
 -- Dependencies: 222
 -- Data for Name: AspNetRoles; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -404,7 +408,7 @@ COPY public."AspNetRoles" ("Id", "Name", "NormalizedName", "ConcurrencyStamp") F
 
 
 --
--- TOC entry 5866 (class 0 OID 109073)
+-- TOC entry 5870 (class 0 OID 109073)
 -- Dependencies: 228
 -- Data for Name: AspNetUserClaims; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -414,7 +418,7 @@ COPY public."AspNetUserClaims" ("Id", "UserId", "ClaimType", "ClaimValue") FROM 
 
 
 --
--- TOC entry 5867 (class 0 OID 109085)
+-- TOC entry 5871 (class 0 OID 109085)
 -- Dependencies: 229
 -- Data for Name: AspNetUserLogins; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -424,7 +428,7 @@ COPY public."AspNetUserLogins" ("LoginProvider", "ProviderKey", "ProviderDisplay
 
 
 --
--- TOC entry 5868 (class 0 OID 109097)
+-- TOC entry 5872 (class 0 OID 109097)
 -- Dependencies: 230
 -- Data for Name: AspNetUserRoles; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -448,7 +452,7 @@ a543e6a1-34bb-4f6a-96af-78aaad16dc9c	01957d08-0b5c-7811-9905-27c4ac82cee9
 
 
 --
--- TOC entry 5869 (class 0 OID 109112)
+-- TOC entry 5873 (class 0 OID 109112)
 -- Dependencies: 231
 -- Data for Name: AspNetUserTokens; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -458,7 +462,7 @@ COPY public."AspNetUserTokens" ("UserId", "LoginProvider", "Name", "Value") FROM
 
 
 --
--- TOC entry 5861 (class 0 OID 109045)
+-- TOC entry 5865 (class 0 OID 109045)
 -- Dependencies: 223
 -- Data for Name: AspNetUsers; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -482,7 +486,7 @@ a543e6a1-34bb-4f6a-96af-78aaad16dc9c	2025-05-15 01:55:54.926395+03	dmitriy123@gm
 
 
 --
--- TOC entry 5862 (class 0 OID 109052)
+-- TOC entry 5866 (class 0 OID 109052)
 -- Dependencies: 224
 -- Data for Name: Categories; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -498,7 +502,7 @@ COPY public."Categories" ("Id", "Title", "Description", "ImageUri") FROM stdin;
 
 
 --
--- TOC entry 5875 (class 0 OID 116654)
+-- TOC entry 5879 (class 0 OID 116654)
 -- Dependencies: 237
 -- Data for Name: Comments; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -515,11 +519,14 @@ a960f8b9-6695-443a-be49-c7f120f36f9f	айайай	2025-05-03 03:26:11.59162+03	8
 7cc5bb78-1ee9-4e15-b52c-2c0c83c8ca13	1	2025-05-15 01:35:58.449561+03	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	e0b8e65c-6d58-4c5a-ac80-293eaf32171a
 7fa2e7a5-ae8c-4567-b6b0-1b2c29a34796	2	2025-05-15 01:37:26.089775+03	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	e0b8e65c-6d58-4c5a-ac80-293eaf32171a
 5acd796d-f565-4010-a4b5-bc27b9a0b12a	тест	2025-05-15 01:47:38.994142+03	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	e0b8e65c-6d58-4c5a-ac80-293eaf32171a
+6b05a0b3-0883-43ba-a21d-5b41a7d03983	вот дела	2025-05-16 20:41:47.370911+03	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	0f33876e-d306-469d-b73b-07d6381a86cf
+72b83b4b-bfe0-4227-86f7-d28591f0fac2	й	2025-05-16 20:41:53.292139+03	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	0f33876e-d306-469d-b73b-07d6381a86cf
+c957c47a-a8b4-434f-8553-8ffbba513d8b	23	2025-05-16 20:42:37.562899+03	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	0f33876e-d306-469d-b73b-07d6381a86cf
 \.
 
 
 --
--- TOC entry 5877 (class 0 OID 116696)
+-- TOC entry 5881 (class 0 OID 116696)
 -- Dependencies: 239
 -- Data for Name: Grades; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -527,19 +534,20 @@ a960f8b9-6695-443a-be49-c7f120f36f9f	айайай	2025-05-03 03:26:11.59162+03	8
 COPY public."Grades" ("Id", "UserId", "IssueId", "Like") FROM stdin;
 66ee057e-cd26-446e-9adf-61a5efaec06b	4fbd8498-115b-4194-94dd-249ed292bd80	0f33876e-d306-469d-b73b-07d6381a86cf	t
 85dab29a-f423-424b-a3a6-dee655e881aa	4fbd8498-115b-4194-94dd-249ed292bd80	5900f9cb-f69f-4871-b178-462940eff52d	t
-aaf2f301-6bb8-4d40-82c7-f8dda53bb9b2	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	0f33876e-d306-469d-b73b-07d6381a86cf	t
 dd5b5135-bfed-4ef3-bb4d-d59f2157b16b	4fbd8498-115b-4194-94dd-249ed292bd80	9c548d03-0acd-4c6b-8a72-ed7a74d476dd	f
 7600168f-a00f-40ed-a9f4-0d507f6e1960	4fbd8498-115b-4194-94dd-249ed292bd80	980f834a-ce93-449d-bd1c-94f48195086d	f
-a13e51e4-c6cd-4fc3-8791-4a27a425bec2	4fbd8498-115b-4194-94dd-249ed292bd80	39b48708-6035-40c4-98fc-a821ce655aa5	t
 4108af48-9bc6-4672-8fee-7fc9d6dd8cfb	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	0f33876e-d306-469d-b73b-07d6381a86cf	t
 49a1de3f-e0bf-4081-b382-68b59a55f124	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	5900f9cb-f69f-4871-b178-462940eff52d	t
 b554dbdd-10d3-4246-85c1-7994dd597297	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	980f834a-ce93-449d-bd1c-94f48195086d	t
 ae7035b2-eb20-4ebb-8998-bd2a91078242	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	9c548d03-0acd-4c6b-8a72-ed7a74d476dd	f
+a17eabd3-a3c2-479b-832b-3f97016076d7	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	0f33876e-d306-469d-b73b-07d6381a86cf	t
+4c0cf489-2410-4a67-9614-25866c89837c	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	b4b2f863-5f12-4199-b8a8-eb41e4b6f1b5	t
+2a881b25-cc4f-421d-842c-40b0fce20fd8	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	7ea991bb-5cde-4a7a-aa49-186b5848ac46	t
 \.
 
 
 --
--- TOC entry 5874 (class 0 OID 116200)
+-- TOC entry 5878 (class 0 OID 116200)
 -- Dependencies: 236
 -- Data for Name: IssueImages; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -551,8 +559,6 @@ dcc69559-eccd-4e45-8b23-d2bb5723b40a	6e6b9a65-e4b9-4f6f-bcb8-feb32e7a2bc7.jpg	98
 cdfeafed-10e5-48ef-8e13-8b7cba6cf43d	8a3fb438-723a-4419-bdf4-4c264fd5b8aa.jpg	90da36a5-4697-4a29-9d84-f5c89aabb2a5
 d95628b1-0ff2-4872-b228-ed54528d89f7	e14032f8-3efd-402d-8f27-aaf5b41bd1cc.jpg	90da36a5-4697-4a29-9d84-f5c89aabb2a5
 4bb77c51-776e-442c-8424-2608b81da9b7	fee001af-c8da-416c-b13d-d1b48dc3352f.jpg	9c548d03-0acd-4c6b-8a72-ed7a74d476dd
-476bfd90-dc93-4a55-97ae-b926e71d74ab	0d4ce624-96b4-43f8-afdc-5ff1b8a28352.jpg	39b48708-6035-40c4-98fc-a821ce655aa5
-86d37c19-a2fb-49c8-9e69-c7cd97769189	35411d2f-18b1-472a-b1b5-e8cfbda4602b.jpg	39b48708-6035-40c4-98fc-a821ce655aa5
 352818d4-dc86-443b-81a2-dfa0e93e7226	9fa5983f-6d71-4603-81c9-ca0a51675825.jpg	b4b2f863-5f12-4199-b8a8-eb41e4b6f1b5
 602293eb-9232-4aea-b596-8a22004b5acf	216a5434-8712-486a-9c8c-6b2a689a5aa6.jpg	b4b2f863-5f12-4199-b8a8-eb41e4b6f1b5
 a896f0e2-92ff-45f4-87ea-73b350f465f8	6d8b7572-0438-4dbd-ab18-0e903f6c59e8.jpg	b4b2f863-5f12-4199-b8a8-eb41e4b6f1b5
@@ -564,38 +570,32 @@ b387e922-5bd1-4494-8705-0bc31184f3ac	4ce0a722-b5f6-453d-9660-179b37051e66.jpg	0f
 e5edec33-e982-4576-873c-14b14935119e	806fc5a5-2e77-4b42-9eef-97b8c203ac75.jpg	0f33876e-d306-469d-b73b-07d6381a86cf
 1dfad447-e46a-4d12-b2e4-3e081ab880b8	a6e6da1b-0266-402b-9a2c-506d3d82d575.jpg	7ea991bb-5cde-4a7a-aa49-186b5848ac46
 cf20b4f4-afd4-48f4-a44f-5e8bc08095cb	01529631-456c-4454-8a0b-04b93ed7b814.jpeg	7ea991bb-5cde-4a7a-aa49-186b5848ac46
-183466c0-39d6-4276-86b2-0813cf135f2b	80e6855d-8708-45dd-ac10-fee575dff4cd.jpg	de203979-239a-473b-a7b2-e302432405f2
-5574038c-93b3-433a-b83b-018b38147d78	c246fef9-39e2-40c1-a7be-394cacf3c1cc.jpg	de203979-239a-473b-a7b2-e302432405f2
 943d0ca3-7a61-46a4-8514-adfa605d7444	1e57bf50-db8d-48f1-9876-1b7e82d05308.webp	f827be99-3920-4f5f-b0b8-7473ef3497a3
-9619aba1-8ea2-4bca-a863-dfd362df9161	e90ed97f-fb73-440b-9b29-e02cf6eb334f.jpg	398dca6b-8a58-4260-89b9-e56a9b551960
 4042fd4c-6a83-448b-afd4-9ac23decd55b	c39bc8e9-bc5d-4a95-95db-603dbb79c333.jpeg	e0b8e65c-6d58-4c5a-ac80-293eaf32171a
 \.
 
 
 --
--- TOC entry 5870 (class 0 OID 109124)
+-- TOC entry 5874 (class 0 OID 109124)
 -- Dependencies: 232
 -- Data for Name: Issues; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public."Issues" ("Id", "Title", "Description", "Status", "Location", "Point", "CreatedAt", "UserId", "CategoryId") FROM stdin;
-b4b2f863-5f12-4199-b8a8-eb41e4b6f1b5	Засоренная ливневая канализация	После дождя вода стоит 3 дня, невозможно пройти	InProgress	Волгодонск, улица Ленина, 109	0101000020E610000005DD77FA59154540F5E7199F21C14740	2025-04-21 01:33:45.849282+03	4fbd8498-115b-4194-94dd-249ed292bd80	01964131-f40e-78db-beb9-8f0d2c9b5dfb
-0f33876e-d306-469d-b73b-07d6381a86cf	Грязь на тротуаре	Грязно	InProgress	Волгодонск, проспект Строителей, 2Д	0101000020E61000006E287B3B8C18454001DDE11E5FC14740	2025-04-21 01:36:54.211518+03	4fbd8498-115b-4194-94dd-249ed292bd80	78b02b13-958f-4257-8b06-5378e1f6f3df
-de203979-239a-473b-a7b2-e302432405f2	Улица неровная	На дорожке повсюду дыры	Pending	Волгодонск, проезд Натальина Роща, 12	0101000020E610000033DF4FF1081245409A46C7629AC14740	2025-05-03 22:41:16.430832+03	4fbd8498-115b-4194-94dd-249ed292bd80	019645dc-f75a-7008-b083-e399eecd79e0
-f827be99-3920-4f5f-b0b8-7473ef3497a3	Старый сломанный аттракцион 	Эта площадка находится в аренде у предпринимателя, аттракцион не в рабочем состоянии, поскольку для его ремонта нужна деталь, изготовить которую может только Комсомольский-на-Амуре авиационный завод.	Pending	Волгодонск, квартал Профтехучилищ	0101000020E6100000B3BB50FEF6184540F6FA4E8B17C14740	2025-05-12 22:45:43.809421+03	29c1d83d-414e-45e8-ac22-20c921fcee93	01964131-f40e-78db-beb9-8f0d2c9b5dfb
-398dca6b-8a58-4260-89b9-e56a9b551960	Пропала горячая вода	Уже несколько недель нет горячей воды..	Pending	Волгодонск, Ноябрьский переулок, 9Б	0101000020E6100000331C69CC0718454045804F8B76C24740	2025-05-15 00:51:04.95812+03	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	019645dc-f75a-7008-b083-e399eecd79e0
-e0b8e65c-6d58-4c5a-ac80-293eaf32171a	Грязь	Главный источник грязи в городе – открытый грунт. Грязь на дорогах (особенно зимой) или пыль летом – это в основном последствия открытого грунта.\r\n\r\n	Pending	Волгодонск, бульвар Великой Победы, 26	0101000020E610000035DF4F75061845405FAE5FFBDEC14740	2025-05-15 00:56:42.600023+03	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	3e8225ec-d424-4ea7-9a4d-40f400bed880
-90da36a5-4697-4a29-9d84-f5c89aabb2a5	Яма на проспекте Ленина	Большая яма размером 1.5×2 метра, глубиной около 30 см	Pending	Волгодонск, улица Ленина	0101000020E6100000F4E63D96A315454090B23FD900C14740	2025-04-21 01:26:44.48107+03	4fbd8498-115b-4194-94dd-249ed292bd80	3e8225ec-d424-4ea7-9a4d-40f400bed880
-39b48708-6035-40c4-98fc-a821ce655aa5	Стертая разметка зебры	Пешеходный переход полностью стерт, водители не останавливаются	Pending	Волгодонск, улица Серафимовича, 86/23	0101000020E610000035DF4FB59E1245407314F1CAE2C14740	2025-04-21 01:32:24.255722+03	4fbd8498-115b-4194-94dd-249ed292bd80	3e8225ec-d424-4ea7-9a4d-40f400bed880
-5900f9cb-f69f-4871-b178-462940eff52d	Сломанная лавочка	\N	Pending	Волгодонск, улица 50 лет СССР, 11	0101000020E610000035DF4FD1AE1345409734B3F8C0C14740	2025-04-21 01:34:55.327524+03	4fbd8498-115b-4194-94dd-249ed292bd80	01964131-f40e-78db-beb9-8f0d2c9b5dfb
-7ea991bb-5cde-4a7a-aa49-186b5848ac46	Плохие маршрутки	Езжу на маршрутке, они неудобное, в них жарко и долго набираются 	Resolved	Цимлянск, улица Надежды Крупской	0101000020E610000089FAC6A4820C454045157DF8DED14740	2025-04-24 00:38:15.210745+03	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	0196410c-5015-7044-aa8d-1af8884879e1
-980f834a-ce93-449d-bd1c-94f48195086d	Много мусора	Около подьезда грязно	Resolved	Волгодонск, улица Ленина, 73	0101000020E610000035DF4F0F611445409D0E9546F7C14740	2025-04-21 01:23:09.708677+03	4fbd8498-115b-4194-94dd-249ed292bd80	78b02b13-958f-4257-8b06-5378e1f6f3df
-9c548d03-0acd-4c6b-8a72-ed7a74d476dd	Не работает фонарь во дворе	Фонарь не включается уже 2 недели, вечером опасно ходить	Rejected	Волгодонск, Вокзальный переулок, 54	0101000020E610000035DF4F81EF134540EA488AD2AFC14740	2025-04-21 01:30:42.551464+03	4fbd8498-115b-4194-94dd-249ed292bd80	5f354cb0-fa60-40f9-81e7-ab15d1404218
+COPY public."Issues" ("Id", "Title", "Description", "Status", "Location", "Point", "CreatedAt", "UserId", "CategoryId", "ModifiedById", "ModifiedOn", "RevokedById", "RevokedOn") FROM stdin;
+0f33876e-d306-469d-b73b-07d6381a86cf	Грязь на тротуаре	Грязно	InProgress	Волгодонск, проспект Строителей, 2Д	0101000020E61000006E287B3B8C18454001DDE11E5FC14740	2025-04-21 01:36:54.211518+03	4fbd8498-115b-4194-94dd-249ed292bd80	78b02b13-958f-4257-8b06-5378e1f6f3df	\N	\N	\N	\N
+7ea991bb-5cde-4a7a-aa49-186b5848ac46	Плохие маршрутки	Езжу на маршрутке, они неудобное, в них жарко и долго набираются 	Resolved	Цимлянск, улица Надежды Крупской	0101000020E610000089FAC6A4820C454045157DF8DED14740	2025-04-24 00:38:15.210745+03	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	0196410c-5015-7044-aa8d-1af8884879e1	\N	\N	\N	\N
+b4b2f863-5f12-4199-b8a8-eb41e4b6f1b5	Засоренная ливневая канализация	После дождя вода стоит 3 дня, невозможно пройти	InProgress	Волгодонск, улица Ленина, 109	0101000020E610000005DD77FA59154540F5E7199F21C14740	2025-04-21 01:33:45.849282+03	4fbd8498-115b-4194-94dd-249ed292bd80	01964131-f40e-78db-beb9-8f0d2c9b5dfb	\N	\N	\N	\N
+f827be99-3920-4f5f-b0b8-7473ef3497a3	Старый сломанный аттракцион 	Эта площадка находится в аренде у предпринимателя, аттракцион не в рабочем состоянии, поскольку для его ремонта нужна деталь, изготовить которую может только Комсомольский-на-Амуре авиационный завод.	Pending	Волгодонск, квартал Профтехучилищ	0101000020E6100000B3BB50FEF6184540F6FA4E8B17C14740	2025-05-12 22:45:43.809421+03	29c1d83d-414e-45e8-ac22-20c921fcee93	01964131-f40e-78db-beb9-8f0d2c9b5dfb	\N	\N	\N	\N
+5900f9cb-f69f-4871-b178-462940eff52d	Сломанная лавочка	\N	Pending	Волгодонск, улица 50 лет СССР, 11	0101000020E610000035DF4FD1AE1345409734B3F8C0C14740	2025-04-21 01:34:55.327524+03	4fbd8498-115b-4194-94dd-249ed292bd80	01964131-f40e-78db-beb9-8f0d2c9b5dfb	\N	\N	\N	\N
+980f834a-ce93-449d-bd1c-94f48195086d	Много мусора	Около подьезда грязно	Resolved	Волгодонск, улица Ленина, 73	0101000020E610000035DF4F0F611445409D0E9546F7C14740	2025-04-21 01:23:09.708677+03	4fbd8498-115b-4194-94dd-249ed292bd80	78b02b13-958f-4257-8b06-5378e1f6f3df	\N	\N	\N	\N
+9c548d03-0acd-4c6b-8a72-ed7a74d476dd	Не работает фонарь во дворе	Фонарь не включается уже 2 недели, вечером опасно ходить	Rejected	Волгодонск, Вокзальный переулок, 54	0101000020E610000035DF4F81EF134540EA488AD2AFC14740	2025-04-21 01:30:42.551464+03	4fbd8498-115b-4194-94dd-249ed292bd80	5f354cb0-fa60-40f9-81e7-ab15d1404218	\N	\N	\N	\N
+90da36a5-4697-4a29-9d84-f5c89aabb2a5	Яма на проспекте Ленина	Большая яма размером 1.5×2 метра, глубиной около 30 см	Pending	Волгодонск, улица Ленина	0101000020E6100000F4E63D96A315454090B23FD900C14740	2025-04-21 01:26:44.48107+03	4fbd8498-115b-4194-94dd-249ed292bd80	3e8225ec-d424-4ea7-9a4d-40f400bed880	\N	\N	\N	\N
+e0b8e65c-6d58-4c5a-ac80-293eaf32171a	Грязь	Главный источник грязи в городе – открытый грунт. Грязь на дорогах (особенно зимой) или пыль летом – это в основном последствия открытого грунта.\r\n\r\n	Pending	Волгодонск, бульвар Великой Победы, 26	0101000020E610000035DF4F75061845405FAE5FFBDEC14740	2025-05-15 00:56:42.600023+03	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	3e8225ec-d424-4ea7-9a4d-40f400bed880	\N	\N	\N	\N
 \.
 
 
 --
--- TOC entry 5871 (class 0 OID 109141)
+-- TOC entry 5875 (class 0 OID 109141)
 -- Dependencies: 233
 -- Data for Name: ModeratorCategories; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -617,18 +617,19 @@ COPY public."ModeratorCategories" ("ModeratorId", "CategoryId") FROM stdin;
 
 
 --
--- TOC entry 5873 (class 0 OID 116185)
+-- TOC entry 5877 (class 0 OID 116185)
 -- Dependencies: 235
 -- Data for Name: RefreshTokens; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public."RefreshTokens" ("Id", "Token", "UserId", "Expires") FROM stdin;
+0196db0d-dd58-7c02-954e-c3b67549c9fa	9a0f2362-5562-4be9-a6b4-3ae4ff9f3e9b	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	2025-05-24 00:44:01.111503+03
 0196c606-131d-7345-aa65-ce0a7ac9d1cc	df5baa62-dfb4-4e06-ae51-7ca138a97c57	29c1d83d-414e-45e8-ac22-20c921fcee93	2025-05-19 22:43:29.04387+03
 \.
 
 
 --
--- TOC entry 5859 (class 0 OID 109033)
+-- TOC entry 5863 (class 0 OID 109033)
 -- Dependencies: 221
 -- Data for Name: __EFMigrationsHistory; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -651,6 +652,7 @@ COPY public."__EFMigrationsHistory" ("MigrationId", "ProductVersion") FROM stdin
 20250504220750_AddGrades	9.0.2
 20250512210955_FullNameIsUnique	9.0.2
 20250514203624_CategoryTitleIsUnique	9.0.2
+20250516183940_AddModifiedRevoked	9.0.2
 \.
 
 
@@ -665,7 +667,7 @@ COPY public.spatial_ref_sys (srid, auth_name, auth_srid, srtext, proj4text) FROM
 
 
 --
--- TOC entry 5884 (class 0 OID 0)
+-- TOC entry 5888 (class 0 OID 0)
 -- Dependencies: 225
 -- Name: AspNetRoleClaims_Id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -674,7 +676,7 @@ SELECT pg_catalog.setval('public."AspNetRoleClaims_Id_seq"', 1, false);
 
 
 --
--- TOC entry 5885 (class 0 OID 0)
+-- TOC entry 5889 (class 0 OID 0)
 -- Dependencies: 227
 -- Name: AspNetUserClaims_Id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -683,7 +685,7 @@ SELECT pg_catalog.setval('public."AspNetUserClaims_Id_seq"', 1, false);
 
 
 --
--- TOC entry 5687 (class 2606 OID 116695)
+-- TOC entry 5689 (class 2606 OID 116695)
 -- Name: AnswerImages PK_AnswerImages; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -692,7 +694,7 @@ ALTER TABLE ONLY public."AnswerImages"
 
 
 --
--- TOC entry 5674 (class 2606 OID 116155)
+-- TOC entry 5676 (class 2606 OID 116155)
 -- Name: Answers PK_Answers; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -773,7 +775,7 @@ ALTER TABLE ONLY public."Categories"
 
 
 --
--- TOC entry 5684 (class 2606 OID 116660)
+-- TOC entry 5686 (class 2606 OID 116660)
 -- Name: Comments PK_Comments; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -782,7 +784,7 @@ ALTER TABLE ONLY public."Comments"
 
 
 --
--- TOC entry 5691 (class 2606 OID 116700)
+-- TOC entry 5693 (class 2606 OID 116700)
 -- Name: Grades PK_Grades; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -791,7 +793,7 @@ ALTER TABLE ONLY public."Grades"
 
 
 --
--- TOC entry 5680 (class 2606 OID 116206)
+-- TOC entry 5682 (class 2606 OID 116206)
 -- Name: IssueImages PK_IssueImages; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -800,7 +802,7 @@ ALTER TABLE ONLY public."IssueImages"
 
 
 --
--- TOC entry 5667 (class 2606 OID 109130)
+-- TOC entry 5669 (class 2606 OID 109130)
 -- Name: Issues PK_Issues; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -809,7 +811,7 @@ ALTER TABLE ONLY public."Issues"
 
 
 --
--- TOC entry 5670 (class 2606 OID 109145)
+-- TOC entry 5672 (class 2606 OID 109145)
 -- Name: ModeratorCategories PK_ModeratorCategories; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -818,7 +820,7 @@ ALTER TABLE ONLY public."ModeratorCategories"
 
 
 --
--- TOC entry 5677 (class 2606 OID 116191)
+-- TOC entry 5679 (class 2606 OID 116191)
 -- Name: RefreshTokens PK_RefreshTokens; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -844,7 +846,7 @@ CREATE INDEX "EmailIndex" ON public."AspNetUsers" USING btree ("NormalizedEmail"
 
 
 --
--- TOC entry 5685 (class 1259 OID 116693)
+-- TOC entry 5687 (class 1259 OID 116693)
 -- Name: IX_AnswerImages_AnswerId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -852,7 +854,7 @@ CREATE INDEX "IX_AnswerImages_AnswerId" ON public."AnswerImages" USING btree ("A
 
 
 --
--- TOC entry 5671 (class 1259 OID 116167)
+-- TOC entry 5673 (class 1259 OID 116167)
 -- Name: IX_Answers_IssueId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -860,7 +862,7 @@ CREATE INDEX "IX_Answers_IssueId" ON public."Answers" USING btree ("IssueId");
 
 
 --
--- TOC entry 5672 (class 1259 OID 116168)
+-- TOC entry 5674 (class 1259 OID 116168)
 -- Name: IX_Answers_ModeratorId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -924,7 +926,7 @@ CREATE UNIQUE INDEX "IX_Categories_Title" ON public."Categories" USING btree ("T
 
 
 --
--- TOC entry 5681 (class 1259 OID 116671)
+-- TOC entry 5683 (class 1259 OID 116671)
 -- Name: IX_Comments_IssueId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -932,7 +934,7 @@ CREATE INDEX "IX_Comments_IssueId" ON public."Comments" USING btree ("IssueId");
 
 
 --
--- TOC entry 5682 (class 1259 OID 116672)
+-- TOC entry 5684 (class 1259 OID 116672)
 -- Name: IX_Comments_UserId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -940,7 +942,7 @@ CREATE INDEX "IX_Comments_UserId" ON public."Comments" USING btree ("UserId");
 
 
 --
--- TOC entry 5688 (class 1259 OID 116711)
+-- TOC entry 5690 (class 1259 OID 116711)
 -- Name: IX_Grades_IssueId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -948,7 +950,7 @@ CREATE INDEX "IX_Grades_IssueId" ON public."Grades" USING btree ("IssueId");
 
 
 --
--- TOC entry 5689 (class 1259 OID 116712)
+-- TOC entry 5691 (class 1259 OID 116712)
 -- Name: IX_Grades_UserId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -956,7 +958,7 @@ CREATE INDEX "IX_Grades_UserId" ON public."Grades" USING btree ("UserId");
 
 
 --
--- TOC entry 5678 (class 1259 OID 116212)
+-- TOC entry 5680 (class 1259 OID 116212)
 -- Name: IX_IssueImages_IssueId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -972,7 +974,23 @@ CREATE INDEX "IX_Issues_CategoryId" ON public."Issues" USING btree ("CategoryId"
 
 
 --
--- TOC entry 5664 (class 1259 OID 109180)
+-- TOC entry 5664 (class 1259 OID 116734)
+-- Name: IX_Issues_ModifiedById; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX "IX_Issues_ModifiedById" ON public."Issues" USING btree ("ModifiedById");
+
+
+--
+-- TOC entry 5665 (class 1259 OID 116735)
+-- Name: IX_Issues_RevokedById; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX "IX_Issues_RevokedById" ON public."Issues" USING btree ("RevokedById");
+
+
+--
+-- TOC entry 5666 (class 1259 OID 109180)
 -- Name: IX_Issues_Status; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -980,7 +998,7 @@ CREATE INDEX "IX_Issues_Status" ON public."Issues" USING btree ("Status");
 
 
 --
--- TOC entry 5665 (class 1259 OID 109181)
+-- TOC entry 5667 (class 1259 OID 109181)
 -- Name: IX_Issues_UserId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -988,7 +1006,7 @@ CREATE INDEX "IX_Issues_UserId" ON public."Issues" USING btree ("UserId");
 
 
 --
--- TOC entry 5668 (class 1259 OID 109182)
+-- TOC entry 5670 (class 1259 OID 109182)
 -- Name: IX_ModeratorCategories_CategoryId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -996,7 +1014,7 @@ CREATE INDEX "IX_ModeratorCategories_CategoryId" ON public."ModeratorCategories"
 
 
 --
--- TOC entry 5675 (class 1259 OID 116197)
+-- TOC entry 5677 (class 1259 OID 116197)
 -- Name: IX_RefreshTokens_UserId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1020,7 +1038,7 @@ CREATE UNIQUE INDEX "UserNameIndex" ON public."AspNetUsers" USING btree ("Normal
 
 
 --
--- TOC entry 5708 (class 2606 OID 116713)
+-- TOC entry 5712 (class 2606 OID 116713)
 -- Name: AnswerImages FK_AnswerImages_Answers_AnswerId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1029,7 +1047,7 @@ ALTER TABLE ONLY public."AnswerImages"
 
 
 --
--- TOC entry 5702 (class 2606 OID 116156)
+-- TOC entry 5706 (class 2606 OID 116156)
 -- Name: Answers FK_Answers_AspNetUsers_ModeratorId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1038,7 +1056,7 @@ ALTER TABLE ONLY public."Answers"
 
 
 --
--- TOC entry 5703 (class 2606 OID 116161)
+-- TOC entry 5707 (class 2606 OID 116161)
 -- Name: Answers FK_Answers_Issues_IssueId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1047,7 +1065,7 @@ ALTER TABLE ONLY public."Answers"
 
 
 --
--- TOC entry 5692 (class 2606 OID 109067)
+-- TOC entry 5694 (class 2606 OID 109067)
 -- Name: AspNetRoleClaims FK_AspNetRoleClaims_AspNetRoles_RoleId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1056,7 +1074,7 @@ ALTER TABLE ONLY public."AspNetRoleClaims"
 
 
 --
--- TOC entry 5693 (class 2606 OID 109080)
+-- TOC entry 5695 (class 2606 OID 109080)
 -- Name: AspNetUserClaims FK_AspNetUserClaims_AspNetUsers_UserId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1065,7 +1083,7 @@ ALTER TABLE ONLY public."AspNetUserClaims"
 
 
 --
--- TOC entry 5694 (class 2606 OID 109092)
+-- TOC entry 5696 (class 2606 OID 109092)
 -- Name: AspNetUserLogins FK_AspNetUserLogins_AspNetUsers_UserId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1074,7 +1092,7 @@ ALTER TABLE ONLY public."AspNetUserLogins"
 
 
 --
--- TOC entry 5695 (class 2606 OID 109102)
+-- TOC entry 5697 (class 2606 OID 109102)
 -- Name: AspNetUserRoles FK_AspNetUserRoles_AspNetRoles_RoleId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1083,7 +1101,7 @@ ALTER TABLE ONLY public."AspNetUserRoles"
 
 
 --
--- TOC entry 5696 (class 2606 OID 109107)
+-- TOC entry 5698 (class 2606 OID 109107)
 -- Name: AspNetUserRoles FK_AspNetUserRoles_AspNetUsers_UserId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1092,7 +1110,7 @@ ALTER TABLE ONLY public."AspNetUserRoles"
 
 
 --
--- TOC entry 5697 (class 2606 OID 109119)
+-- TOC entry 5699 (class 2606 OID 109119)
 -- Name: AspNetUserTokens FK_AspNetUserTokens_AspNetUsers_UserId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1101,7 +1119,7 @@ ALTER TABLE ONLY public."AspNetUserTokens"
 
 
 --
--- TOC entry 5706 (class 2606 OID 116661)
+-- TOC entry 5710 (class 2606 OID 116661)
 -- Name: Comments FK_Comments_AspNetUsers_UserId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1110,7 +1128,7 @@ ALTER TABLE ONLY public."Comments"
 
 
 --
--- TOC entry 5707 (class 2606 OID 116674)
+-- TOC entry 5711 (class 2606 OID 116674)
 -- Name: Comments FK_Comments_Issues_IssueId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1119,7 +1137,7 @@ ALTER TABLE ONLY public."Comments"
 
 
 --
--- TOC entry 5709 (class 2606 OID 116701)
+-- TOC entry 5713 (class 2606 OID 116701)
 -- Name: Grades FK_Grades_AspNetUsers_UserId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1128,7 +1146,7 @@ ALTER TABLE ONLY public."Grades"
 
 
 --
--- TOC entry 5710 (class 2606 OID 116706)
+-- TOC entry 5714 (class 2606 OID 116706)
 -- Name: Grades FK_Grades_Issues_IssueId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1137,7 +1155,7 @@ ALTER TABLE ONLY public."Grades"
 
 
 --
--- TOC entry 5705 (class 2606 OID 116207)
+-- TOC entry 5709 (class 2606 OID 116207)
 -- Name: IssueImages FK_IssueImages_Issues_IssueId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1146,7 +1164,25 @@ ALTER TABLE ONLY public."IssueImages"
 
 
 --
--- TOC entry 5698 (class 2606 OID 116240)
+-- TOC entry 5700 (class 2606 OID 116736)
+-- Name: Issues FK_Issues_AspNetUsers_ModifiedById; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Issues"
+    ADD CONSTRAINT "FK_Issues_AspNetUsers_ModifiedById" FOREIGN KEY ("ModifiedById") REFERENCES public."AspNetUsers"("Id") ON DELETE SET NULL;
+
+
+--
+-- TOC entry 5701 (class 2606 OID 116741)
+-- Name: Issues FK_Issues_AspNetUsers_RevokedById; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Issues"
+    ADD CONSTRAINT "FK_Issues_AspNetUsers_RevokedById" FOREIGN KEY ("RevokedById") REFERENCES public."AspNetUsers"("Id") ON DELETE SET NULL;
+
+
+--
+-- TOC entry 5702 (class 2606 OID 116240)
 -- Name: Issues FK_Issues_AspNetUsers_UserId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1155,7 +1191,7 @@ ALTER TABLE ONLY public."Issues"
 
 
 --
--- TOC entry 5699 (class 2606 OID 116245)
+-- TOC entry 5703 (class 2606 OID 116245)
 -- Name: Issues FK_Issues_Categories_CategoryId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1164,7 +1200,7 @@ ALTER TABLE ONLY public."Issues"
 
 
 --
--- TOC entry 5700 (class 2606 OID 109146)
+-- TOC entry 5704 (class 2606 OID 109146)
 -- Name: ModeratorCategories FK_ModeratorCategories_AspNetUsers_ModeratorId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1173,7 +1209,7 @@ ALTER TABLE ONLY public."ModeratorCategories"
 
 
 --
--- TOC entry 5701 (class 2606 OID 109151)
+-- TOC entry 5705 (class 2606 OID 109151)
 -- Name: ModeratorCategories FK_ModeratorCategories_Categories_CategoryId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1182,7 +1218,7 @@ ALTER TABLE ONLY public."ModeratorCategories"
 
 
 --
--- TOC entry 5704 (class 2606 OID 116192)
+-- TOC entry 5708 (class 2606 OID 116192)
 -- Name: RefreshTokens FK_RefreshTokens_AspNetUsers_UserId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1190,7 +1226,7 @@ ALTER TABLE ONLY public."RefreshTokens"
     ADD CONSTRAINT "FK_RefreshTokens_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES public."AspNetUsers"("Id") ON DELETE CASCADE;
 
 
--- Completed on 2025-05-15 02:02:56
+-- Completed on 2025-05-17 00:47:21
 
 --
 -- PostgreSQL database dump complete

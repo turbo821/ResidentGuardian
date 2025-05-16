@@ -1,26 +1,72 @@
-﻿using Application.Dtos;
-using AutoMapper;
+﻿
+using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
-
+using Microsoft.AspNetCore.Identity;
 namespace Application.UseCases.DeleteIssue
 {
     public class DeleteIssueUseCase : IDeleteIssueUseCase
     {
-        private readonly IIssueRepository _repo;
+        private readonly IIssueRepository _issueRepo;
+        private readonly UserManager<User> _userManager;
+        private readonly IFileStorage _fileStorage;
 
-        public DeleteIssueUseCase(IIssueRepository repo)
+        public DeleteIssueUseCase(IIssueRepository issueRepo, UserManager<User> userManager, IFileStorage fileStorage)
         {
-            _repo = repo;
+            _issueRepo = issueRepo;
+            _userManager = userManager;
+            _fileStorage = fileStorage;
         }
 
-        public async Task<bool> Execute(Guid id)
+        public async Task<bool> Execute(Guid id, DeleteIssueRequest request)
         {
-            var issue = await _repo.GetById(id);
+            var currentUser = await _userManager.FindByIdAsync(request.UserId.ToString());
+            if (currentUser == null) return false;
 
-            var success = await _repo.Delete(issue!);
+            var issue = await _issueRepo.GetById(id);
+            if (issue == null) return false;
 
-            return success;
+            if (request.SoftDeletion)
+            {
+                return await SoftDelete(issue, currentUser);
+            }
+            else
+            {
+                return await HardDelete(issue, currentUser);
+            }
+        }
+
+        private async Task<bool> SoftDelete(Issue issue, User currentUser)
+        {
+            bool isCurrentModerator = await _userManager.IsInRoleAsync(currentUser, "Moderator") 
+                && await _issueRepo.CheckModeratorToIssueAccess(currentUser.Id, issue.Id);
+
+            if (isCurrentModerator
+                || await _userManager.IsInRoleAsync(currentUser, "Admin")
+                || issue.UserId == currentUser.Id)
+            {
+                issue.RevokedOn = DateTime.UtcNow;
+                issue.RevokedById = currentUser.Id;
+
+                var success = await _issueRepo.Update(issue);
+                return success;
+            }
+            return false;
+        }
+
+        private async Task<bool> HardDelete(Issue issue, User currentUser)
+        {
+            if (await _userManager.IsInRoleAsync(currentUser, "Admin"))
+            {
+                foreach (var image in issue.Images) 
+                {
+                    _fileStorage.DeleteImage(image.Uri);
+                }
+
+                var success = await _issueRepo.Delete(issue);
+                return success;
+            }
+            return false;
         }
     }
 }

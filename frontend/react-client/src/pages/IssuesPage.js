@@ -8,7 +8,7 @@ import api from "../api";
 import getTimeRange from "../functions/getDates";
 import { useAuth } from "../context/AuthContext";
 import { useSearchParams } from "react-router-dom";
-
+import toast, { Toaster } from "react-hot-toast";
 const IssuesPage = () => {
   const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -99,6 +99,18 @@ const IssuesPage = () => {
     }
   }
 
+  const handleDeleteIssue = async(id, softDeletion = true) => {
+    try {
+      await api.delete(`/api/issues/${id}?softDeletion=${softDeletion}`);
+      toast.success("Обращение успешно удалено", { duration: 2000 });
+      await handleFilterApply(currentPage);
+    }
+    catch(err) {
+      toast.error("Ошибка при удалении обращения", { duration: 2000 });
+      console.log(err.response);
+    }
+  }
+
   return (
     <div className="min-h-[90vh] bg-blue-100 flex flex-col items-center py-10 px-4">
       <div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-7xl">
@@ -137,7 +149,7 @@ const IssuesPage = () => {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {issues && issues.length > 0 ? issues.map((issue) => (
-            <IssueCard issue={issue} key={issue.id} user={user} />
+            <IssueCard issue={issue} key={issue.id} user={user} handleDeleteIssue={handleDeleteIssue} />
           )) 
           : 
           <div className="text-center text-gray-700 text-xl">Обращения не найдены.</div>}
@@ -154,12 +166,13 @@ const IssuesPage = () => {
       </div>
 
       {issues && issues.length > 0 && (
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
-    )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
+      <Toaster/>
     </div>
   );
 };

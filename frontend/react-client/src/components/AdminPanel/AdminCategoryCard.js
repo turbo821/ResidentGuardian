@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { imagesURL } from "../../api";
-import ConfirmDelete from "./ConfirmDelete";
+import ConfirmDelete from "../ConfirmDelete";
 
 const AdminCategoryCard = ({ category, categories, setEditCategory, handleDeleteCategory }) => {
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmDeleted, setConfirmDeleted] = useState(false);
 
   const handleEditCategory = (id) => {
     setEditCategory(categories.find((cat) => cat.id === id));
   };
-
 
   return (
     <div className="flex flex-col md:flex-row items-start gap-4 p-4 border rounded-xl shadow-sm bg-white">
@@ -30,7 +29,7 @@ const AdminCategoryCard = ({ category, categories, setEditCategory, handleDelete
             ✏ Редактировать
           </button>
           <button
-            onClick={() => setConfirmOpen(true)}
+            onClick={() => setConfirmDeleted(true)}
             className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg transition"
           >
             ❌ Удалить
@@ -38,12 +37,12 @@ const AdminCategoryCard = ({ category, categories, setEditCategory, handleDelete
         </div>
       </div>
 
-      {confirmOpen && (
+      {confirmDeleted && (
         <ConfirmDelete
           itemTitle={"категорию"}
           item={category}
           handleDelete={handleDeleteCategory}
-          setConfirmOpen={setConfirmOpen}
+          setConfirmOpen={setConfirmDeleted}
         />
       )}
     </div>

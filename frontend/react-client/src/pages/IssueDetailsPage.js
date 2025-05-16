@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Answer from "../components/IssueDetailsPage/Answer";
 import ModalImage from "../components/ModalImage";
@@ -14,6 +14,7 @@ import ModeratorForm from "../components/IssueDetailsPage/ModeratorForm";
 import CommentForm from "../components/IssueDetailsPage/CommentForm";
 import Comment from "../components/IssueDetailsPage/Comment";
 import toast, { Toaster } from "react-hot-toast";
+import ConfirmDelete from "../components/ConfirmDelete";
 
 const IssueDetailsPage = () => {
   const fileInputRef = useRef(null);
@@ -23,10 +24,13 @@ const IssueDetailsPage = () => {
   const [modalImage, setModalImage] = useState(null);
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
+  const [confirmDeleted, setConfirmDeleted] = useState(false);
 
   const isModerator = user?.roles?.includes("Moderator") && user.moderatorCategories.some(
     (moderatorCategory) => moderatorCategory?.title === issue?.category
   );
+  const isAdmin = user?.roles?.includes("Admin");
+  const isCurrentUser = user?.id === issue?.userId;
 
   const [newAnswer, setNewAnswer] = useState({
     text: "",
@@ -79,6 +83,18 @@ const IssueDetailsPage = () => {
     }
   }
 
+  const handleDeleteIssue = async(id) => {
+    const softDeletion = true;
+    try {
+      await api.delete(`/api/issues/${id}?softDeletion=${softDeletion}`);
+      toast.success("Обращение успешно удалено", { duration: 2000 });
+    }
+    catch(err) {
+      toast.error("Ошибка при удалении обращения", { duration: 2000 });
+      console.log(err.response);
+    }
+  }
+
   const fetchIssueComments = async(id) => {
     try {
       const response = await api.get(`/api/issues/${id}/comments`);
@@ -104,9 +120,9 @@ const IssueDetailsPage = () => {
       const response = await api.post(`/api/issues/${id}/comments`, request);
       setCommentText("");
       setComments(prev => [...prev, response.data ]);
-      toast.success("Комментарий успешно создан", { duration: 2000 })
+      toast.success("Комментарий успешно отправлен", { duration: 2000 });
     } catch(err) {
-      toast.error("Ошибка при создании комментария", { duration: 2000 })
+      toast.error("Ошибка при отправлении комментария", { duration: 2000 });
       console.log(err.response);
     }
   }
@@ -231,8 +247,20 @@ const IssueDetailsPage = () => {
 
   return (
     <div className="min-h-[90vh] bg-blue-100 flex flex-col items-center py-12 px-4">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">{issue.title}</h2>
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full relative">
+        <div className="flex justify-between items-start mb-2">
+          <h2 className="text-3xl font-bold text-gray-800">{issue.title}</h2>
+          {(isAdmin || isModerator || isCurrentUser) && <button
+            onClick={() => setConfirmDeleted(true)}
+            className="text-red-500 hover:text-red-700 transition-colors"
+            title="Удалить обращение"
+            aria-label="Удалить"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>}
+        </div>
         
         <div className="mb-6 p-2">
           <Slider
@@ -368,6 +396,14 @@ const IssueDetailsPage = () => {
         <ModalImage modalImage={modalImage} closeModal={closeModal} />
       )}
       <Toaster/>
+      {(isModerator || isAdmin || isCurrentUser) && confirmDeleted && (
+        <ConfirmDelete
+          itemTitle={"обращение"}
+          item={issue}
+          handleDelete={handleDeleteIssue}
+          setConfirmOpen={setConfirmDeleted}
+        />
+      )}
     </div>
   );
 };

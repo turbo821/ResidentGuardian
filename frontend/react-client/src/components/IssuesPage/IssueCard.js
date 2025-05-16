@@ -3,12 +3,19 @@ import viewStatus from "../../functions/viewStatus";
 import { imagesURL } from "../../api";
 import api from "../../api";
 import { useState } from "react";
+import ConfirmDelete from "../ConfirmDelete";
 
-const IssueCard = ({ issue, user }) => {
+const IssueCard = ({ issue, user, handleDeleteIssue }) => {
   const [likes, setLikes] = useState(issue?.likeCount || 0);
   const [dislikes, setDislikes] = useState(issue?.dislikeCount || 0);
   const [userVote, setUserVote] = useState(issue?.like);
+  const [confirmDeleted, setConfirmDeleted] = useState(false);
   const id = issue.id;
+
+  const isModerator = user?.roles?.includes("Moderator") && user.moderatorCategories.some(
+    (moderatorCategory) => moderatorCategory?.title === issue?.category
+  );
+  const isAdmin = user?.roles?.includes("Admin");
 
   const handleLike = async() => {
     if (!user) return;
@@ -66,9 +73,8 @@ const IssueCard = ({ issue, user }) => {
     }
   }
 
-
   return (
-    <div key={issue.id} className="bg-white shadow-md rounded-xl overflow-hidden border">
+  <div key={issue.id} className="group bg-white shadow-md rounded-xl overflow-hidden border relative">
     <img 
       src={`${imagesURL}/${issue.image}`}
       alt={issue.image} 
@@ -111,7 +117,25 @@ const IssueCard = ({ issue, user }) => {
           </button>
         </div>
       </div>
+      {(isModerator || isAdmin) && 
+        <button
+          type="button"
+          onClick={() => setConfirmDeleted(true)}
+          className="absolute 
+          top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-50"
+        >
+          ×
+        </button>
+      }
     </div>
+      {(isModerator || isAdmin) && confirmDeleted && (
+        <ConfirmDelete
+          itemTitle={"обращение"}
+          item={issue}
+          handleDelete={handleDeleteIssue}
+          setConfirmOpen={setConfirmDeleted}
+        />
+      )}
   </div>
   )
 };

@@ -2,6 +2,6 @@
 {
     public interface IDeleteIssueUseCase
     {
-        Task<bool> Execute(Guid id);
+        Task<bool> Execute(Guid id, DeleteIssueRequest request);
     }
 }

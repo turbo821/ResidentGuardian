@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ConfirmDelete from "./ConfirmDelete";
+import ConfirmDelete from "../ConfirmDelete";
 import ModCategories from "./ModCategories";
 
 const ModeratorCard = ({ moderator, categories, handleDeleteModerator, unassignModerator, updateModCategories }) => {

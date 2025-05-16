@@ -5,7 +5,7 @@ namespace Domain.Interfaces
 {
     public interface IIssueRepository
     {
-        Task<(IEnumerable<Issue>, int)> GetAll(IssueFilterRequest request);
+        Task<(IEnumerable<Issue>, int)> GetAll(IssueFilterRequest request, bool isRevoredIssue = false);
         Task<IEnumerable<Issue>> GetAllByUser(Guid userID);
         Task<IEnumerable<Issue>> GetAllByModerator(Guid moderatorId);
         Task<Issue?> GetById(Guid id);

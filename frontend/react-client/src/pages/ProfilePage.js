@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams,  Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import IssueItem from "../components/ProfilePage/IssueItem";
+import IssueItem from "../components/IssueItem";
 import UserInfo from "../components/ProfilePage/UserInfo";
 import api from "../api";
+import toast, { Toaster } from "react-hot-toast";
 
 const ProfilePage = () => {
   const { id } = useParams();
@@ -31,6 +32,19 @@ const ProfilePage = () => {
       setIssues(response.data);
     }
     catch(err) {
+      console.log(err.response);
+    }
+  }
+
+  const handleDeleteIssue = async(id) => {
+    const softDeletion = true;
+    try {
+      await api.delete(`/api/issues/${id}?softDeletion=${softDeletion}`);
+      toast.success("Обращение успешно удалено", { duration: 2000 });
+      setIssues((prev) => prev.filter((cat) => cat.id !== id));
+    }
+    catch(err) {
+      toast.error("Ошибка при удалении обращения", { duration: 2000 });
       console.log(err.response);
     }
   }
@@ -141,7 +155,7 @@ const ProfilePage = () => {
           
           <div className="space-y-4">
             {getActiveIssues().length > 0 ? getActiveIssues().map((issue) => (
-              <IssueItem issue={issue} key={issue.id} user={user}/>
+              <IssueItem issue={issue} key={issue.id} user={user} handleDeleteIssue={handleDeleteIssue} isCurrentUser={true}/>
             ))
           : <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition">
               <h4 className="text-lg">Здесь нет ваших обращений</h4>
@@ -172,6 +186,7 @@ const ProfilePage = () => {
             Настройки профиля
           </Link>
         </div>
+        <Toaster />
       </div>
     </div>
   );

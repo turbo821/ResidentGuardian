@@ -19,9 +19,13 @@ namespace Infrastructure.Repositories
             _sorted = sorted;
             _pagination = pagination;
         }
-        public async Task<(IEnumerable<Issue>, int)> GetAll(IssueFilterRequest request)
+        public async Task<(IEnumerable<Issue>, int)> GetAll(IssueFilterRequest request, bool isRevoredIssue = false)
         {
-            IQueryable<Issue> issuesQuery = _context.Issues;
+            IQueryable<Issue> issuesQuery;
+            if (isRevoredIssue)
+                issuesQuery = _context.Issues.Where(i => i.RevokedOn != null);
+            else
+                issuesQuery = _context.Issues.Where(i => i.RevokedOn == null);
 
             issuesQuery = _sorted.Apply(issuesQuery, request.SortOrder);
 
@@ -30,7 +34,7 @@ namespace Infrastructure.Repositories
 
             (issuesQuery, int totalCount) = await _pagination.Apply(issuesQuery, request);
 
-            var issues = await issuesQuery
+            var issues = await issuesQuery.Include(i => i.Category)
                 .Include(i => i.Images).Include(i => i.Grades).ToListAsync();
 
             return (issues, totalCount);
@@ -39,6 +43,8 @@ namespace Infrastructure.Repositories
         public async Task<IEnumerable<Issue>> GetAllByUser(Guid userId)
         {
             var issues = await _context.Issues
+                .Where(i => i.RevokedOn == null)
+                .Include(i => i.Category)
                 .Include(i => i.Grades)
                 .Where(issue => issue.UserId == userId)
                 .OrderByDescending(issue => issue.CreatedAt)
@@ -50,6 +56,8 @@ namespace Infrastructure.Repositories
         public async Task<IEnumerable<Issue>> GetAllByModerator(Guid moderatorId)
         {
             var issues = await _context.Issues
+                .Where(i => i.RevokedOn == null)
+                .Include(i => i.Category)
                 .Include(i => i.Grades)
                 .Where(issue => issue.Category.ModeratorCategories.Any(mc => mc.ModeratorId == moderatorId))
                 .OrderByDescending(issue => issue.CreatedAt)

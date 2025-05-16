@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
-import IssueItem from "../components/ProfilePage/IssueItem";
+import IssueItem from "../components/IssueItem";
+import toast, { Toaster } from "react-hot-toast";
 
 const ModeratorPanel = () => {
   const { user, isLoading } = useAuth();
@@ -31,6 +32,19 @@ const ModeratorPanel = () => {
     }
   }
   
+  const handleDeleteIssue = async(id) => {
+    const softDeletion = true;
+    try {
+      await api.delete(`/api/issues/${id}?softDeletion=${softDeletion}`);
+      toast.success("Обращение успешно удалено", { duration: 2000 });
+      setIssues((prev) => prev.filter((cat) => cat.id !== id));
+    }
+    catch(err) {
+      toast.error("Ошибка при удалении обращения", { duration: 2000 });
+      console.log(err.response);
+    }
+  }
+
   useEffect(() => {
     if (!isLoading && (!user || !user.roles.includes("Moderator"))) {
       navigate("/");
@@ -144,7 +158,7 @@ const ModeratorPanel = () => {
 
         <div className="space-y-4">
           {getActiveIssues().length > 0 ? (
-            getActiveIssues().map(issue => <IssueItem issue={issue} key={issue.id}/>)
+            getActiveIssues().map(issue => <IssueItem issue={issue} key={issue.id} user={user} handleDeleteIssue={handleDeleteIssue} />)
           ) : (
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
               <p className="text-gray-500">
@@ -157,7 +171,7 @@ const ModeratorPanel = () => {
             </div>
           )}
         </div>
-
+      <Toaster/>
       </div>
     </div>
   );

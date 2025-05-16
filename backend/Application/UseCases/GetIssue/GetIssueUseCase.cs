@@ -20,7 +20,7 @@ namespace Application.UseCases.GetIssue
 
             var issueDto = new GetIssueResponse(issue.Id,
                 issue.Title, issue.Status, issue.Description, issue.Category.Title, 
-                issue.Location, issue.Images.Select(im => im.Uri).ToList(), like,
+                issue.Location, issue.Images.Select(im => im.Uri).ToList(), issue.UserId, like, 
                 issue.Grades.Where(g => g.Like).Count(), issue.Grades.Where(g => !g.Like).Count());
 
             return issueDto;

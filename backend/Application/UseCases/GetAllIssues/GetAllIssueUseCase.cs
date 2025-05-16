@@ -13,9 +13,9 @@ namespace Application.UseCases.GetAllIssues
         {
             _repo = repo;
         }
-        public async Task<PaginatedResult<GetAllIssueResponse>?> Execute(IssueFilterRequest request, Guid? userId)
+        public async Task<PaginatedResult<GetAllIssueResponse>?> Execute(IssueFilterRequest request, Guid? userId, bool isRevoredIssues = false)
         {
-            (var issues, int totalCount) = await _repo.GetAll(request);
+            (var issues, int totalCount) = await _repo.GetAll(request, isRevoredIssues);
             if(!issues.Any())
                 return null;
 
@@ -23,6 +23,7 @@ namespace Application.UseCases.GetAllIssues
             new GetAllIssueResponse(
                 issue.Id,
                 issue.Title,
+                issue.Category.Title,
                 issue.Status,
                 issue.Images?.Select(img => img.Uri).FirstOrDefault()!,
                 Coords: issue.Point != null 

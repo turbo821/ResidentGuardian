@@ -25,6 +25,7 @@ namespace Application.UseCases.GetUserIssues
                 issue.Status,
                 issue.CreatedAt,
                 issue.Location,
+                issue.Category.Title,
                 Like: issue.Grades.FirstOrDefault(g => g.UserId == id)?.Like,
                 LikeCount: issue.Grades.Where(g => g.Like).Count(), DislikeCount: issue.Grades.Where(g => !g.Like).Count()
             ));
