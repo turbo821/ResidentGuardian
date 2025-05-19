@@ -4,7 +4,7 @@
 
 services:
   client:
-    image: turbo821/resident-guardian-client:05-10
+    image: turbo821/resident-guardian-client:05-19.2
     depends_on:
       - loadbalancer
     ports:
@@ -20,12 +20,15 @@ services:
       - api
 
   api:
-    image: turbo821/resident-guardian-api:05-10
+    image: turbo821/resident-guardian-api:05-19
+    user: "0:0"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ALLOWED_ORIGINS=http://client:3000,http://client:80,https://client:443,https://client:3000
       - CONNECTION_STRING=Host=database;Port=5432;Database=reguan_db;Username=postgres;Password=postgres
       - REDIS_HOST=redis:6379
+    volumes:
+      - uploads_data:/app/wwwroot/upload
     depends_on:
       - database
     ports:
@@ -70,3 +73,6 @@ services:
     ports:
       - "6379:6379"
     restart: unless-stopped
+
+volumes:
+  uploads_data:
