@@ -19,8 +19,9 @@ namespace Application.UseCases.GetIssue
             var like = userId != null ? issue.Grades.FirstOrDefault(g => g.UserId == userId)?.Like : null;
 
             var issueDto = new GetIssueResponse(issue.Id,
-                issue.Title, issue.Status, issue.Description, issue.Category.Title, 
-                issue.Location, issue.Images.Select(im => im.Uri).ToList(), issue.UserId, like, 
+                issue.Title, issue.Status, issue.Description, issue.Category.Title, issue.CategoryId,
+                issue.Location, Coords: issue.Point != null ? new List<double>() { issue.Point.Y, issue.Point.X }
+                    : new List<double>(), issue.Images.Select(im => im.Uri).ToList(), issue.UserId, like, 
                 issue.Grades.Where(g => g.Like).Count(), issue.Grades.Where(g => !g.Like).Count());
 
             return issueDto;

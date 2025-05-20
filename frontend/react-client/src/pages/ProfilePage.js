@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import IssueItem from "../components/IssueItem";
 import UserInfo from "../components/ProfilePage/UserInfo";
 import api from "../api";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const ProfilePage = () => {
   const { id } = useParams();
@@ -186,7 +186,6 @@ const ProfilePage = () => {
             Настройки профиля
           </Link>
         </div>
-        <Toaster />
       </div>
     </div>
   );

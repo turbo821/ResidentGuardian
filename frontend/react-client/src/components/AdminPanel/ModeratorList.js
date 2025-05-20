@@ -1,7 +1,7 @@
 import { useState } from "react";
 import api from "../../api";
 import ModeratorCard from "./ModeratorCard";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 const ModeratorList = ({ moderators, setModerators, categories }) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -78,7 +78,6 @@ const ModeratorList = ({ moderators, setModerators, categories }) => {
           : <p className="text-gray-500 mt-2">Модераторов нет</p>}
         </div>
       )}
-      <Toaster/>
     </div>
   );
 }

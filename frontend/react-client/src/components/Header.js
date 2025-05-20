@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 const Header = () => {
   const { user, isLoading, logout } = useAuth();
@@ -70,6 +71,7 @@ const Header = () => {
           </div>
         )}
       </div>
+      <Toaster/>
     </header>
   );
 };

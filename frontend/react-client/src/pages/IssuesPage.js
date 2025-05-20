@@ -8,7 +8,7 @@ import api from "../api";
 import getTimeRange from "../functions/getDates";
 import { useAuth } from "../context/AuthContext";
 import { useSearchParams } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 const IssuesPage = () => {
   const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -172,7 +172,7 @@ const IssuesPage = () => {
           onPageChange={handlePageChange}
         />
       )}
-      <Toaster/>
+
     </div>
   );
 };

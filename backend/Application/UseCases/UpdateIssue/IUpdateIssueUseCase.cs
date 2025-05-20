@@ -2,6 +2,6 @@
 {
     public interface IUpdateIssueUseCase
     {
-        Task<bool> Execute(UpdateIssueRequest issueDto);
+        Task<bool> Execute(Guid issueId, UpdateIssueRequest issueDto, Guid userId);
     }
 }

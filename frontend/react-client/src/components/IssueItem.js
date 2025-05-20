@@ -116,7 +116,8 @@ const IssueItem = ({ issue, user, handleDeleteIssue, isCurrentUser = false }) =>
               <span>{dislikes}</span>
             </button>
           </div>
-          {(isAdmin || isModerator || isCurrentUser) && <button
+          {(isAdmin || isModerator || isCurrentUser) && 
+          <button
             onClick={() => setConfirmDeleted(true)}
             className="text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity absolute right-0 top-0"
             title="Удалить обращение"
@@ -126,6 +127,18 @@ const IssueItem = ({ issue, user, handleDeleteIssue, isCurrentUser = false }) =>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>}
+          {isCurrentUser && (
+            <Link
+              to={`/issues/${issue.id}/edit`}
+              className="text-blue-500 hover:text-blue-700 opacity-0 group-hover:opacity-100 transition-opacity absolute right-0 bottom-0"
+              title="Редактировать обращение"
+              aria-label="Редактировать"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </Link>
+          )}
           {(isAdmin || isModerator || isCurrentUser) && confirmDeleted && 
             <ConfirmDelete
               itemTitle={"обращение"}

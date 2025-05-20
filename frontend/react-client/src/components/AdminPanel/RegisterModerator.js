@@ -2,7 +2,7 @@ import { useState } from "react";
 import api from "../../api";
 import { isValidEmail } from "../../functions/textFunctions";
 import { EyeOff, Eye } from "lucide-react";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 const RegisterModerator = ({ setModerators }) => {
   const [moderatorFullName, setModeratorFullName] = useState("");
@@ -120,7 +120,7 @@ const RegisterModerator = ({ setModerators }) => {
       >
         {isLoading ? "Загрузка..." : "Зарегистрировать модератора"}
       </button>
-      <Toaster/>
+
     </div>
     );
 }

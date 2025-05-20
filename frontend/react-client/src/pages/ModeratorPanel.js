@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 import IssueItem from "../components/IssueItem";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const ModeratorPanel = () => {
   const { user, isLoading } = useAuth();
@@ -171,7 +171,7 @@ const ModeratorPanel = () => {
             </div>
           )}
         </div>
-      <Toaster/>
+
       </div>
     </div>
   );

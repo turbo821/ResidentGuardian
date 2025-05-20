@@ -1,5 +1,5 @@
 import { useState } from "react";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 const ModCategories = ({ moderator, categories = [], updateModCategories }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -97,7 +97,7 @@ const ModCategories = ({ moderator, categories = [], updateModCategories }) => {
           &lt;
         </button>
       </div>
-      <Toaster/>
+
     </div>
   );
 }

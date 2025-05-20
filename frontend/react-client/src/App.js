@@ -14,6 +14,7 @@ import ProfilePage from './pages/ProfilePage';
 import { AuthProvider } from './context/AuthContext';
 import IssueDetailsPage from './pages/IssueDetailsPage';
 import ModeratorPanel from './pages/ModeratorPanel';
+import EditReportPage from './pages/EditReportPage';
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/map" element={<Layout><MapPage /></Layout>} />
           <Route path="/issues" element={<Layout><IssuesPage /></Layout>} />
           <Route path="/issues/:id" element={<Layout><IssueDetailsPage /></Layout>} />
+          <Route path="/issues/:id/edit" element={<Layout><EditReportPage  /></Layout>} />
           <Route path="/categories" element={<Layout><CategoriesPage/></Layout>} />
           <Route path="/about" element={<Layout><AboutPage/></Layout>} />
 

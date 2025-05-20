@@ -1,7 +1,7 @@
 import api from "../../api";
 import { useState, useRef } from "react";
 import UploadImage from "../UploadImage";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const AdminCategoryEdit = ({ editCategory, setEditCategory, categories, setCategories }) => {
   const fileInputRef = useRef(null);
@@ -116,7 +116,6 @@ const AdminCategoryEdit = ({ editCategory, setEditCategory, categories, setCateg
           ✖ Отменить
         </button>
       </div>
-      <Toaster/>
     </div>
   )
 };

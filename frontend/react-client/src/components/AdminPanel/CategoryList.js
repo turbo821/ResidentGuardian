@@ -2,7 +2,7 @@ import { useState } from "react";
 import api from "../../api";
 import AdminCategoryEdit from "./AdminCategoryEdit";
 import AdminCategoryCard from "./AdminCategoryCard";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 const CategoryList = ({ categories = [], setCategories }) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -62,7 +62,7 @@ const CategoryList = ({ categories = [], setCategories }) => {
           : <p>Категорий нет</p>}
         </div>
       )}
-      <Toaster/>
+
     </div>
   );
 }

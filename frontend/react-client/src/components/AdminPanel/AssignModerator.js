@@ -1,7 +1,7 @@
 import { useState } from "react";
 import api from "../../api";
 import { isValidEmail } from "../../functions/textFunctions";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 const AssignModerator = ({ categories, setModerators }) => {
   const [moderatorEmail, setModeratorEmail] = useState("");
@@ -116,7 +116,6 @@ const AssignModerator = ({ categories, setModerators }) => {
       >
         {isLoading ? "Загрузка..." : "Назначить модератором"}
       </button>
-      <Toaster/>
     </div>
     );
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import api from "../../api";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import RevoredIssueCard from "./RevoredIssueCard";
 
 const RevoredIssueList = ({ issues = [], setIssues }) => {
@@ -57,7 +57,7 @@ const RevoredIssueList = ({ issues = [], setIssues }) => {
           : <p>Обращений на удаление нет</p>}
         </div>
       )}
-      <Toaster/>
+
     </div>
   );
 }

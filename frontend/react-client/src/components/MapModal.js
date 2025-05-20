@@ -4,7 +4,7 @@ import { useState } from "react";
 
 Modal.setAppElement("#root");
 
-const MapModal = ({ isMapOpen, setIsMapOpen, hadleLocation = () => {} }) => {
+const MapModal = ({ isMapOpen, setIsMapOpen, handleLocation = () => {} }) => {
   const defaultState = {
     center: [47.517641, 42.160875],
     zoom: 14,
@@ -18,7 +18,7 @@ const [location, setLocation] = useState(null);
   };
 
   const handleSetLocation = async () => {
-    await hadleLocation(location);
+    await handleLocation(location);
     setIsMapOpen(false);
     setLocation(null);
   };

@@ -68,8 +68,7 @@ namespace Web.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetIssue(Guid id)
         {
             if (!ModelState.IsValid)
@@ -93,7 +92,7 @@ namespace Web.Controllers
         public async Task<IActionResult> AddIssue([FromForm] CreateIssueRequest request)
         {
             if (!ModelState.IsValid)
-                return BadRequest("Not valid");
+                return BadRequest();
 
             Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
             var id = await _createIssue.Execute(request, userId);
@@ -105,13 +104,14 @@ namespace Web.Controllers
         }
 
         [Authorize]
-        [HttpPut]
-        public async Task<IActionResult> UpdateIssue([FromBody] UpdateIssueRequest request)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateIssue(Guid id, [FromForm] UpdateIssueRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var success = await _updateIssue.Execute(request);
+            Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+            var success = await _updateIssue.Execute(id, request, userId);
 
             if (!success)
                 return NotFound();
