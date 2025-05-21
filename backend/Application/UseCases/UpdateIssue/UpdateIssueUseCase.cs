@@ -9,11 +9,13 @@ namespace Application.UseCases.UpdateIssue
     {
         private readonly IIssueRepository _repo;
         private readonly IFileStorage _fileStorage;
+        private readonly ICacheService _cache;
 
-        public UpdateIssueUseCase(IIssueRepository repo, IFileStorage fileStorage)
+        public UpdateIssueUseCase(IIssueRepository repo, IFileStorage fileStorage, ICacheService cache)
         {
             _repo = repo;
             _fileStorage = fileStorage;
+            _cache = cache;
         }
 
         public async Task<bool> Execute(Guid issueId, UpdateIssueRequest issueDto, Guid userId)
@@ -60,6 +62,9 @@ namespace Application.UseCases.UpdateIssue
 
             issue.Location = issueDto.Location;
             issue.Point = point;
+
+            string cacheKey = $"Issue_{issueId}";
+            await _cache.RemoveAsync(cacheKey);
 
             var success = await _repo.Update(issue);
             return success;

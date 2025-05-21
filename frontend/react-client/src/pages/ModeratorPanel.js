@@ -9,18 +9,13 @@ const ModeratorPanel = () => {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const [issues, setIssues] = useState([]);
-  const [categories, setCategories] = useState(user?.moderatorCategories ?? []);
+  const [categories, setCategories] = useState([]);
   const [activeTab, setActiveTab] = useState('pending');
 
   useEffect(() => {
     fetchModerIssues();
+    fetchModerCategories();
   }, []);
-
-  useEffect(() => {
-    if (user?.moderatorCategories) {
-      setCategories(user.moderatorCategories);
-    }
-  }, [user?.moderatorCategories]);
 
   const fetchModerIssues = async() => {
     try {
@@ -32,6 +27,15 @@ const ModeratorPanel = () => {
     }
   }
   
+  const fetchModerCategories = async() => {
+    try {
+      const response = await api.get("/api/moderation/categories");
+      setCategories(response.data);
+    } catch(err) {
+      console.log(err.response);
+    }
+  }
+
   const handleDeleteIssue = async(id) => {
     const softDeletion = true;
     try {

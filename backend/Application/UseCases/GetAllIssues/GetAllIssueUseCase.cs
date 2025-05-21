@@ -1,4 +1,5 @@
 ﻿using Application.Dtos;
+using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
 using Domain.Models;
@@ -8,10 +9,12 @@ namespace Application.UseCases.GetAllIssues
     public class GetAllIssueUseCase : IGetAllIssueUseCase
     {
         private readonly IIssueRepository _repo;
+        private readonly ICacheService _cache;
 
-        public GetAllIssueUseCase(IIssueRepository repo)
+        public GetAllIssueUseCase(IIssueRepository repo, ICacheService cache)
         {
             _repo = repo;
+            _cache = cache;
         }
         public async Task<PaginatedResult<GetAllIssueResponse>?> Execute(IssueFilterRequest request, Guid? userId, bool isRevoredIssues = false)
         {

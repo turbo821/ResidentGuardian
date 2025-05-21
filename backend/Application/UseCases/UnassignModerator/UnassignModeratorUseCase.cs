@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Services.Interfaces;
+using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
@@ -8,11 +9,14 @@ namespace Application.UseCases.UnassignModerator
     {
         private readonly UserManager<User> _userManager;
         private readonly ICategoryRepository _repo;
+        private readonly ICacheService _cache;
+        private const string CacheKey = "AllModerators";
 
-        public UnassignModeratorUseCase(UserManager<User> userManager, ICategoryRepository repo)
+        public UnassignModeratorUseCase(UserManager<User> userManager, ICategoryRepository repo, ICacheService cache)
         {
             _userManager = userManager;
             _repo = repo;
+            _cache = cache;
         }
 
         public async Task<bool> Execute(Guid id)
@@ -30,6 +34,7 @@ namespace Application.UseCases.UnassignModerator
                 return false;
 
             var save = await _repo.RemoveModeratorCategories(user.Id);
+            await _cache.RemoveAsync(CacheKey);
 
             return save;
         }

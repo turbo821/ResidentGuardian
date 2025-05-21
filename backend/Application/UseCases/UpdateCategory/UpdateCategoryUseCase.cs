@@ -1,6 +1,5 @@
 ﻿using Application.Services.Interfaces;
 using Application.UseCases.GetCategories;
-using Application.UseCases.UpdateIssue;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -13,6 +12,7 @@ namespace Application.UseCases.UpdateCategory
         private readonly IMapper _mapper;
         private readonly IFileStorage _fileStorage;
         private readonly ICacheService _cache;
+        private const string CacheKey = "AllCategories";
 
         public UpdateCategoryUseCase(ICategoryRepository repo, IMapper mapper, IFileStorage fileStorage, ICacheService cache)
         {
@@ -44,7 +44,7 @@ namespace Application.UseCases.UpdateCategory
                 return null;
 
             var editCategory = _mapper.Map<GetCategoriesResponse>(category);
-            await _cache.RemoveByPatternAsync("AllCategories");
+            await _cache.RemoveByPatternAsync(CacheKey);
             return editCategory;
         }
     }

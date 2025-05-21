@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import ConfirmDelete from "../components/ConfirmDelete";
 
 const IssueDetailsPage = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const fileInputRef = useRef(null);
   const { id } = useParams();
   const { user } = useAuth();
@@ -27,7 +28,7 @@ const IssueDetailsPage = () => {
   const [confirmDeleted, setConfirmDeleted] = useState(false);
 
   const isModerator = user?.roles?.includes("Moderator") && user.moderatorCategories.some(
-    (moderatorCategory) => moderatorCategory?.title === issue?.category
+    (moderatorCategory) => moderatorCategory?.title === issue?.categoryTitle
   );
   const isAdmin = user?.roles?.includes("Admin");
   const isCurrentUser = user?.id === issue?.userId;
@@ -64,11 +65,29 @@ const IssueDetailsPage = () => {
     };
   }, [modalImage, setModalImage]);
 
-  useEffect(() => {
-    fetchIssue(id); 
-    fetchIssueComments(id);
-    fetchIssueAnswers(id);
-  }, [id]);
+useEffect(() => {
+  let isMounted = true;
+
+  const fetchData = async () => {
+    try {
+      await fetchIssue(id);
+      await fetchIssueComments(id);
+      await fetchIssueAnswers(id);
+      if (isMounted) setIsLoading(false);
+    } catch (error) {
+      if (isMounted) {
+        console.error("Error fetching data:", error);
+        setIsLoading(false);
+      }
+    }
+  };
+
+  fetchData();
+
+  return () => {
+    isMounted = false;
+  };
+}, [id]);
 
   const fetchIssue = async(id) => {
     try {
@@ -237,6 +256,14 @@ const IssueDetailsPage = () => {
     }
   }
 
+  if (isLoading) {
+    return (
+      <div className="min-h-[90vh] flex items-center justify-center bg-blue-100">
+        <div className="text-center text-gray-700 text-xl">Загрузка...</div>
+      </div>
+    );
+  }
+
   if (!issue) {
     return (
       <div className="min-h-[90vh] flex items-center justify-center bg-blue-100">
@@ -333,7 +360,7 @@ const IssueDetailsPage = () => {
               <p className="text-gray-700"><strong>Статус:</strong> {viewStatus(issue.status)}</p>
             </div>
               
-              <p className="text-gray-700"><strong>Категория:</strong> {issue.category}</p>
+              <p className="text-gray-700"><strong>Категория:</strong> {issue.categoryTitle}</p>
           </div>
             
           <div className="flex items-center gap-2">

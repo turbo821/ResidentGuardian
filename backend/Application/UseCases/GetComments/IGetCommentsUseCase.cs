@@ -4,6 +4,6 @@ namespace Application.UseCases.GetComments
 {
     public interface IGetCommentsUseCase
     {
-        Task<IEnumerable<CommentDto>> Execute(Guid issueId);
+        Task<IEnumerable<CommentDto>?> Execute(Guid issueId);
     }
 }
