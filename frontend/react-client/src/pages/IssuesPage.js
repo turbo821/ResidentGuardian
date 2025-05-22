@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import SearchFilterPanel from "../components/IssuesPage/SearchPanel";
 import Filters from "../components/IssuesPage/Filters";
@@ -24,12 +24,31 @@ const IssuesPage = () => {
   const [selectStatus, setSelectStatus] = useState(searchParams.get('status') || "99");
   const [timeRange, setTimeRange] = useState(searchParams.get('date') || "all");
   const [sortBy, setSortBy] = useState(searchParams.get('sortOrder') || 2);
-
+  const [moderatorCategories, setModeratorCategories] = useState([]);
   const PAGE_SIZE=8;
 
   useEffect(() => {
-    handleFilterApply(currentPage); 
-  }, []);
+    let isMounted = true;
+
+    const fetchData = async() => {
+      try {
+        await handleFilterApply(currentPage);
+        if(user?.roles?.includes("Moderator")) {
+          await fetchModerCategories();
+        }
+      } catch(err) {
+          if (isMounted) {
+            console.error("Error fetching data:", err);
+          }
+      }
+    }
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
 
   const handlePageChange = async(page) => {
     setCurrentPage(page);
@@ -111,6 +130,15 @@ const IssuesPage = () => {
     }
   }
 
+  const fetchModerCategories = async() => {
+    try {
+      const response = await api.get("/api/moderation/categories");
+      setModeratorCategories(response.data);
+    } catch(err) {
+      console.log(err.response);
+    }
+  }
+
   return (
     <div className="min-h-[90vh] bg-blue-100 flex flex-col items-center py-10 px-4">
       <div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-7xl">
@@ -149,7 +177,7 @@ const IssuesPage = () => {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {issues && issues.length > 0 ? issues.map((issue) => (
-            <IssueCard issue={issue} key={issue.id} user={user} handleDeleteIssue={handleDeleteIssue} />
+            <IssueCard issue={issue} key={issue.id} user={user} handleDeleteIssue={handleDeleteIssue} moderatorCategories={moderatorCategories} />
           )) 
           : 
           <div className="text-center text-gray-700 text-xl">Обращения не найдены.</div>}

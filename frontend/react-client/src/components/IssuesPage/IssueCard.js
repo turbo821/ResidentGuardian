@@ -5,14 +5,14 @@ import api from "../../api";
 import { useState } from "react";
 import ConfirmDelete from "../ConfirmDelete";
 
-const IssueCard = ({ issue, user, handleDeleteIssue }) => {
+const IssueCard = ({ issue, user, handleDeleteIssue, moderatorCategories=[] }) => {
   const [likes, setLikes] = useState(issue?.likeCount || 0);
   const [dislikes, setDislikes] = useState(issue?.dislikeCount || 0);
   const [userVote, setUserVote] = useState(issue?.like);
   const [confirmDeleted, setConfirmDeleted] = useState(false);
   const id = issue.id;
 
-  const isModerator = user?.roles?.includes("Moderator") && user.moderatorCategories.some(
+  const isModerator = user?.roles?.includes("Moderator") && moderatorCategories.some(
     (moderatorCategory) => moderatorCategory?.title === issue?.category
   );
   const isAdmin = user?.roles?.includes("Admin");

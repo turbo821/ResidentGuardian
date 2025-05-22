@@ -26,8 +26,9 @@ const IssueDetailsPage = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [confirmDeleted, setConfirmDeleted] = useState(false);
+  const [moderatorCategories, setModeratorCategories] = useState([]);
 
-  const isModerator = user?.roles?.includes("Moderator") && user.moderatorCategories.some(
+  const isModerator = user?.roles?.includes("Moderator") && moderatorCategories.some(
     (moderatorCategory) => moderatorCategory?.title === issue?.categoryTitle
   );
   const isAdmin = user?.roles?.includes("Admin");
@@ -65,29 +66,51 @@ const IssueDetailsPage = () => {
     };
   }, [modalImage, setModalImage]);
 
-useEffect(() => {
-  let isMounted = true;
+  useEffect(() => {
+    let isMounted = true;
 
-  const fetchData = async () => {
-    try {
-      await fetchIssue(id);
-      await fetchIssueComments(id);
-      await fetchIssueAnswers(id);
-      if (isMounted) setIsLoading(false);
-    } catch (error) {
-      if (isMounted) {
-        console.error("Error fetching data:", error);
-        setIsLoading(false);
+    const fetchData = async () => {
+      try {
+        await fetchIssue(id);
+        await fetchIssueComments(id);
+        await fetchIssueAnswers(id);
+        if (isMounted) setIsLoading(false);
+      } catch (error) {
+        if (isMounted) {
+          console.error("Error fetching data:", error);
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchData = async() => {
+      try {
+        if(user?.roles?.includes("Moderator")) {
+          await fetchModerCategories();
+        }
+      } catch(err) {
+          if (isMounted) {
+            console.error("Error fetching data:", err);
+          }
       }
     }
-  };
 
-  fetchData();
+    fetchData();
 
-  return () => {
-    isMounted = false;
-  };
-}, [id]);
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
 
   const fetchIssue = async(id) => {
     try {
@@ -110,6 +133,16 @@ useEffect(() => {
     }
     catch(err) {
       toast.error("Ошибка при удалении обращения", { duration: 2000 });
+      console.log(err.response);
+    }
+  }
+
+  const fetchModerCategories = async() => {
+    try {
+      const response = await api.get("/api/moderation/categories");
+      setModeratorCategories(response.data);
+      console.log("OK");
+    } catch(err) {
       console.log(err.response);
     }
   }
