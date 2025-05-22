@@ -12,7 +12,8 @@ namespace Application.UseCases.UpdateCategory
         private readonly IMapper _mapper;
         private readonly IFileStorage _fileStorage;
         private readonly ICacheService _cache;
-        private const string CacheKey = "AllCategories";
+        private const string AllCategoriesCacheKey = "AllCategories";
+        private const string AllIssuesCacheKey = "AllIssues";
 
         public UpdateCategoryUseCase(ICategoryRepository repo, IMapper mapper, IFileStorage fileStorage, ICacheService cache)
         {
@@ -44,7 +45,9 @@ namespace Application.UseCases.UpdateCategory
                 return null;
 
             var editCategory = _mapper.Map<GetCategoriesResponse>(category);
-            await _cache.RemoveByPatternAsync(CacheKey);
+            await _cache.RemoveByPatternAsync(AllCategoriesCacheKey);
+            await _cache.RemoveByPatternAsync(AllIssuesCacheKey);
+
             return editCategory;
         }
     }

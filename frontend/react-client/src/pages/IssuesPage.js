@@ -9,6 +9,7 @@ import getTimeRange from "../functions/getDates";
 import { useAuth } from "../context/AuthContext";
 import { useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
+
 const IssuesPage = () => {
   const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -25,14 +26,33 @@ const IssuesPage = () => {
   const [timeRange, setTimeRange] = useState(searchParams.get('date') || "all");
   const [sortBy, setSortBy] = useState(searchParams.get('sortOrder') || 2);
   const [moderatorCategories, setModeratorCategories] = useState([]);
-  const PAGE_SIZE=8;
+  const PAGE_SIZE = 8;
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchData = async() => {
+      try {
+        const params = buildBaseParams(currentPage);
+        buildAddedParams(params);
+        await fetchFilterIssues(params);
+      } catch(err) {
+          if (isMounted) {
+            console.error("Error fetching data:", err);
+          }
+      }
+    }
+    fetchData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
 
   useEffect(() => {
     let isMounted = true;
 
     const fetchData = async() => {
       try {
-        await handleFilterApply(currentPage);
         if(user?.roles?.includes("Moderator")) {
           await fetchModerCategories();
         }
@@ -42,9 +62,7 @@ const IssuesPage = () => {
           }
       }
     }
-
     fetchData();
-
     return () => {
       isMounted = false;
     };
@@ -57,6 +75,13 @@ const IssuesPage = () => {
   };
 
   const handleFilterApply = async(page) => {
+    const params = buildBaseParams(page);
+    setSearchParams(params);
+    buildAddedParams(params);
+    await fetchFilterIssues(params);
+  }
+
+  const buildBaseParams = (page) => {
     const params = new URLSearchParams();
 
     if(selectCategoryId !== "99" && selectCategoryId !== "98") {
@@ -74,25 +99,27 @@ const IssuesPage = () => {
     params.append("sortOrder", sortBy);
     params.append("pageNumber", page);
     params.append("date", timeRange);
+    
+    return params;
+  }
 
-    setSearchParams(params);
-
-    if(timeRange && timeRange !== "all") {
-      const range = getTimeRange(timeRange);
-      if(range) {
-        params.append("startDate", range[0]);
-        params.append("endDate", range[1]);
-      }
+  const buildAddedParams = (params) => {
+      if(timeRange && timeRange !== "all") {
+        const range = getTimeRange(timeRange);
+        if(range) {
+          params.append("startDate", range[0]);
+          params.append("endDate", range[1]);
+        }
     }
-
     params.append("pageSize", PAGE_SIZE);
+  }
 
+  const fetchFilterIssues = async(params) => {
     try {
       const response = await api.get(`/api/issues?${params.toString()}`);
       setIssues(response.data.items);
       setTotalCount(response.data.totalItems);
       setTotalPages(response.data.totalPages);
-
     } catch(err) {
       console.log(err.response);
     }
@@ -172,7 +199,7 @@ const IssuesPage = () => {
         )}
         
         <div className="my-3 text-gray-700 font-semibold text-center">
-          Найдено обращений: {totalCount}
+          Найдено обращений: {totalCount ?? 0}
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">

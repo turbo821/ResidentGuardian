@@ -24,7 +24,7 @@ namespace Domain.Models
         {
             var parts = new List<string>
             {
-                $"sort={IssueSortOrder.ByRating}",
+                $"sort={SortOrder}",
                 $"catId={CategoryId}",
                 $"status={Status}",
                 $"start={StartDate}",

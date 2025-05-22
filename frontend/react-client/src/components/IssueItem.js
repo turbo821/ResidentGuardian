@@ -4,7 +4,7 @@ import api from "../api";
 import { useState } from "react";
 import ConfirmDelete from "./ConfirmDelete";
 
-const IssueItem = ({ issue, user, handleDeleteIssue, isCurrentUser = false }) => {
+const IssueItem = ({ issue, user, handleDeleteIssue, moderatorCategories, isCurrentUser = false }) => {
   const createdDate = (new Date(issue?.createdAt)).toLocaleDateString();
 
   const [likes, setLikes] = useState(issue?.likeCount || 0);
@@ -12,7 +12,7 @@ const IssueItem = ({ issue, user, handleDeleteIssue, isCurrentUser = false }) =>
   const [userVote, setUserVote] = useState(issue?.like);
   const [confirmDeleted, setConfirmDeleted] = useState(false);
   const id = issue.id;
-  const isModerator = user?.roles?.includes("Moderator") && user.moderatorCategories.some(
+  const isModerator = user?.roles?.includes("Moderator") && moderatorCategories.some(
     (moderatorCategory) => moderatorCategory?.title === issue?.category
   );
   const isAdmin = user?.roles?.includes("Admin");

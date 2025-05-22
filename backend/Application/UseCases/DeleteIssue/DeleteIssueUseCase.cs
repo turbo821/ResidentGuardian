@@ -11,6 +11,7 @@ namespace Application.UseCases.DeleteIssue
         private readonly UserManager<User> _userManager;
         private readonly IFileStorage _fileStorage;
         private readonly ICacheService _cache;
+        private const string AllIssuesKey = "AllIssues";
 
         public DeleteIssueUseCase(IIssueRepository issueRepo, UserManager<User> userManager, IFileStorage fileStorage, ICacheService cache)
         {
@@ -30,6 +31,7 @@ namespace Application.UseCases.DeleteIssue
 
             string cacheKey = $"Issue_{id}";
             await _cache.RemoveAsync(cacheKey);
+            await _cache.RemoveByPatternAsync(AllIssuesKey);
 
             if (request.SoftDeletion)
             {

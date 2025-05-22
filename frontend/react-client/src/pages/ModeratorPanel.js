@@ -162,7 +162,7 @@ const ModeratorPanel = () => {
 
         <div className="space-y-4">
           {getActiveIssues().length > 0 ? (
-            getActiveIssues().map(issue => <IssueItem issue={issue} key={issue.id} user={user} handleDeleteIssue={handleDeleteIssue} />)
+            getActiveIssues().map(issue => <IssueItem issue={issue} key={issue.id} user={user} moderatorCategories={categories} handleDeleteIssue={handleDeleteIssue} />)
           ) : (
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
               <p className="text-gray-500">
