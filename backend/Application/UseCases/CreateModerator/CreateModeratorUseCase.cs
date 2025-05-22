@@ -10,11 +10,14 @@ namespace Application.UseCases.CreateModerator
     {
         private readonly IAuthService _authService;
         private readonly UserManager<User> _userManager;
+        private readonly ICacheService _cache;
+        private const string CacheKey = "AllModerators";
 
-        public CreateModeratorUseCase(IAuthService authService, UserManager<User> userManager)
+        public CreateModeratorUseCase(IAuthService authService, UserManager<User> userManager, ICacheService cache)
         {
             _authService = authService;
             _userManager = userManager;
+            _cache = cache;
         }
 
         public async Task<GetModeratorsResponse?> Execute(RegisterRequest request)
@@ -34,6 +37,7 @@ namespace Application.UseCases.CreateModerator
                 moderator.ModeratorCategories.Select(mc => mc.CategoryId)
             );
 
+            await _cache.RemoveAsync(CacheKey);
             return moderatorDtos;
         }
     }

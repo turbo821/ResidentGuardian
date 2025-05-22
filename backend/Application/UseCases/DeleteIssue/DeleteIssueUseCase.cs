@@ -10,12 +10,15 @@ namespace Application.UseCases.DeleteIssue
         private readonly IIssueRepository _issueRepo;
         private readonly UserManager<User> _userManager;
         private readonly IFileStorage _fileStorage;
+        private readonly ICacheService _cache;
+        private const string AllIssuesKey = "AllIssues";
 
-        public DeleteIssueUseCase(IIssueRepository issueRepo, UserManager<User> userManager, IFileStorage fileStorage)
+        public DeleteIssueUseCase(IIssueRepository issueRepo, UserManager<User> userManager, IFileStorage fileStorage, ICacheService cache)
         {
             _issueRepo = issueRepo;
             _userManager = userManager;
             _fileStorage = fileStorage;
+            _cache = cache;
         }
 
         public async Task<bool> Execute(Guid id, DeleteIssueRequest request)
@@ -25,6 +28,10 @@ namespace Application.UseCases.DeleteIssue
 
             var issue = await _issueRepo.GetById(id);
             if (issue == null) return false;
+
+            string cacheKey = $"Issue_{id}";
+            await _cache.RemoveAsync(cacheKey);
+            await _cache.RemoveByPatternAsync(AllIssuesKey);
 
             if (request.SoftDeletion)
             {

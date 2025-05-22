@@ -6,6 +6,5 @@ namespace Application.Dtos
         string FullName, 
         string Email, 
         IEnumerable<string> Roles,
-        IEnumerable<GetModeratorCategoriesResponse>? ModeratorCategories,
         DateTime CreatedAt);
 }

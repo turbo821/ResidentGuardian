@@ -12,6 +12,7 @@ const ProfilePage = () => {
   const [issues, setIssues] = useState([]);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('pending');
+  const [moderatorCategories, setModeratorCategories] = useState([]);
 
   useEffect(() => {
 
@@ -22,6 +23,26 @@ const ProfilePage = () => {
     }
   }, [user, id, isLoading, navigate]);
 
+    useEffect(() => {
+    let isMounted = true;
+
+    const fetchData = async() => {
+      try {
+        if(user?.roles?.includes("Moderator")) {
+          await fetchModerCategories();
+        }
+      } catch(err) {
+          if (isMounted) {
+            console.error("Error fetching data:", err);
+          }
+      }
+    }
+    fetchData();
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
+  
   useEffect(() => {
     fetchUserIssues(); 
   }, []);
@@ -32,6 +53,15 @@ const ProfilePage = () => {
       setIssues(response.data);
     }
     catch(err) {
+      console.log(err.response);
+    }
+  }
+
+    const fetchModerCategories = async() => {
+    try {
+      const response = await api.get("/api/moderation/categories");
+      setModeratorCategories(response.data);
+    } catch(err) {
       console.log(err.response);
     }
   }
@@ -155,7 +185,7 @@ const ProfilePage = () => {
           
           <div className="space-y-4">
             {getActiveIssues().length > 0 ? getActiveIssues().map((issue) => (
-              <IssueItem issue={issue} key={issue.id} user={user} handleDeleteIssue={handleDeleteIssue} isCurrentUser={true}/>
+              <IssueItem issue={issue} key={issue.id} user={user} moderatorCategories={moderatorCategories} handleDeleteIssue={handleDeleteIssue} isCurrentUser={true}/>
             ))
           : <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition">
               <h4 className="text-lg">Здесь нет ваших обращений</h4>

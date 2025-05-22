@@ -10,12 +10,15 @@ namespace Application.UseCases.CreateAnswer
         private readonly IAnswerRepository _answerRepo;
         private readonly IIssueRepository _issueRepo;
         private readonly IFileStorage _fileStorage;
+        private readonly ICacheService _cache;
+        private const string AllIssuesKey = "AllIssues";
 
-        public CreateAnswerUseCase(IAnswerRepository answerRepo, IIssueRepository issueRepo, IFileStorage fileStorage)
+        public CreateAnswerUseCase(IAnswerRepository answerRepo, IIssueRepository issueRepo, IFileStorage fileStorage, ICacheService cache)
         {
             _answerRepo = answerRepo;
             _issueRepo = issueRepo;
             _fileStorage = fileStorage;
+            _cache = cache;
         }
 
         public async Task<AnswerDto?> Execute(CreateAnswerRequest request)
@@ -60,6 +63,10 @@ namespace Application.UseCases.CreateAnswer
                 newAnswer.OldStatus, newAnswer.NewStatus,
                 newAnswer.Images.Select(im => im.Uri).ToList(),
                 newAnswer.Text, newAnswer.CreatedAt);
+
+            string answerCacheKey = $"AllAnswers_{request.IssueId}";
+            await _cache.RemoveAsync(answerCacheKey);
+            await _cache.RemoveByPatternAsync(AllIssuesKey);
 
             return answerDto;
         }

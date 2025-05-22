@@ -111,18 +111,13 @@ namespace Infrastructure.Auth
             if (user == null) return null;
 
             var roles = await _userManager.GetRolesAsync(user);
-            IEnumerable<GetModeratorCategoriesResponse>? categories = null;
 
-            if (roles.Contains("Moderator"))
-                categories = await _getModeratorCategories.Execute(userId);
-                
             return new UserProfileDto
             (
                 user.Id,
                 user.FullName,
                 user.Email!,
                 roles.ToList(),
-                categories,
                 user.CreatedAt
             );
         }

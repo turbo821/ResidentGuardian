@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import SearchFilterPanel from "../components/IssuesPage/SearchPanel";
 import Filters from "../components/IssuesPage/Filters";
@@ -9,6 +9,7 @@ import getTimeRange from "../functions/getDates";
 import { useAuth } from "../context/AuthContext";
 import { useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
+
 const IssuesPage = () => {
   const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -24,12 +25,48 @@ const IssuesPage = () => {
   const [selectStatus, setSelectStatus] = useState(searchParams.get('status') || "99");
   const [timeRange, setTimeRange] = useState(searchParams.get('date') || "all");
   const [sortBy, setSortBy] = useState(searchParams.get('sortOrder') || 2);
-
-  const PAGE_SIZE=8;
+  const [moderatorCategories, setModeratorCategories] = useState([]);
+  const PAGE_SIZE = 8;
 
   useEffect(() => {
-    handleFilterApply(currentPage); 
+    let isMounted = true;
+    const fetchData = async() => {
+      try {
+        const params = buildBaseParams(currentPage);
+        buildAddedParams(params);
+        await fetchFilterIssues(params);
+      } catch(err) {
+          if (isMounted) {
+            console.error("Error fetching data:", err);
+          }
+      }
+    }
+    fetchData();
+    return () => {
+      isMounted = false;
+    };
   }, []);
+
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchData = async() => {
+      try {
+        if(user?.roles?.includes("Moderator")) {
+          await fetchModerCategories();
+        }
+      } catch(err) {
+          if (isMounted) {
+            console.error("Error fetching data:", err);
+          }
+      }
+    }
+    fetchData();
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
 
   const handlePageChange = async(page) => {
     setCurrentPage(page);
@@ -38,6 +75,13 @@ const IssuesPage = () => {
   };
 
   const handleFilterApply = async(page) => {
+    const params = buildBaseParams(page);
+    setSearchParams(params);
+    buildAddedParams(params);
+    await fetchFilterIssues(params);
+  }
+
+  const buildBaseParams = (page) => {
     const params = new URLSearchParams();
 
     if(selectCategoryId !== "99" && selectCategoryId !== "98") {
@@ -55,25 +99,27 @@ const IssuesPage = () => {
     params.append("sortOrder", sortBy);
     params.append("pageNumber", page);
     params.append("date", timeRange);
+    
+    return params;
+  }
 
-    setSearchParams(params);
-
-    if(timeRange && timeRange !== "all") {
-      const range = getTimeRange(timeRange);
-      if(range) {
-        params.append("startDate", range[0]);
-        params.append("endDate", range[1]);
-      }
+  const buildAddedParams = (params) => {
+      if(timeRange && timeRange !== "all") {
+        const range = getTimeRange(timeRange);
+        if(range) {
+          params.append("startDate", range[0]);
+          params.append("endDate", range[1]);
+        }
     }
-
     params.append("pageSize", PAGE_SIZE);
+  }
 
+  const fetchFilterIssues = async(params) => {
     try {
       const response = await api.get(`/api/issues?${params.toString()}`);
       setIssues(response.data.items);
       setTotalCount(response.data.totalItems);
       setTotalPages(response.data.totalPages);
-
     } catch(err) {
       console.log(err.response);
     }
@@ -111,6 +157,15 @@ const IssuesPage = () => {
     }
   }
 
+  const fetchModerCategories = async() => {
+    try {
+      const response = await api.get("/api/moderation/categories");
+      setModeratorCategories(response.data);
+    } catch(err) {
+      console.log(err.response);
+    }
+  }
+
   return (
     <div className="min-h-[90vh] bg-blue-100 flex flex-col items-center py-10 px-4">
       <div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-7xl">
@@ -144,12 +199,12 @@ const IssuesPage = () => {
         )}
         
         <div className="my-3 text-gray-700 font-semibold text-center">
-          Найдено обращений: {totalCount}
+          Найдено обращений: {totalCount ?? 0}
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {issues && issues.length > 0 ? issues.map((issue) => (
-            <IssueCard issue={issue} key={issue.id} user={user} handleDeleteIssue={handleDeleteIssue} />
+            <IssueCard issue={issue} key={issue.id} user={user} handleDeleteIssue={handleDeleteIssue} moderatorCategories={moderatorCategories} />
           )) 
           : 
           <div className="text-center text-gray-700 text-xl">Обращения не найдены.</div>}

@@ -1,4 +1,5 @@
 ﻿
+using Application.Services.Interfaces;
 using Domain.Interfaces;
 
 namespace Application.UseCases.RestoreIssue
@@ -6,10 +7,13 @@ namespace Application.UseCases.RestoreIssue
     public class RestoreIssueUseCase : IRestoreIssueUseCase
     {
         private readonly IIssueRepository _issueRepo;
+        private readonly ICacheService _cache;
+        private const string AllIssuesCacheKey = "AllIssues";
 
-        public RestoreIssueUseCase(IIssueRepository issueRepo)
+        public RestoreIssueUseCase(IIssueRepository issueRepo, ICacheService cache)
         {
             _issueRepo = issueRepo;
+            _cache = cache;
         }
 
         public async Task<bool> Execute(Guid id)
@@ -21,6 +25,9 @@ namespace Application.UseCases.RestoreIssue
             issue.RevokedById = null;
 
             var success = await _issueRepo.Update(issue);
+
+            await _cache.RemoveByPatternAsync(AllIssuesCacheKey);
+
             return success;
         }
     }

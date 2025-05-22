@@ -12,6 +12,7 @@ namespace Application.UseCases.CreateCategory
         private readonly IMapper _mapper;
         private readonly IFileStorage _fileStorage;
         private readonly ICacheService _cache;
+        private const string CacheKey = "AllCategories";
 
         public CreateCategoryUseCase(ICategoryRepository repo, IMapper mapper, IFileStorage fileStorage, ICacheService cache)
         {
@@ -40,7 +41,7 @@ namespace Application.UseCases.CreateCategory
             category.Id = id.Value;
 
             var newCategory = _mapper.Map<GetCategoriesResponse>(category);
-            await _cache.RemoveByPatternAsync("AllCategories");
+            await _cache.RemoveAsync(CacheKey);
             return newCategory;
         }
     }

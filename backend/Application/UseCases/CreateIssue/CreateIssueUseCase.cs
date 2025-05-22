@@ -1,6 +1,4 @@
-﻿using Application.Dtos;
-using Application.Services.Interfaces;
-using AutoMapper;
+﻿using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
 using NetTopologySuite.Geometries;
@@ -11,11 +9,14 @@ namespace Application.UseCases.CreateIssue
     {
         private readonly IIssueRepository _repo;
         private readonly IFileStorage _fileStorage;
+        private readonly ICacheService _cache;
+        private const string AllIssuesKey = "AllIssues";
 
-        public CreateIssueUseCase(IIssueRepository repo, IFileStorage fileStorage)
+        public CreateIssueUseCase(IIssueRepository repo, IFileStorage fileStorage, ICacheService cache)
         {
             _repo = repo;
             _fileStorage = fileStorage;
+            _cache = cache;
         }
         public async Task<Guid?> Execute(CreateIssueRequest issueDto, Guid userId)
         {
@@ -47,6 +48,8 @@ namespace Application.UseCases.CreateIssue
                 CategoryId = issueDto.CategoryId,
                 Images = imageUris
             };
+
+            await _cache.RemoveByPatternAsync(AllIssuesKey);
 
             var id = await _repo.Add(issue);
             if (id is not null)

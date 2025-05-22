@@ -4,7 +4,7 @@ import cityMap from "../../assets/images/map-image3.jpg";
 const MapSection = () => {
   return (
     <section className="container mx-auto px-4 py-16 space-y-16 flex flex-col md:flex-row items-center">
-    <div className="text-white md:w-1/2 bg-blue-500 bg-opacity-50 p-8 rounded-lg max-w-lg">
+    <div className="text-white md:w-1/2 bg-blue-500 bg-opacity-80 p-8 rounded-lg max-w-lg">
       <h2 className="text-3xl font-bold">Карта городских проблем</h2>
       <p className="mt-4 text-lg max-w-2xl">
         Просматривайте существующие проблемы на карте и следите за их решением.

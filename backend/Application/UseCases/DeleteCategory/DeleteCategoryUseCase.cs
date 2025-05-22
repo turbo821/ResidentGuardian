@@ -8,6 +8,7 @@ namespace Application.UseCases.DeleteCategory
         private readonly ICategoryRepository _repo;
         private readonly IFileStorage _fileStorage;
         private readonly ICacheService _cache;
+        private const string CacheKey = "AllCategories";
 
         public DeleteCategoryUseCase(ICategoryRepository repo, IFileStorage fileStorage,  ICacheService cache)
         {
@@ -21,7 +22,7 @@ namespace Application.UseCases.DeleteCategory
 
             _fileStorage.DeleteImage(category!.ImageUri);
             var success = await _repo.Delete(category!);
-            if (success) await _cache.RemoveByPatternAsync("AllCategories");
+            if (success) await _cache.RemoveByPatternAsync(CacheKey);
 
             return success;
         }

@@ -1,4 +1,5 @@
-﻿using Application.UseCases.AddModeratorRoles;
+﻿using Application.Services.Interfaces;
+using Application.UseCases.AddModeratorRoles;
 using Application.UseCases.GetModerators;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -10,13 +11,14 @@ namespace Application.UseCases.UpdateModeratorCategories
     {
         private readonly UserManager<User> _userManager;
         private readonly ICategoryRepository _repo;
+        private readonly ICacheService _cache;
+        private const string CacheKey = "AllModerators";
 
-        public UpdateModeratorCategoriesUseCase(
-            UserManager<User> userManager,
-            ICategoryRepository repo)
+        public UpdateModeratorCategoriesUseCase(UserManager<User> userManager, ICategoryRepository repo, ICacheService cache)
         {
             _userManager = userManager;
             _repo = repo;
+            _cache = cache;
         }
 
         public async Task<GetModeratorsResponse?> Execute(UpdateModeratorCategoriesRequest request)
@@ -40,6 +42,7 @@ namespace Application.UseCases.UpdateModeratorCategories
                 user.ModeratorCategories.Select(mc => mc.CategoryId)
             );
 
+            await _cache.RemoveByPatternAsync(CacheKey);
             return userDto;
         }
     }

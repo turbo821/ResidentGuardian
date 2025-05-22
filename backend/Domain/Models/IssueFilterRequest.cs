@@ -19,5 +19,23 @@ namespace Domain.Models
         // Pagination
         public int? PageSize { get; set; }
         public int PageNumber { get; set; } = 1;
+
+        public string GetCacheKey()
+        {
+            var parts = new List<string>
+            {
+                $"sort={SortOrder}",
+                $"catId={CategoryId}",
+                $"status={Status}",
+                $"start={StartDate}",
+                $"end={EndDate}",
+                $"search={Search}",
+                $"userId={UserId}",
+                $"page={PageNumber}",
+                $"size={PageSize}",
+            };
+
+            return string.Join(";", parts);
+        }
     }
 }

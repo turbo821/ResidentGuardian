@@ -1,5 +1,6 @@
 ﻿
 using Application.Dtos;
+using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -10,11 +11,13 @@ namespace Application.UseCases.AddComment
     {
         private readonly ICommentRepository _repo;
         private readonly IMapper _mapper;
+        private readonly ICacheService _cache;
 
-        public AddCommentUseCase(ICommentRepository repo, IMapper mapper)
+        public AddCommentUseCase(ICommentRepository repo, IMapper mapper, ICacheService cache)
         {
             _repo = repo;
             _mapper = mapper;
+            _cache = cache;
         }
 
         public async Task<CommentDto?> Execute(AddCommentRequest request)
@@ -25,6 +28,10 @@ namespace Application.UseCases.AddComment
             if (newComment is null) return null;
 
             var commentDto = _mapper.Map<CommentDto>(newComment);
+
+            string cacheKey = $"AllComments_{request.IssueId}";
+            await _cache.RemoveAsync(cacheKey);
+
             return commentDto;
         }
     }
