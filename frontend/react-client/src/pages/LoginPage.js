@@ -62,7 +62,7 @@ const LoginPage = () => {
     <div className="flex items-center justify-center min-h-[85vh] bg-blue-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full relative">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-3">Вход</h2>
-        <div className="mt-4">
+        <form onSubmit={handleLogin} className="mt-4">
           {errors.email && <p className="absolute top-14 mt-1 text-sm text-red-600">{errors.email}</p>}
           <input 
             type="email" 
@@ -101,16 +101,15 @@ const LoginPage = () => {
           </button>
           {errors.general && <p className="absolute top-56 text-sm text-red-600">{errors.general}</p>}
 
-          <button onClick={handleLogin} 
+          <button type="submit" 
             className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition">
             {isLoading ? "Загрузка..." : "Войти"}
           </button>
-        </div>
+        </form>
         <p className="mt-4 text-center">
           Нет аккаунта? <a href="/register" className="text-green-500 hover:underline">Регистрация</a>
         </p>
       </div>
-
     </div>
   );
 };

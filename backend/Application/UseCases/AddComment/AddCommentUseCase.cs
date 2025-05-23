@@ -24,7 +24,7 @@ namespace Application.UseCases.AddComment
         {
             var comment = _mapper.Map<Comment>(request);
 
-            var newComment = await _repo.AddComment(comment);
+            var newComment = await _repo.Add(comment);
             if (newComment is null) return null;
 
             var commentDto = _mapper.Map<CommentDto>(newComment);

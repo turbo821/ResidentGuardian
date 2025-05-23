@@ -104,7 +104,6 @@ namespace Infrastructure.Repositories
             _context.Issues.Remove(issue);
 
             return await Save();
-
         }
 
         public Task<bool> IsExist(Guid id)

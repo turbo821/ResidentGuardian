@@ -25,7 +25,7 @@ namespace Infrastructure.Repositories
             return await _context.Comments.Include(c => c.User).FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<Comment?> AddComment(Comment comment)
+        public async Task<Comment?> Add(Comment comment)
         {
             _context.Comments.Add(comment);
 
@@ -35,6 +35,16 @@ namespace Infrastructure.Repositories
             }
 
             return null;
+        }
+
+        public async Task<bool> Delete(Comment comment)
+        {
+            if (!await _context.Comments.AnyAsync(x => x.Id == comment.Id))
+                return false;
+
+            _context.Comments.Remove(comment);
+
+            return await Save();
         }
     }
 }

@@ -179,6 +179,17 @@ const IssueDetailsPage = () => {
     }
   }
 
+  const deleteComment = async(id) => {
+    try {
+      await api.delete(`/api/issues/${id}/comments`);
+      setComments((prev) => prev.filter((comment) => comment.id !== id));
+      toast.success("Комментарий успешно удален", { duration: 2000 });
+    } catch(err) {
+      toast.error("Ошибка при удалении комментария", { duration: 2000 });
+      console.log(err.response);
+    }
+  }
+
   const addAnswer = async() => {
     resetErrors();
     if (!validateAnswer()) {
@@ -457,7 +468,7 @@ const IssueDetailsPage = () => {
           <div className="space-y-4">
             {comments?.length > 0 ? (
               comments.map((comment, idx) => (
-                <Comment key={idx} comment={comment} />
+                <Comment key={idx} comment={comment} isAdmin={isAdmin} isModerator={isModerator} handleDeleteComment={deleteComment}/>
               ))
             ) : (
               <p className="text-gray-500 text-center py-4">Пока нет комментариев</p>

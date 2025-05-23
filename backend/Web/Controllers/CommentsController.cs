@@ -1,5 +1,6 @@
 ﻿using Application.Dtos;
 using Application.UseCases.AddComment;
+using Application.UseCases.DeleteComment;
 using Application.UseCases.GetComments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,13 @@ namespace Web.Controllers
     {
         private readonly IGetCommentsUseCase _getComments;
         private readonly IAddCommentUseCase _addComment;
+        private readonly IDeleteCommentUseCase _deleteComment;
 
-        public CommentsController(IAddCommentUseCase addComment, IGetCommentsUseCase getComments)
+        public CommentsController(IAddCommentUseCase addComment, IGetCommentsUseCase getComments, IDeleteCommentUseCase deleteComment)
         {
             _getComments = getComments;
             _addComment = addComment;
+            _deleteComment = deleteComment;
         }
 
         [HttpGet]
@@ -51,6 +54,26 @@ namespace Web.Controllers
                 return NotFound();
 
             return Ok(response);
+        }
+
+        [Authorize(Roles = "Admin, Moderator")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteComment(Guid id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) return Unauthorized();
+
+            var userGuid = Guid.Parse(userId);
+
+            var success = await _deleteComment.Execute(id, userGuid);
+
+            if (!success)
+                return NotFound();
+
+            return Ok();
         }
     }
 }

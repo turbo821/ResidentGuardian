@@ -68,8 +68,7 @@ const RegisterPage = () => {
     <div className="flex items-center justify-center min-h-[85vh] bg-blue-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full relative">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Регистрация</h2>
-        <div className="mt-4">
-
+        <form onSubmit={handleRegister} className="mt-4">
           {errors.fullName && <p className="absolute top-16 mt-1 text-sm text-red-600">{errors.fullName}</p>}
           <input 
             type="text" 
@@ -79,20 +78,18 @@ const RegisterPage = () => {
               setFullName(e.target.value)
               setErrors((prevErrors) => ({ ...prevErrors, fullName: "" }));
             }} 
-            required 
             className="w-full p-3 border rounded-lg mb-7"
           />
 
           {errors.email && <p className="absolute top-36 mt-1 text-sm text-red-600">{errors.email}</p>}
           <input 
-            type="email" 
+            type="text" 
             placeholder="Email" 
             value={email} 
             onChange={(e) => {
               setEmail(e.target.value)
               setErrors((prevErrors) => ({ ...prevErrors, email: "" }));
             }} 
-            required 
             className="w-full p-3 border rounded-lg mb-7"
           />
 
@@ -104,8 +101,7 @@ const RegisterPage = () => {
             onChange={(e) => {
               setPassword(e.target.value);
               setErrors((prevErrors) => ({ ...prevErrors, password: "" }));
-            }} 
-            required 
+            }}  
             className="w-full p-3 border rounded-lg mb-8"
           />
           <button
@@ -121,16 +117,15 @@ const RegisterPage = () => {
           </button>
           {errors.general && <p className="absolute top-[19rem] text-sm text-red-600">{errors.general}</p>}
 
-          <button onClick={handleRegister} 
+          <button type="submit" 
           className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition">
             {isLoading ? "Загрузка..." : "Зарегистрироваться"}
           </button>
-        </div>
+        </form>
         <p className="mt-4 text-center">
           Уже есть аккаунт? <a href="/login" className="text-green-500 hover:underline">Войти</a>
         </p>
       </div>
-
     </div>
   );
 };

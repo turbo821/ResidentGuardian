@@ -31,6 +31,7 @@ using Infrastructure.Cache;
 using Infrastructure.Repositories;
 using StackExchange.Redis;
 using Application.UseCases.RestoreIssue;
+using Application.UseCases.DeleteComment;
 
 namespace Web.Extensions
 {
@@ -64,6 +65,7 @@ namespace Web.Extensions
 
             services.AddScoped<IAddCommentUseCase, AddCommentUseCase>();
             services.AddScoped<IGetCommentsUseCase, GetCommentsUseCase>();
+            services.AddScoped<IDeleteCommentUseCase, DeleteCommentUseCase>();
 
             services.AddScoped<ICreateAnswerUseCase, CreateAnswerUseCase>();
             services.AddScoped<IGetAnswersUseCase, GetAnswersUseCase>();

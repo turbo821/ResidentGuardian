@@ -5,7 +5,7 @@
 -- Dumped from database version 16.1
 -- Dumped by pg_dump version 16.1
 
--- Started on 2025-05-21 01:42:32
+-- Started on 2025-05-24 01:05:40
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -381,6 +381,7 @@ COPY public."Answers" ("Id", "IssueId", "ModeratorId", "Text", "CreatedAt", "New
 0196d0f0-5311-7f00-a23e-ea624b05cb9d	e0b8e65c-6d58-4c5a-ac80-293eaf32171a	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	дада	2025-05-15 01:35:33.009005+03	1	0
 0196d0f2-a67a-7878-b3d1-ea7972e59db9	e0b8e65c-6d58-4c5a-ac80-293eaf32171a	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	\N	2025-05-15 01:38:05.434081+03	0	1
 0196d0f9-9d1b-7912-b6da-ba4447bbb23b	e0b8e65c-6d58-4c5a-ac80-293eaf32171a	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	321	2025-05-15 01:45:41.782028+03	0	0
+0196f4a9-4e16-7413-ad98-634ed99fae66	90da36a5-4697-4a29-9d84-f5c89aabb2a5	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	Надо уточнить	2025-05-22 00:04:18.449166+03	0	0
 \.
 
 
@@ -443,11 +444,10 @@ COPY public."AspNetUserRoles" ("UserId", "RoleId") FROM stdin;
 01964fcb-2c3e-7c9f-8042-e9e4a41ce442	01957d08-0ab4-7282-959f-b9581cbd742c
 8a4268b2-c39a-4562-b9be-f78dd3dc3a55	01957d08-0b49-76d4-8c31-e32b4ec63173
 29c1d83d-414e-45e8-ac22-20c921fcee93	01957d08-0b5c-7811-9905-27c4ac82cee9
-a10b1c56-c464-4f2d-a9f2-bfecf9f0a24a	01957d08-0b5c-7811-9905-27c4ac82cee9
 084acc8b-633c-44c3-9d65-76b19c3c361c	01957d08-0b49-76d4-8c31-e32b4ec63173
 01964fcb-2c3e-7c9f-8042-e9e4a41ce442	01957d08-0b49-76d4-8c31-e32b4ec63173
-1ca79cb6-e708-499e-a858-5ff9f41d94f8	01957d08-0b49-76d4-8c31-e32b4ec63173
 a543e6a1-34bb-4f6a-96af-78aaad16dc9c	01957d08-0b5c-7811-9905-27c4ac82cee9
+1ca79cb6-e708-499e-a858-5ff9f41d94f8	01957d08-0b49-76d4-8c31-e32b4ec63173
 \.
 
 
@@ -474,13 +474,12 @@ COPY public."AspNetUsers" ("Id", "CreatedAt", "UserName", "NormalizedUserName", 
 0195cf1b-4450-77d8-8ada-87fdae2ba123	2025-03-26 00:00:25.429795+03	admin@gmail.com	ADMIN@GMAIL.COM	admin@gmail.com	ADMIN@GMAIL.COM	t	AQAAAAIAAYagAAAAEGLoWoHRIsTGbBsTf6zpJxxwa0ZYJ+9Hs+Gt2W7evU1qDwjV22N7v0t7IDP61V4ylw==	VKVDT6RBZC3SRVKAHEHDFRPIVTVZ732H	8ecf4005-5be4-4904-8ac7-5200b73494e2	\N	f	f	\N	t	0	Admin
 22325660-a1a2-45c0-bf8d-40a5a510b754	2025-04-04 02:27:41.338915+03	biba@gmail.com	BIBA@GMAIL.COM	biba@gmail.com	BIBA@GMAIL.COM	t	AQAAAAIAAYagAAAAEOY5wyYouEYHm8aIKbruyD2H+Fe/LQj9G7EMFdtrZly1+1rHH7S9aw91ssBINnbJVw==	BR4PXXOURVVF3DICLY52EVBR6RZPSYMS	c310598b-628a-4ea3-84f0-b85145ec342d	\N	f	f	\N	t	0	Биба
 9cc8c352-75b9-4050-83c9-31544140ce17	2025-04-19 02:14:06.05169+03	petrov@gmail.com	PETROV@GMAIL.COM	petrov@gmail.com	PETROV@GMAIL.COM	t	AQAAAAIAAYagAAAAEMy+O1F8MAs3FXWZIv8A4i1D53iugyegeoTUFtHnaejJpc6DbKMhk8NpFLRleyg+VA==	F2ZKHPDNIBQ4CYNBNMQ3KV5YUNJFPSIG	e6a7229d-21d3-43e7-9426-2a0579af15f7	\N	f	f	\N	t	0	Петров
-a10b1c56-c464-4f2d-a9f2-bfecf9f0a24a	2025-05-12 23:48:17.07051+03	432@213	432@213	432@213	432@213	t	AQAAAAIAAYagAAAAECU+KItEDkRbxoJBrSxNuztzdHu4sCRPO2KDtHOVybvRLaaH5NDewCNfLyZG5cbzhQ==	HE6GUC4EAQQDZ6NXAUQISQJY3DIM2ACH	356cfe1d-62e0-4440-9018-8401b1830c49	\N	f	f	\N	t	0	43242
 1d9da412-e926-499a-862c-d467f31e831a	2025-03-31 01:33:29.993193+03	puser@gmail.com	PUSER@GMAIL.COM	puser@gmail.com	PUSER@GMAIL.COM	t	AQAAAAIAAYagAAAAEFfpEw8UXrMXotCZ1wb0XTEwhsQPPGpIAHV+IiI7nFlwkxQxX4gY73QtxQG5SUKaKg==	3UW2RYBCWX3SLUDK55545XONNR5GISOC	613f897d-0739-4773-9f8d-1874585291f7	\N	f	f	\N	t	0	puser
 084acc8b-633c-44c3-9d65-76b19c3c361c	2025-05-14 00:12:44.462652+03	klarfe@gmail.com	KLARFE@GMAIL.COM	klarfe@gmail.com	KLARFE@GMAIL.COM	t	AQAAAAIAAYagAAAAEBCcJdjZPpnn7KE7k+AwSoPdaqKtfDjk3/8I0OnbVSWc+tDRBvEF2s1qSD9RI6PKcA==	MB3ODTFKUN635XUP3PNIORYW6FDNIRF2	a0b37042-365f-4d1e-aa8f-e95a795a215f	\N	f	f	\N	t	0	Klarfe
+1ca79cb6-e708-499e-a858-5ff9f41d94f8	2025-04-20 22:12:38.380717+03	zack@gmail.com	ZACK@GMAIL.COM	zack@gmail.com	ZACK@GMAIL.COM	t	AQAAAAIAAYagAAAAECIaDcSPDyndMZhEbY7Du0CIIYUmJRgxtbB8gxqdWTWCvQkCVtKfaURkKDKmfPRH6g==	6J22E33FCITGVYYXTEFNC45PIDMNII53	67d53f7c-b2e3-43ff-8e20-3e4f4c10de63	\N	f	f	\N	t	0	Zack
 8a4268b2-c39a-4562-b9be-f78dd3dc3a55	2025-03-18 00:25:56.304494+03	bob@gmail.com	BOB@GMAIL.COM	bob@gmail.com	BOB@GMAIL.COM	t	AQAAAAIAAYagAAAAEPP8mjO/JRYwvJ1E9+bGJHZh9b+ZXiOMLYp/rCpv6CYQ+4K2po5FR3NyNdVG8hVngw==	HHZRRF4SPUN2TX7PMWFSOEW2MRJWWO7N	df8b3365-c258-4ea1-91b0-139bfdd74a5a	\N	f	f	\N	t	0	Bob
 4fbd8498-115b-4194-94dd-249ed292bd80	2025-03-18 00:09:00.954252+03	tom@gmail.com	TOM@GMAIL.COM	tom@gmail.com	TOM@GMAIL.COM	t	AQAAAAIAAYagAAAAEJbHGieIBoKuZNlTellG6z2Y/cXAqISp9+HCedL6CiyNt0XkHA8CT0Ce890BGmH+lA==	6ULEMUGXOHMZUHFELIDJZZUPF4W3CFIZ	5b04d4e1-854c-4087-a454-45264dcfe747	\N	f	f	\N	t	0	Tom
 cd2c2cee-2228-4fd7-8429-a5c06492388f	2025-05-15 01:05:01.507128+03	nikolay@mail.ru	NIKOLAY@MAIL.RU	nikolay@mail.ru	NIKOLAY@MAIL.RU	t	AQAAAAIAAYagAAAAEGFryE+bj2qVvrbPQh64c/aAIy4/XxjBX07GLVw/aRVanuHHoxVrmwk19MnmjT55Gw==	JPIPHOD4ZNZOL4AEVOSWHMT6GRSEOFGC	f5cb3ab1-2402-4fb0-ab80-77822bae27ab	\N	f	f	\N	t	0	Николай
-1ca79cb6-e708-499e-a858-5ff9f41d94f8	2025-04-20 22:12:38.380717+03	zack@gmail.com	ZACK@GMAIL.COM	zack@gmail.com	ZACK@GMAIL.COM	t	AQAAAAIAAYagAAAAECIaDcSPDyndMZhEbY7Du0CIIYUmJRgxtbB8gxqdWTWCvQkCVtKfaURkKDKmfPRH6g==	6J22E33FCITGVYYXTEFNC45PIDMNII53	b3c3ca32-39b4-4736-8933-5610707927b7	\N	f	f	\N	t	0	Zack
 a543e6a1-34bb-4f6a-96af-78aaad16dc9c	2025-05-15 01:55:54.926395+03	dmitriy123@gmail.com	DMITRIY123@GMAIL.COM	dmitriy123@gmail.com	DMITRIY123@GMAIL.COM	t	AQAAAAIAAYagAAAAEMkfQjHNk/RZchWlQBQqb0mQkq8Boa0DPEIZaTniT53OFfJQ7WPGQk/f9DDXfb2AyQ==	AW3BFCSBUAS5D2NCA22563YUU3P7V2T4	98184d37-0208-4ec8-9c1d-63fafdd8e45b	\N	f	f	\N	t	0	Дима
 \.
 
@@ -492,12 +491,12 @@ a543e6a1-34bb-4f6a-96af-78aaad16dc9c	2025-05-15 01:55:54.926395+03	dmitriy123@gm
 --
 
 COPY public."Categories" ("Id", "Title", "Description", "ImageUri") FROM stdin;
-01964131-f40e-78db-beb9-8f0d2c9b5dfb	Благоустройство	Сломанные лавочки, поврежденные детские площадки, отсутствие озеленения.	871a7a39-f430-461f-b13f-d40f0bb44dc1.png
 0196410c-5015-7044-aa8d-1af8884879e1	Общественный транспорт	Поломанные остановки, нехватка маршрутов, нерегулярное движение транспорта.	9768d5e4-7393-4afa-a57b-4cb7eaac5315.png
 019645dc-f75a-7008-b083-e399eecd79e0	Другое	Все остальные проблемы, не входящие в указанные категории.	8b1c96fd-1513-483b-a66d-f05aac014ec1.png
-78b02b13-958f-4257-8b06-5378e1f6f3df	Мусор	Несвоевременный вывоз мусора, переполненные урны, свалки.	5cc15e56-e907-4659-be2a-263476a685c6.png
-3e8225ec-d424-4ea7-9a4d-40f400bed880	Дорожные проблемы	Ямы, трещины, отсутствие разметки, поврежденные знаки.	b167edc4-b351-4bed-9839-d828740b9bf7.png
 5f354cb0-fa60-40f9-81e7-ab15d1404218	Освещение	Неисправные фонари, отсутствие освещения на улицах и в парках.	6fde3bc8-29c3-4765-8289-952930fb271c.png
+3e8225ec-d424-4ea7-9a4d-40f400bed880	Дорожные проблемы	Ямы, трещины, отсутствие разметки, поврежденные знаки.	b167edc4-b351-4bed-9839-d828740b9bf7.png
+78b02b13-958f-4257-8b06-5378e1f6f3df	Мусор	Несвоевременный вывоз мусора, переполненные урны, свалки.	5cc15e56-e907-4659-be2a-263476a685c6.png
+01964131-f40e-78db-beb9-8f0d2c9b5dfb	Благоустройство	Сломанные лавочки, поврежденные детские площадки, отсутствие озеленения.	871a7a39-f430-461f-b13f-d40f0bb44dc1.png
 \.
 
 
@@ -508,7 +507,6 @@ COPY public."Categories" ("Id", "Title", "Description", "ImageUri") FROM stdin;
 --
 
 COPY public."Comments" ("Id", "Text", "CreatedAt", "UserId", "IssueId") FROM stdin;
-ee5060b9-73f5-41b4-a518-02bf91ebb4a1	string	2025-05-03 00:06:16.443557+03	4fbd8498-115b-4194-94dd-249ed292bd80	7ea991bb-5cde-4a7a-aa49-186b5848ac46
 96f2eb87-b88f-443d-a572-8b6273093109	Привет	2025-05-03 00:25:14.004894+03	4fbd8498-115b-4194-94dd-249ed292bd80	7ea991bb-5cde-4a7a-aa49-186b5848ac46
 5a82399f-9441-48f3-9c3b-d85354c8c9c1	Третий коммент	2025-05-03 00:32:40.783863+03	4fbd8498-115b-4194-94dd-249ed292bd80	7ea991bb-5cde-4a7a-aa49-186b5848ac46
 805cfe5f-12b6-4536-9318-6ac577555edc	4 коммекн	2025-05-03 00:33:25.246361+03	4fbd8498-115b-4194-94dd-249ed292bd80	7ea991bb-5cde-4a7a-aa49-186b5848ac46
@@ -522,11 +520,9 @@ a960f8b9-6695-443a-be49-c7f120f36f9f	айайай	2025-05-03 03:26:11.59162+03	8
 6b05a0b3-0883-43ba-a21d-5b41a7d03983	вот дела	2025-05-16 20:41:47.370911+03	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	0f33876e-d306-469d-b73b-07d6381a86cf
 72b83b4b-bfe0-4227-86f7-d28591f0fac2	й	2025-05-16 20:41:53.292139+03	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	0f33876e-d306-469d-b73b-07d6381a86cf
 c957c47a-a8b4-434f-8553-8ffbba513d8b	23	2025-05-16 20:42:37.562899+03	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	0f33876e-d306-469d-b73b-07d6381a86cf
-b675b9c9-e0a2-4ce4-96f1-a57866658cca	r	2025-05-20 23:58:17.096829+03	4fbd8498-115b-4194-94dd-249ed292bd80	5900f9cb-f69f-4871-b178-462940eff52d
-073308d9-12e8-462c-b652-5eace36c437c	324	2025-05-20 23:58:24.543453+03	4fbd8498-115b-4194-94dd-249ed292bd80	5900f9cb-f69f-4871-b178-462940eff52d
 d04cec55-2f2d-4f2e-9e10-65d4787c8b4d	443\n	2025-05-20 23:58:37.979503+03	4fbd8498-115b-4194-94dd-249ed292bd80	5900f9cb-f69f-4871-b178-462940eff52d
-030133f9-c1ba-46bb-b514-ad1d33b66b8c	321	2025-05-21 00:01:59.447031+03	4fbd8498-115b-4194-94dd-249ed292bd80	5900f9cb-f69f-4871-b178-462940eff52d
 62096469-5c71-451e-a509-d1182ab2d3a4	321	2025-05-21 00:02:05.731859+03	4fbd8498-115b-4194-94dd-249ed292bd80	5900f9cb-f69f-4871-b178-462940eff52d
+3d8cb09d-ac0d-4236-99af-77142bd81c3b	дааа	2025-05-22 00:16:53.964582+03	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	0f33876e-d306-469d-b73b-07d6381a86cf
 \.
 
 
@@ -538,16 +534,16 @@ d04cec55-2f2d-4f2e-9e10-65d4787c8b4d	443\n	2025-05-20 23:58:37.979503+03	4fbd849
 
 COPY public."Grades" ("Id", "UserId", "IssueId", "Like") FROM stdin;
 66ee057e-cd26-446e-9adf-61a5efaec06b	4fbd8498-115b-4194-94dd-249ed292bd80	0f33876e-d306-469d-b73b-07d6381a86cf	t
-85dab29a-f423-424b-a3a6-dee655e881aa	4fbd8498-115b-4194-94dd-249ed292bd80	5900f9cb-f69f-4871-b178-462940eff52d	t
-dd5b5135-bfed-4ef3-bb4d-d59f2157b16b	4fbd8498-115b-4194-94dd-249ed292bd80	9c548d03-0acd-4c6b-8a72-ed7a74d476dd	f
-7600168f-a00f-40ed-a9f4-0d507f6e1960	4fbd8498-115b-4194-94dd-249ed292bd80	980f834a-ce93-449d-bd1c-94f48195086d	f
 4108af48-9bc6-4672-8fee-7fc9d6dd8cfb	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	0f33876e-d306-469d-b73b-07d6381a86cf	t
 49a1de3f-e0bf-4081-b382-68b59a55f124	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	5900f9cb-f69f-4871-b178-462940eff52d	t
 b554dbdd-10d3-4246-85c1-7994dd597297	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	980f834a-ce93-449d-bd1c-94f48195086d	t
 ae7035b2-eb20-4ebb-8998-bd2a91078242	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	9c548d03-0acd-4c6b-8a72-ed7a74d476dd	f
-a17eabd3-a3c2-479b-832b-3f97016076d7	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	0f33876e-d306-469d-b73b-07d6381a86cf	t
 4c0cf489-2410-4a67-9614-25866c89837c	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	b4b2f863-5f12-4199-b8a8-eb41e4b6f1b5	t
 2a881b25-cc4f-421d-842c-40b0fce20fd8	8a4268b2-c39a-4562-b9be-f78dd3dc3a55	7ea991bb-5cde-4a7a-aa49-186b5848ac46	t
+7eec36f3-3223-4819-92f0-bf9c376cac73	4fbd8498-115b-4194-94dd-249ed292bd80	90da36a5-4697-4a29-9d84-f5c89aabb2a5	t
+f141fd75-3576-4181-bdb4-5694fea109d5	4fbd8498-115b-4194-94dd-249ed292bd80	980f834a-ce93-449d-bd1c-94f48195086d	t
+5e18b54c-b95d-4cc4-ad48-09c136c322e5	4fbd8498-115b-4194-94dd-249ed292bd80	5900f9cb-f69f-4871-b178-462940eff52d	t
+e596ba59-7dce-411a-84ac-940706929d8a	4fbd8498-115b-4194-94dd-249ed292bd80	9c548d03-0acd-4c6b-8a72-ed7a74d476dd	f
 \.
 
 
@@ -592,9 +588,9 @@ f827be99-3920-4f5f-b0b8-7473ef3497a3	Старый сломанный аттра�
 5900f9cb-f69f-4871-b178-462940eff52d	Сломанная лавочка	\N	Pending	Волгодонск, улица 50 лет СССР, 11	0101000020E610000035DF4FD1AE1345409734B3F8C0C14740	2025-04-21 01:34:55.327524+03	4fbd8498-115b-4194-94dd-249ed292bd80	01964131-f40e-78db-beb9-8f0d2c9b5dfb	\N	\N	\N	\N
 980f834a-ce93-449d-bd1c-94f48195086d	Много мусора	Около подьезда грязно	Resolved	Волгодонск, улица Ленина, 73	0101000020E610000035DF4F0F611445409D0E9546F7C14740	2025-04-21 01:23:09.708677+03	4fbd8498-115b-4194-94dd-249ed292bd80	78b02b13-958f-4257-8b06-5378e1f6f3df	\N	\N	\N	\N
 9c548d03-0acd-4c6b-8a72-ed7a74d476dd	Не работает фонарь во дворе	Фонарь не включается уже 2 недели, вечером опасно ходить	Rejected	Волгодонск, Вокзальный переулок, 54	0101000020E610000035DF4F81EF134540EA488AD2AFC14740	2025-04-21 01:30:42.551464+03	4fbd8498-115b-4194-94dd-249ed292bd80	5f354cb0-fa60-40f9-81e7-ab15d1404218	\N	\N	\N	\N
-90da36a5-4697-4a29-9d84-f5c89aabb2a5	Яма на проспекте Ленина	Большая яма размером 1.5×2 метра, глубиной около 30 см	Pending	Волгодонск, улица Ленина	0101000020E6100000F4E63D96A315454090B23FD900C14740	2025-04-21 01:26:44.48107+03	4fbd8498-115b-4194-94dd-249ed292bd80	3e8225ec-d424-4ea7-9a4d-40f400bed880	\N	\N	\N	\N
 e0b8e65c-6d58-4c5a-ac80-293eaf32171a	Грязь	Главный источник грязи в городе – открытый грунт. Грязь на дорогах (особенно зимой) или пыль летом – это в основном последствия открытого грунта.\r\n\r\n	Pending	Волгодонск, бульвар Великой Победы, 26	0101000020E610000035DF4F75061845405FAE5FFBDEC14740	2025-05-15 00:56:42.600023+03	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	3e8225ec-d424-4ea7-9a4d-40f400bed880	\N	\N	\N	\N
-0f33876e-d306-469d-b73b-07d6381a86cf	Грязь на тротуаре2	Грязно очень	InProgress	Волгодонск, переулок Макаренко, 61	0101000020E610000036DF4F4D321445406C5B823D93C14740	2025-04-21 01:36:54.211518+03	4fbd8498-115b-4194-94dd-249ed292bd80	78b02b13-958f-4257-8b06-5378e1f6f3df	\N	\N	\N	\N
+90da36a5-4697-4a29-9d84-f5c89aabb2a5	Яма на проспекте Ленина	Большая яма размером 1.5×2 метра, глубиной около 30 см	Pending	Волгодонск, улица Ленина, 93	0101000020E610000036DF4FE7F11445403CC129526EC14740	2025-04-21 01:26:44.48107+03	4fbd8498-115b-4194-94dd-249ed292bd80	3e8225ec-d424-4ea7-9a4d-40f400bed880	\N	\N	\N	\N
+0f33876e-d306-469d-b73b-07d6381a86cf	Грязь на тротуаре	Грязно очень	InProgress	Волгодонск, переулок Макаренко, 61	0101000020E610000036DF4F4D321445406C5B823D93C14740	2025-04-21 01:36:54.211518+03	4fbd8498-115b-4194-94dd-249ed292bd80	78b02b13-958f-4257-8b06-5378e1f6f3df	\N	\N	\N	\N
 \.
 
 
@@ -612,11 +608,13 @@ COPY public."ModeratorCategories" ("ModeratorId", "CategoryId") FROM stdin;
 084acc8b-633c-44c3-9d65-76b19c3c361c	5f354cb0-fa60-40f9-81e7-ab15d1404218
 084acc8b-633c-44c3-9d65-76b19c3c361c	0196410c-5015-7044-aa8d-1af8884879e1
 01964fcb-2c3e-7c9f-8042-e9e4a41ce442	019645dc-f75a-7008-b083-e399eecd79e0
-01964fcb-2c3e-7c9f-8042-e9e4a41ce442	3e8225ec-d424-4ea7-9a4d-40f400bed880
-1ca79cb6-e708-499e-a858-5ff9f41d94f8	0196410c-5015-7044-aa8d-1af8884879e1
+8a4268b2-c39a-4562-b9be-f78dd3dc3a55	0196410c-5015-7044-aa8d-1af8884879e1
 1ca79cb6-e708-499e-a858-5ff9f41d94f8	01964131-f40e-78db-beb9-8f0d2c9b5dfb
 1ca79cb6-e708-499e-a858-5ff9f41d94f8	019645dc-f75a-7008-b083-e399eecd79e0
-1ca79cb6-e708-499e-a858-5ff9f41d94f8	78b02b13-958f-4257-8b06-5378e1f6f3df
+1ca79cb6-e708-499e-a858-5ff9f41d94f8	5f354cb0-fa60-40f9-81e7-ab15d1404218
+084acc8b-633c-44c3-9d65-76b19c3c361c	3e8225ec-d424-4ea7-9a4d-40f400bed880
+01964fcb-2c3e-7c9f-8042-e9e4a41ce442	78b02b13-958f-4257-8b06-5378e1f6f3df
+01964fcb-2c3e-7c9f-8042-e9e4a41ce442	0196410c-5015-7044-aa8d-1af8884879e1
 \.
 
 
@@ -627,11 +625,6 @@ COPY public."ModeratorCategories" ("ModeratorId", "CategoryId") FROM stdin;
 --
 
 COPY public."RefreshTokens" ("Id", "Token", "UserId", "Expires") FROM stdin;
-0196db0d-dd58-7c02-954e-c3b67549c9fa	9a0f2362-5562-4be9-a6b4-3ae4ff9f3e9b	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	2025-05-24 00:44:01.111503+03
-0196ef8f-c6a6-78e6-836b-9a81c4b8ee25	3d922065-856e-484b-a9e2-43ae1a5cc032	4fbd8498-115b-4194-94dd-249ed292bd80	2025-05-28 00:18:19.302523+03
-0196efa1-68a5-7737-9d15-39fa175c9707	86faf352-5181-4150-a592-4b5567be95ac	4fbd8498-115b-4194-94dd-249ed292bd80	2025-05-28 00:37:34.884508+03
-0196efbd-2160-7c03-b7fb-bce3af9782c0	ba05935c-a027-405a-b4f7-91bc4ed516ba	4fbd8498-115b-4194-94dd-249ed292bd80	2025-05-28 01:07:51.608094+03
-0196efce-92c1-7188-bfbf-dc1f5091a99a	8c4e2f7b-029f-4c88-864d-baf31be78c84	4fbd8498-115b-4194-94dd-249ed292bd80	2025-05-28 01:26:54.764835+03
 0196c606-131d-7345-aa65-ce0a7ac9d1cc	df5baa62-dfb4-4e06-ae51-7ca138a97c57	29c1d83d-414e-45e8-ac22-20c921fcee93	2025-05-19 22:43:29.04387+03
 \.
 
@@ -1234,7 +1227,7 @@ ALTER TABLE ONLY public."RefreshTokens"
     ADD CONSTRAINT "FK_RefreshTokens_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES public."AspNetUsers"("Id") ON DELETE CASCADE;
 
 
--- Completed on 2025-05-21 01:42:33
+-- Completed on 2025-05-24 01:05:41
 
 --
 -- PostgreSQL database dump complete
