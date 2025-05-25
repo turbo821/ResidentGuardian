@@ -1,6 +1,5 @@
 ﻿
 using Application.Services.Interfaces;
-using Application.UseCases.GetUserIssues;
 using Domain.Interfaces;
 
 namespace Application.UseCases.GetIssue

@@ -5,7 +5,7 @@
 -- Dumped from database version 16.1
 -- Dumped by pg_dump version 16.1
 
--- Started on 2025-05-24 01:05:40
+-- Started on 2025-05-25 18:04:45
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -570,8 +570,8 @@ a896f0e2-92ff-45f4-87ea-73b350f465f8	6d8b7572-0438-4dbd-ab18-0e903f6c59e8.jpg	b4
 b387e922-5bd1-4494-8705-0bc31184f3ac	4ce0a722-b5f6-453d-9660-179b37051e66.jpg	0f33876e-d306-469d-b73b-07d6381a86cf
 1dfad447-e46a-4d12-b2e4-3e081ab880b8	a6e6da1b-0266-402b-9a2c-506d3d82d575.jpg	7ea991bb-5cde-4a7a-aa49-186b5848ac46
 cf20b4f4-afd4-48f4-a44f-5e8bc08095cb	01529631-456c-4454-8a0b-04b93ed7b814.jpeg	7ea991bb-5cde-4a7a-aa49-186b5848ac46
-943d0ca3-7a61-46a4-8514-adfa605d7444	1e57bf50-db8d-48f1-9876-1b7e82d05308.webp	f827be99-3920-4f5f-b0b8-7473ef3497a3
 4042fd4c-6a83-448b-afd4-9ac23decd55b	c39bc8e9-bc5d-4a95-95db-603dbb79c333.jpeg	e0b8e65c-6d58-4c5a-ac80-293eaf32171a
+75d5c0df-3664-40ee-9b90-b06111763ec0	2afa2cff-f313-4e68-b678-42281d08839e.webp	58e56880-fe52-41b4-b118-cceecdc69d0b
 \.
 
 
@@ -582,9 +582,9 @@ cf20b4f4-afd4-48f4-a44f-5e8bc08095cb	01529631-456c-4454-8a0b-04b93ed7b814.jpeg	7
 --
 
 COPY public."Issues" ("Id", "Title", "Description", "Status", "Location", "Point", "CreatedAt", "UserId", "CategoryId", "ModifiedById", "ModifiedOn", "RevokedById", "RevokedOn") FROM stdin;
+58e56880-fe52-41b4-b118-cceecdc69d0b	Сломанный аттракцион	Эта площадка находится в аренде у предпринимателя, аттракцион не в рабочем состоянии, поскольку для его ремонта нужна деталь, изготовить которую может только Комсомольский-на-Амуре авиационный завод.	Pending	Волгодонск, квартал В-2	0101000020E6100000F4A83CCB43194540B8D1DCBF86C14740	2025-05-25 18:03:07.738364+03	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	01964131-f40e-78db-beb9-8f0d2c9b5dfb	\N	\N	\N	\N
 7ea991bb-5cde-4a7a-aa49-186b5848ac46	Плохие маршрутки	Езжу на маршрутке, они неудобное, в них жарко и долго набираются 	Resolved	Цимлянск, улица Надежды Крупской	0101000020E610000089FAC6A4820C454045157DF8DED14740	2025-04-24 00:38:15.210745+03	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	0196410c-5015-7044-aa8d-1af8884879e1	\N	\N	\N	\N
 b4b2f863-5f12-4199-b8a8-eb41e4b6f1b5	Засоренная ливневая канализация	После дождя вода стоит 3 дня, невозможно пройти	InProgress	Волгодонск, улица Ленина, 109	0101000020E610000005DD77FA59154540F5E7199F21C14740	2025-04-21 01:33:45.849282+03	4fbd8498-115b-4194-94dd-249ed292bd80	01964131-f40e-78db-beb9-8f0d2c9b5dfb	\N	\N	\N	\N
-f827be99-3920-4f5f-b0b8-7473ef3497a3	Старый сломанный аттракцион 	Эта площадка находится в аренде у предпринимателя, аттракцион не в рабочем состоянии, поскольку для его ремонта нужна деталь, изготовить которую может только Комсомольский-на-Амуре авиационный завод.	Pending	Волгодонск, квартал Профтехучилищ	0101000020E6100000B3BB50FEF6184540F6FA4E8B17C14740	2025-05-12 22:45:43.809421+03	29c1d83d-414e-45e8-ac22-20c921fcee93	01964131-f40e-78db-beb9-8f0d2c9b5dfb	\N	\N	\N	\N
 5900f9cb-f69f-4871-b178-462940eff52d	Сломанная лавочка	\N	Pending	Волгодонск, улица 50 лет СССР, 11	0101000020E610000035DF4FD1AE1345409734B3F8C0C14740	2025-04-21 01:34:55.327524+03	4fbd8498-115b-4194-94dd-249ed292bd80	01964131-f40e-78db-beb9-8f0d2c9b5dfb	\N	\N	\N	\N
 980f834a-ce93-449d-bd1c-94f48195086d	Много мусора	Около подьезда грязно	Resolved	Волгодонск, улица Ленина, 73	0101000020E610000035DF4F0F611445409D0E9546F7C14740	2025-04-21 01:23:09.708677+03	4fbd8498-115b-4194-94dd-249ed292bd80	78b02b13-958f-4257-8b06-5378e1f6f3df	\N	\N	\N	\N
 9c548d03-0acd-4c6b-8a72-ed7a74d476dd	Не работает фонарь во дворе	Фонарь не включается уже 2 недели, вечером опасно ходить	Rejected	Волгодонск, Вокзальный переулок, 54	0101000020E610000035DF4F81EF134540EA488AD2AFC14740	2025-04-21 01:30:42.551464+03	4fbd8498-115b-4194-94dd-249ed292bd80	5f354cb0-fa60-40f9-81e7-ab15d1404218	\N	\N	\N	\N
@@ -625,6 +625,7 @@ COPY public."ModeratorCategories" ("ModeratorId", "CategoryId") FROM stdin;
 --
 
 COPY public."RefreshTokens" ("Id", "Token", "UserId", "Expires") FROM stdin;
+019707f2-8654-70a9-9a1b-c647b0abafe4	f1141aae-ed16-4b29-90e3-4adc13d30121	01964fcb-2c3e-7c9f-8042-e9e4a41ce442	2025-06-01 17:57:04.084434+03
 0196c606-131d-7345-aa65-ce0a7ac9d1cc	df5baa62-dfb4-4e06-ae51-7ca138a97c57	29c1d83d-414e-45e8-ac22-20c921fcee93	2025-05-19 22:43:29.04387+03
 \.
 
@@ -1227,7 +1228,7 @@ ALTER TABLE ONLY public."RefreshTokens"
     ADD CONSTRAINT "FK_RefreshTokens_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES public."AspNetUsers"("Id") ON DELETE CASCADE;
 
 
--- Completed on 2025-05-24 01:05:41
+-- Completed on 2025-05-25 18:04:46
 
 --
 -- PostgreSQL database dump complete
