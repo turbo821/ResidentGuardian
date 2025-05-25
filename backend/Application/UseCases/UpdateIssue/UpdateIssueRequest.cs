@@ -8,7 +8,7 @@ namespace Application.UseCases.UpdateIssue
         string? Description,
         Guid CategoryId,
         IEnumerable<IFormFile>? Images,
-        IEnumerable<string> imagesToKeep,
+        IEnumerable<string>? imagesToKeep,
         string Location,
 
         [RegularExpression(@"^[0-9\.]+$")]

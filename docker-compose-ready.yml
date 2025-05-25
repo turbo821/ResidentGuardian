@@ -4,7 +4,7 @@
 
 services:
   client:
-    image: turbo821/resident-guardian-client:05-19.2
+    image: turbo821/resident-guardian-client:05-25
     depends_on:
       - loadbalancer
     ports:
@@ -20,7 +20,7 @@ services:
       - api
 
   api:
-    image: turbo821/resident-guardian-api:05-19
+    image: turbo821/resident-guardian-api:05-25
     user: "0:0"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development

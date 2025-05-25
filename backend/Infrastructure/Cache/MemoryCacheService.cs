@@ -1,7 +1,6 @@
 ﻿using Application.Services.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Concurrent;
-using System.Text.RegularExpressions;
 
 namespace Infrastructure.Cache
 {

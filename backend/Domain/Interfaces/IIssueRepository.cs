@@ -15,5 +15,7 @@ namespace Domain.Interfaces
         Task<bool> IsExist(Guid id);
         Task<IssueStatus?> ChangeStatus(Guid id, IssueStatus newStatus);
         Task<bool> CheckModeratorToIssueAccess(Guid moderatorId, Guid issueId);
+        Task RemoveImage(IssueImage image);
+        Task AddImage(Guid issueId, string imageUri);
     }
 }

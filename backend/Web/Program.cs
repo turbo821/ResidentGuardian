@@ -102,7 +102,7 @@ app.UseCookiePolicy(new CookiePolicyOptions
 
 });
 
-app.MapStaticAssets();
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();

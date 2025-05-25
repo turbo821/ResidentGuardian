@@ -28,48 +28,60 @@ namespace Application.UseCases.UpdateIssue
             issue.Title = issueDto.Title;
             issue.Description = issueDto.Description;
             issue.CategoryId = issueDto.CategoryId;
+            issue.ModifiedOn = DateTime.UtcNow;
+            issue.ModifiedById = userId;
 
-            foreach (var image in issue.Images)
+            await ProcessImages(issue, issueDto);
+
+            if (!double.TryParse(issueDto.PointLatitude, out var latitude) ||
+                !double.TryParse(issueDto.PointLongitude, out var longitude))
+                return false;
+
+            issue.Point = new Point(longitude, latitude) { SRID = 4326 };
+            issue.Location = issueDto.Location;
+            var success = await _repo.Update(issue);
+
+            if (success)
             {
-                if (!issueDto.imagesToKeep.Contains(image.Uri))
+                string cacheKey = $"Issue_{issueId}";
+                await _cache.RemoveAsync(cacheKey);
+                await _cache.RemoveByPatternAsync(AllIssuesKey);
+            }
+
+            return success;
+        }
+
+        private async Task ProcessImages(Issue issue, UpdateIssueRequest issueDto)
+        {
+            if (issueDto.imagesToKeep != null)
+            {
+                var imagesToRemove = issue.Images
+                    .Where(image => !issueDto.imagesToKeep.Contains(image.Uri))
+                    .ToList();
+
+                foreach (var image in imagesToRemove)
                 {
                     _fileStorage.DeleteImage(image.Uri);
+                    await _repo.RemoveImage(image);
                 }
             }
-            issue.Images = issue.Images.Where(image => issueDto.imagesToKeep.Contains(image.Uri)).ToList();
+            else
+            {
+                foreach (var image in issue.Images.ToList())
+                {
+                    _fileStorage.DeleteImage(image.Uri);
+                    await _repo.RemoveImage(image);
+                }
+            }
 
-            List<IssueImage> imageUris = new List<IssueImage>();
             if (issueDto.Images != null)
             {
                 foreach (var image in issueDto.Images)
                 {
                     var uri = await _fileStorage.SaveImageAsync(image);
-
-                    var issueImage = new IssueImage
-                    {
-                        Uri = uri
-                    };
-                    imageUris.Add(issueImage);
+                    await _repo.AddImage(issue.Id, uri);
                 }
-                issue.Images.AddRange(imageUris);
             }
-
-            if (!double.TryParse(issueDto.PointLatitude, out var latitude)
-                || !double.TryParse(issueDto.PointLongitude, out var longitude))
-                return false;
-
-            var point = new Point(longitude, latitude) { SRID = 4326 };
-
-            issue.Location = issueDto.Location;
-            issue.Point = point;
-
-            var success = await _repo.Update(issue);
-
-            string cacheKey = $"Issue_{issueId}";
-            await _cache.RemoveAsync(cacheKey);
-            await _cache.RemoveByPatternAsync(AllIssuesKey);
-
-            return success;
         }
     }
 }

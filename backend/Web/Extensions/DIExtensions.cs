@@ -32,6 +32,7 @@ using Infrastructure.Repositories;
 using StackExchange.Redis;
 using Application.UseCases.RestoreIssue;
 using Application.UseCases.DeleteComment;
+using System.Text.Json;
 
 namespace Web.Extensions
 {
@@ -107,6 +108,14 @@ namespace Web.Extensions
                 var redis = ConnectionMultiplexer.Connect(redisHost);
                 if (redis.IsConnected)
                 {
+                    var jsonOptions = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                        IncludeFields = true,
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                    };
+
+                    services.AddSingleton(jsonOptions);
                     services.AddSingleton<IConnectionMultiplexer>(redis);
                     services.AddSingleton<ICacheService, DistributedCacheService>();
                     redisAvailable = true;

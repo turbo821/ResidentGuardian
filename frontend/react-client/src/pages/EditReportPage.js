@@ -210,7 +210,7 @@ const EditReportPage = () => {
             )}
           </select>
           
-          {errors.images && <p className="absolute bottom-30 left-40 mt-1 text-sm text-red-600">{errors.images}</p>}
+          {errors.images && <p className="absolute bottom-[22.5rem] left-40 mt-1 text-sm text-red-600">{errors.images}</p>}
           
           <div className="grid grid-cols-3 gap-2">
             {existingImages.map((img, index) => (

@@ -89,11 +89,10 @@ namespace Infrastructure.Repositories
 
         public async Task<bool> Update(Issue issue)
         {
-            if (!await IsExist(issue.Id))
-                return false;
+            _context.Entry(issue).State = EntityState.Modified;
 
-            _context.Issues.Update(issue);
-            return await Save();
+            return await _context.SaveChangesAsync() > 0;
+
         }
 
         public async Task<bool> Delete(Issue issue)
@@ -130,8 +129,24 @@ namespace Infrastructure.Repositories
 
             var issue = await _context.Issues.FirstOrDefaultAsync(i => i.Id == issueId);
 
-            return issue is not null && moderatorCategoriesId.Contains(issue.CategoryId);
-                
+            return issue is not null && moderatorCategoriesId.Contains(issue.CategoryId);     
+        }
+
+        public async Task RemoveImage(IssueImage image)
+        {
+            _context.IssueImages.Remove(image);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddImage(Guid issueId, string imageUri)
+        {
+            var image = new IssueImage
+            {
+                Uri = imageUri,
+                IssueId = issueId
+            };
+            _context.IssueImages.Add(image);
+            await _context.SaveChangesAsync();
         }
     }
 }
