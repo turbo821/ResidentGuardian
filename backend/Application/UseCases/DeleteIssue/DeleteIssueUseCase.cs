@@ -9,11 +9,11 @@ namespace Application.UseCases.DeleteIssue
     {
         private readonly IIssueRepository _issueRepo;
         private readonly UserManager<User> _userManager;
-        private readonly IFileStorage _fileStorage;
+        private readonly IFileStorageService _fileStorage;
         private readonly ICacheService _cache;
         private const string AllIssuesKey = "AllIssues";
 
-        public DeleteIssueUseCase(IIssueRepository issueRepo, UserManager<User> userManager, IFileStorage fileStorage, ICacheService cache)
+        public DeleteIssueUseCase(IIssueRepository issueRepo, UserManager<User> userManager, IFileStorageService fileStorage, ICacheService cache)
         {
             _issueRepo = issueRepo;
             _userManager = userManager;
@@ -67,7 +67,7 @@ namespace Application.UseCases.DeleteIssue
             {
                 foreach (var image in issue.Images) 
                 {
-                    _fileStorage.DeleteImage(image.Uri);
+                    await _fileStorage.DeleteImage(image.Uri);
                 }
 
                 var success = await _issueRepo.Delete(issue);

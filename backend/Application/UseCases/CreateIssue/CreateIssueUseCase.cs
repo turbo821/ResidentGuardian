@@ -8,11 +8,11 @@ namespace Application.UseCases.CreateIssue
     public class CreateIssueUseCase : ICreateIssueUseCase
     {
         private readonly IIssueRepository _repo;
-        private readonly IFileStorage _fileStorage;
+        private readonly IFileStorageService _fileStorage;
         private readonly ICacheService _cache;
         private const string AllIssuesKey = "AllIssues";
 
-        public CreateIssueUseCase(IIssueRepository repo, IFileStorage fileStorage, ICacheService cache)
+        public CreateIssueUseCase(IIssueRepository repo, IFileStorageService fileStorage, ICacheService cache)
         {
             _repo = repo;
             _fileStorage = fileStorage;

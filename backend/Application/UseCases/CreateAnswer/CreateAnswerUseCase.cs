@@ -9,11 +9,11 @@ namespace Application.UseCases.CreateAnswer
     {
         private readonly IAnswerRepository _answerRepo;
         private readonly IIssueRepository _issueRepo;
-        private readonly IFileStorage _fileStorage;
+        private readonly IFileStorageService _fileStorage;
         private readonly ICacheService _cache;
         private const string AllIssuesKey = "AllIssues";
 
-        public CreateAnswerUseCase(IAnswerRepository answerRepo, IIssueRepository issueRepo, IFileStorage fileStorage, ICacheService cache)
+        public CreateAnswerUseCase(IAnswerRepository answerRepo, IIssueRepository issueRepo, IFileStorageService fileStorage, ICacheService cache)
         {
             _answerRepo = answerRepo;
             _issueRepo = issueRepo;

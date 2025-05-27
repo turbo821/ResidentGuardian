@@ -2,9 +2,9 @@
 
 namespace Application.Services.Interfaces
 {
-    public interface IFileStorage
+    public interface IFileStorageService
     {
         Task<string> SaveImageAsync(IFormFile file);
-        bool DeleteImage(string imageUri);
+        Task<bool> DeleteImage(string imageUri);
     }
 }

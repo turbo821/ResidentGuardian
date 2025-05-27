@@ -10,12 +10,12 @@ namespace Application.UseCases.UpdateCategory
     {
         private readonly ICategoryRepository _repo;
         private readonly IMapper _mapper;
-        private readonly IFileStorage _fileStorage;
+        private readonly IFileStorageService _fileStorage;
         private readonly ICacheService _cache;
         private const string AllCategoriesCacheKey = "AllCategories";
         private const string AllIssuesCacheKey = "AllIssues";
 
-        public UpdateCategoryUseCase(ICategoryRepository repo, IMapper mapper, IFileStorage fileStorage, ICacheService cache)
+        public UpdateCategoryUseCase(ICategoryRepository repo, IMapper mapper, IFileStorageService fileStorage, ICacheService cache)
         {
             _repo = repo;
             _mapper = mapper;
@@ -28,7 +28,7 @@ namespace Application.UseCases.UpdateCategory
             string imageUri = (await _repo.GetById(categoryDto.Id))!.ImageUri;
             if (categoryDto.Image != null)
             {
-                _fileStorage.DeleteImage(imageUri ?? "");
+                await _fileStorage.DeleteImage(imageUri ?? "");
                 imageUri = await _fileStorage.SaveImageAsync(categoryDto.Image);
             }
 

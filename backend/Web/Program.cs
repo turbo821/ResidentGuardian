@@ -53,6 +53,7 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
 builder.Services.Configure<FileStorageOptions>(builder.Configuration.GetSection(nameof(FileStorageOptions)));
+builder.Services.Configure<YandexStorageOptions>(builder.Configuration.GetSection(nameof(YandexStorageOptions)));
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
@@ -70,10 +71,10 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 builder.Services.AddHostedService<TokenCleanupService>();
 
-builder.Services.AddScoped<IAdminCliService, AdminCliService>();
 builder.Services.AddScoped<RoleSetter>();
 
-builder.Services.AddScoped<IFileStorage, LocalFileStorage>();
+// builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
+builder.Services.AddScoped<IFileStorageService, YandexStorageService>();
 
 builder.Services.AddRepositories();
 builder.Services.AddUseCases();
@@ -81,7 +82,6 @@ builder.Services.AddFilters();
 
 var app = builder.Build();
 
-// await app.UseAdminCliMode(args); // fix..
 
 // await app.UseDatabaseRun();
 
@@ -102,7 +102,7 @@ app.UseCookiePolicy(new CookiePolicyOptions
 
 });
 
-app.UseStaticFiles();
+// app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();

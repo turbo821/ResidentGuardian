@@ -10,11 +10,11 @@ namespace Application.UseCases.CreateCategory
     {
         private readonly ICategoryRepository _repo;
         private readonly IMapper _mapper;
-        private readonly IFileStorage _fileStorage;
+        private readonly IFileStorageService _fileStorage;
         private readonly ICacheService _cache;
         private const string CacheKey = "AllCategories";
 
-        public CreateCategoryUseCase(ICategoryRepository repo, IMapper mapper, IFileStorage fileStorage, ICacheService cache)
+        public CreateCategoryUseCase(ICategoryRepository repo, IMapper mapper, IFileStorageService fileStorage, ICacheService cache)
         {
             _repo = repo;
             _mapper = mapper;

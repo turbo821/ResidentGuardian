@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace Infrastructure.FileStorage
 {
-    public class LocalFileStorage : IFileStorage
+    public class LocalFileStorageService : IFileStorageService
     {
         private readonly string _rootPath;
         private readonly string _uploadFolder;
@@ -13,7 +13,7 @@ namespace Infrastructure.FileStorage
             "image/jpeg", "image/png", "image/gif", "image/webp"
         };
 
-        public LocalFileStorage(IOptions<FileStorageOptions> options)
+        public LocalFileStorageService(IOptions<FileStorageOptions> options)
         {
             _rootPath = options.Value.RootPath;
             _uploadFolder = options.Value.UploadFolder;
@@ -44,24 +44,24 @@ namespace Infrastructure.FileStorage
             return fileName;
         }
 
-        public bool DeleteImage(string imageUri)
+        public Task<bool> DeleteImage(string imageUri)
         {
             if (string.IsNullOrWhiteSpace(imageUri))
-                return false;
+                return Task.FromResult(false);
 
             string filePath = Path.Combine(_rootPath, _uploadFolder, imageUri);
 
             if (!File.Exists(filePath))
-                return false;
+                return Task.FromResult(false);
 
             try
             {
                 File.Delete(filePath);  
-                return true;
+                return Task.FromResult(true);
             }
             catch
             {
-                return false;
+                return Task.FromResult(false);
             }
         }
     }

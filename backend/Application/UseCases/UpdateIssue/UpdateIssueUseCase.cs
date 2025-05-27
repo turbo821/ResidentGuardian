@@ -8,10 +8,10 @@ namespace Application.UseCases.UpdateIssue
     public class UpdateIssueUseCase : IUpdateIssueUseCase
     {
         private readonly IIssueRepository _repo;
-        private readonly IFileStorage _fileStorage;
+        private readonly IFileStorageService _fileStorage;
         private readonly ICacheService _cache;
         private const string AllIssuesKey = "AllIssues";
-        public UpdateIssueUseCase(IIssueRepository repo, IFileStorage fileStorage, ICacheService cache)
+        public UpdateIssueUseCase(IIssueRepository repo, IFileStorageService fileStorage, ICacheService cache)
         {
             _repo = repo;
             _fileStorage = fileStorage;
@@ -61,7 +61,7 @@ namespace Application.UseCases.UpdateIssue
 
                 foreach (var image in imagesToRemove)
                 {
-                    _fileStorage.DeleteImage(image.Uri);
+                    await _fileStorage.DeleteImage(image.Uri);
                     await _repo.RemoveImage(image);
                 }
             }
@@ -69,7 +69,7 @@ namespace Application.UseCases.UpdateIssue
             {
                 foreach (var image in issue.Images.ToList())
                 {
-                    _fileStorage.DeleteImage(image.Uri);
+                    await _fileStorage.DeleteImage(image.Uri);
                     await _repo.RemoveImage(image);
                 }
             }
