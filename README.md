@@ -19,3 +19,5 @@ or
 `docker-compose -f .\docker-compose-ready.yml run --rm seed-admin-tool`
 
 In interactive mode you can register admins
+
+#### Change AccessKey and SecretKey in appsettings.json
