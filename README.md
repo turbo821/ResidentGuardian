@@ -20,4 +20,4 @@ or
 
 In interactive mode you can register admins
 
-#### Change AccessKey and SecretKey in appsettings.json
+#### Change AccessKey and SecretKey for Yandex Storage in appsettings.json
