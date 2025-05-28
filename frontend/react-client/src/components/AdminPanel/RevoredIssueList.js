@@ -5,6 +5,7 @@ import RevoredIssueCard from "./RevoredIssueCard";
 
 const RevoredIssueList = ({ issues = [], setIssues }) => {
   const [isExpanded, setIsExpanded] = useState(true);
+  const [filter, setFilter] = useState('all');
 
   const handleDeleteIssue = async(id, softDeletion = false) => {
     try {
@@ -29,6 +30,14 @@ const RevoredIssueList = ({ issues = [], setIssues }) => {
       console.log(err.response);
     }
   };
+
+  const filteredIssues = issues.filter(issue => {
+    if (filter === 'all') return true;
+    if (filter === 'moderator') return !issue.selfDeleted;
+    if (filter === 'user') return issue.selfDeleted;
+    return true;
+  });
+
   return (
     <div className="bg-gray-100 p-4 rounded-lg shadow-md md:col-span-2">
       <div 
@@ -48,13 +57,51 @@ const RevoredIssueList = ({ issues = [], setIssues }) => {
       </div>
 
       {isExpanded && (
-        <div className="mt-4 grid gap-4">
-          {issues.length > 0 ? issues.map((issue) => (
-            <div key={issue.id} className="bg-white rounded-xl shadow-md p-4">
-                <RevoredIssueCard issue={issue} handleDeleteIssue={handleDeleteIssue} handleRestoreIssue={handleRestoreIssue} />
-            </div>
-          )) 
-          : <p>Обращений на удаление нет</p>}
+        <div className="mt-4">
+          <div className="flex space-x-2 mb-4">
+            <button
+              onClick={() => setFilter('all')}
+              className={`px-3 py-1 rounded-md text-sm ${
+                filter === 'all' 
+                  ? 'bg-blue-500 text-white' 
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              Все
+            </button>
+            <button
+              onClick={() => setFilter('moderator')}
+              className={`px-3 py-1 rounded-md text-sm ${
+                filter === 'moderator' 
+                  ? 'bg-blue-500 text-white' 
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              Удаленные модератором
+            </button>
+            <button
+              onClick={() => setFilter('user')}
+              className={`px-3 py-1 rounded-md text-sm ${
+                filter === 'user' 
+                  ? 'bg-blue-500 text-white' 
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              Удаленные пользователем
+            </button>
+          </div>
+
+          <div className="grid gap-4">
+            {filteredIssues.length > 0 ? filteredIssues.map((issue) => (
+              <div key={issue.id} className="bg-white rounded-xl shadow-md p-4">
+                <RevoredIssueCard 
+                  issue={issue} 
+                  handleDeleteIssue={handleDeleteIssue} 
+                  handleRestoreIssue={handleRestoreIssue} 
+                />
+              </div>
+            )) : <p className="text-gray-500">Нет обращений на удаление</p>}
+          </div>
         </div>
       )}
 

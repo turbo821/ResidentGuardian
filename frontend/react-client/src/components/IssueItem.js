@@ -3,9 +3,9 @@ import IssueStatus from "./ProfilePage/IssueStatus";
 import api from "../api";
 import { useState } from "react";
 import ConfirmDelete from "./ConfirmDelete";
+import { imagesURL } from "../api";
 
-const IssueItem = ({ issue, user, handleDeleteIssue, moderatorCategories, isCurrentUser = false }) => {
-  const createdDate = (new Date(issue?.createdAt)).toLocaleDateString();
+const IssueItem = ({ issue, user, handleDeleteIssue, moderatorCategories = [], isCurrentUser = false }) => {
 
   const [likes, setLikes] = useState(issue?.likeCount || 0);
   const [dislikes, setDislikes] = useState(issue?.dislikeCount || 0);
@@ -75,24 +75,17 @@ const IssueItem = ({ issue, user, handleDeleteIssue, moderatorCategories, isCurr
 
   return (
     <div key={issue.id} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition relative group">
-      <div className="flex justify-between items-start">
+
+      <div className="flex flex-col md:flex-row items-start gap-4">
+        <img
+          src={`${imagesURL}/${issue.image}`}
+          alt={issue.image}
+          className="w-full md:w-32 h-48 md:h-32 object-cover rounded-lg border"
+        />
         <div>
           <h4 className="font-bold text-lg">{issue.title}</h4>
           <p className="text-gray-600 text-sm mt-1">{issue.location}</p>
-          <p className="text-gray-600 text-sm">Создано: {createdDate}</p>
-        </div>
-        <IssueStatus issue={issue} />
-      </div>
 
-      <div className="flex flex-row justify-between items-start gap-4 mb-4">
-          <div className="flex items-center gap-2">
-            <Link 
-              to={`/issues/${issue.id}`} 
-              className="inline-block mt-3 text-blue-500 hover:underline font-medium"
-            >
-              Подробнее →
-            </Link>
-          </div>
           <div className="flex items-center gap-2">
             <button 
               onClick={handleLike}
@@ -116,39 +109,71 @@ const IssueItem = ({ issue, user, handleDeleteIssue, moderatorCategories, isCurr
               <span>{dislikes}</span>
             </button>
           </div>
-          {(isAdmin || isModerator || isCurrentUser) && 
-          <button
-            onClick={() => setConfirmDeleted(true)}
-            className="text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity absolute right-0 top-0"
-            title="Удалить обращение"
-            aria-label="Удалить"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>}
-          {isCurrentUser && (
-            <Link
-              to={`/issues/${issue.id}/edit`}
-              className="text-blue-500 hover:text-blue-700 opacity-0 group-hover:opacity-100 transition-opacity absolute right-0 bottom-0"
-              title="Редактировать обращение"
-              aria-label="Редактировать"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
-            </Link>
+
+          <p className="text-gray-500 text-sm absolute bottom-6 right-6">
+            <strong>Создано:</strong> {new Date(issue.createdAt).toLocaleDateString('ru-RU', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric'
+            })}
+          </p>
+          {issue.modifiedOn && (
+          <p className="text-gray-500 text-sm absolute bottom-0 right-6">
+            <strong>Изменено:</strong> {new Date(issue.modifiedOn).toLocaleDateString('ru-RU', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric'
+            })}
+          </p>
           )}
-          {(isAdmin || isModerator || isCurrentUser) && confirmDeleted && 
-            <ConfirmDelete
-              itemTitle={"обращение"}
-              item={issue}
-              handleDelete={handleDeleteIssue}
-              setConfirmOpen={setConfirmDeleted}
-            />
-          }
 
         </div>
+        <IssueStatus className={"absolute top-2 right-4"} issue={issue} />
+      </div>
+
+      <div className="flex flex-row justify-between items-start gap-4 mb-4">
+        <div className="flex items-center gap-2">
+          <Link 
+            to={`/issues/${issue.id}`} 
+            className="inline-block mt-3 text-green-500 hover:underline font-medium"
+          >
+            Подробнее →
+          </Link>
+        </div>
+        
+        {(isAdmin || isModerator || isCurrentUser) && 
+        <button
+          onClick={() => setConfirmDeleted(true)}
+          className="text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity absolute right-0 top-0"
+          title="Удалить обращение"
+          aria-label="Удалить"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>}
+        {isCurrentUser && (
+          <Link
+            to={`/issues/${issue.id}/edit`}
+            className="text-blue-500 hover:text-blue-700 opacity-0 group-hover:opacity-100 transition-opacity absolute right-0 bottom-0"
+            title="Редактировать обращение"
+            aria-label="Редактировать"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </Link>
+        )}
+        {(isAdmin || isModerator || isCurrentUser) && confirmDeleted && 
+          <ConfirmDelete
+            itemTitle={"обращение"}
+            item={issue}
+            handleDelete={handleDeleteIssue}
+            setConfirmOpen={setConfirmDeleted}
+          />
+        }
+
+      </div>
     </div>
   )
 };

@@ -19,7 +19,7 @@ namespace Application.UseCases.DeleteModerator
         public async Task<bool> Execute(Guid id)
         {
             await _cache.RemoveAsync(CacheKey);
-            return await _repo.RemoveUser(id);
+            return await _repo.Remove(id);
         }
     }
 }

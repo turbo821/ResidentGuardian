@@ -1,5 +1,6 @@
-﻿using Application.Services.Interfaces;
-using Application.UseCases.GetUserIssues;
+﻿using Application.UseCases.GetUserIssues;
+using Application.UseCases.GetUserProfile;
+using Application.UseCases.UpdateProfile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -11,17 +12,17 @@ namespace Web.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IAuthService _authService;
-        private readonly IRefreshTokenService _refreshTokenService;
+        private readonly IGetUserProfileUseCase _getUserProfile;
+        private readonly IUpdateUserProfileUseCase _updateUserProfile;
         private readonly IGetUserIssuesUseCase _getUserIssues;
 
         public UserController(
-            IAuthService authService,
-            IRefreshTokenService refreshTokenService,
+            IGetUserProfileUseCase getUserProfile,
+            IUpdateUserProfileUseCase updateUserProfile,
             IGetUserIssuesUseCase getUserIssues)
         {
-            _authService = authService;
-            _refreshTokenService = refreshTokenService;
+            _getUserProfile = getUserProfile;
+            _updateUserProfile = updateUserProfile;
             _getUserIssues = getUserIssues;
         }
 
@@ -32,10 +33,18 @@ namespace Web.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null) return Unauthorized();
 
-            var isTokenRevoked = await _refreshTokenService.IsTokenRevokedAsync(Guid.Parse(userId));
-            if (isTokenRevoked) return Unauthorized("Token revoked");
+            var profile = await _getUserProfile.Execute(Guid.Parse(userId));
+            return Ok(profile);
+        }
 
-            var profile = await _authService.GetUserProfile(Guid.Parse(userId));
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserProfileRequest request)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) return Unauthorized();
+
+            var profile = await _updateUserProfile.Execute(Guid.Parse(userId), request);
             return Ok(profile);
         }
 

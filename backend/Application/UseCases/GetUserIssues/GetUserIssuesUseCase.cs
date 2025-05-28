@@ -34,6 +34,8 @@ namespace Application.UseCases.GetUserIssues
                 issue.Title,
                 issue.Status,
                 issue.CreatedAt,
+                issue.ModifiedOn,
+                issue.Images.Select(img => img.Uri).FirstOrDefault()!,
                 issue.Location,
                 issue.Category.Title,
                 Like: issue.Grades.FirstOrDefault(g => g.UserId == id)?.Like,

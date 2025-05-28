@@ -35,6 +35,8 @@ namespace Application.UseCases.GetModeratorIssues
                 issue.Title,
                 issue.Status,
                 issue.CreatedAt,
+                issue.ModifiedOn,
+                issue.Images.Select(img => img.Uri).FirstOrDefault()!,
                 issue.Location,
                 issue.Category.Title,
                 Like: issue.Grades.FirstOrDefault(g => g.UserId == moderatorId)?.Like,

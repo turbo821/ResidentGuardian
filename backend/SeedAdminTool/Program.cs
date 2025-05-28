@@ -6,7 +6,7 @@ using Infrastructure.Data;
 
 var serviceCollection = new ServiceCollection();
 
-string? connection = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+string? connection = Environment.GetEnvironmentVariable("CONNECTION_STRING") ?? "Host=localhost;Port=5432;Database=reguan_db;Username=postgres;Password=postgres";
 
 serviceCollection.AddDbContext<AppGuardContext>(options =>
     options.UseNpgsql(connection,

@@ -23,12 +23,19 @@ namespace Infrastructure.Repositories
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.FullName == fullName);
         }
-        public async Task<bool> RemoveUser(Guid id)
+
+        public async Task<bool> Remove(Guid id)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
             if (user is null) return false;
 
             _context.Users.Remove(user);
+            return await Save();
+        }
+
+        public async Task<bool> Update(User user)
+        {
+            _context.Users.Update(user);
             return await Save();
         }
     }

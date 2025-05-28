@@ -73,11 +73,5 @@ namespace Infrastructure.Auth
             _context.RefreshTokens.RemoveRange(tokens);
             await _context.SaveChangesAsync();
         }
-
-        public async Task<bool> IsTokenRevokedAsync(Guid userId)
-        {
-            return !await _context.RefreshTokens
-                .AnyAsync(rt => rt.UserId == userId && rt.Expires > DateTime.UtcNow);
-        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Application.UseCases.CreateIssue;
 using Application.UseCases.DeleteIssue;
 using Application.UseCases.GetAllIssues;
+using Application.UseCases.GetAllRevoredIssue;
 using Application.UseCases.GetIssue;
 using Application.UseCases.RestoreIssue;
 using Application.UseCases.UpdateIssue;
@@ -16,6 +17,7 @@ namespace Web.Controllers
     public class IssuesController : ControllerBase
     {
         private readonly IGetAllIssueUseCase _getAllIssues;
+        private readonly IGetAllRevoredIssueUseCase _getAllRevoredIssues;
         private readonly IGetIssueUseCase _getIssue;
         private readonly ICreateIssueUseCase _createIssue;
         private readonly IUpdateIssueUseCase _updateIssue;
@@ -23,11 +25,13 @@ namespace Web.Controllers
         private readonly IRestoreIssueUseCase _restoreIssue;
 
         public IssuesController(
-            IGetAllIssueUseCase getAllIssues, IGetIssueUseCase getIssue,
-            ICreateIssueUseCase createIssue, IUpdateIssueUseCase updateIssue,
-            IDeleteIssueUseCase deleteIssue, IRestoreIssueUseCase restoreIssue)
+            IGetAllIssueUseCase getAllIssues, IGetAllRevoredIssueUseCase getAllRevoredIssues,
+            IGetIssueUseCase getIssue,ICreateIssueUseCase createIssue, IUpdateIssueUseCase updateIssue,
+            IDeleteIssueUseCase deleteIssue, IRestoreIssueUseCase restoreIssue
+            )
         {
             _getAllIssues = getAllIssues;
+            _getAllRevoredIssues = getAllRevoredIssues;
             _getIssue = getIssue;
             _createIssue = createIssue;
             _updateIssue = updateIssue;
@@ -63,7 +67,7 @@ namespace Web.Controllers
             Guid? userGuid = null;
             if (userId != null) userGuid = Guid.Parse(userId);
 
-            var response = await _getAllIssues.Execute(request, userGuid, true);
+            var response = await _getAllRevoredIssues.Execute(request, userGuid);
 
             return Ok(response);
         }

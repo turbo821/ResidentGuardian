@@ -317,9 +317,9 @@ const IssueDetailsPage = () => {
   }
 
   return (
-    <div className="min-h-[90vh] bg-blue-100 flex flex-col items-center py-12 px-4">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full relative">
-        <div className="flex justify-between items-start mb-2">
+    <div className="min-h-[90vh] bg-blue-100 flex flex-col items-center py-12 px-4 relative">
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full ">
+        <div className="flex justify-between items-start mb-2 relative">
           <h2 className="text-3xl font-bold text-gray-800">{issue.title}</h2>
           <div className="flex flex-row gap-4">
             {isCurrentUser && (
@@ -344,6 +344,24 @@ const IssueDetailsPage = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>}
+
+            <Link to={`/profile/${issue.userId}`} className="text-gray-500 text-sm absolute top-0 right-20">
+              <strong>Создано:</strong> {new Date(issue.createdAt).toLocaleDateString('ru-RU', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric'
+            })}
+            </Link>
+            {issue.modifiedOn && (
+            <p className="text-gray-500 text-sm absolute top-5 right-20">
+              <strong>Изменено:</strong> {new Date(issue.modifiedOn).toLocaleDateString('ru-RU', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+              })}
+            </p>
+            )}
+
           </div>
 
         </div>

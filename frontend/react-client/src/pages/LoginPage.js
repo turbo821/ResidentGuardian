@@ -70,7 +70,7 @@ const LoginPage = () => {
             value={email} 
             onChange={(e) => {
               setEmail(e.target.value)
-              setErrors((prevErrors) => ({ ...prevErrors, "email": "" }));
+              setErrors((prevErrors) => ({ ...prevErrors, email: "" }));
             }} 
             required 
             className="w-full p-3 border rounded-lg mb-7"
@@ -83,7 +83,7 @@ const LoginPage = () => {
             value={password} 
             onChange={(e) => {
               setPassword(e.target.value);
-              setErrors((prevErrors) => ({ ...prevErrors, "password": "" }));
+              setErrors((prevErrors) => ({ ...prevErrors, password: "" }));
             }} 
             required 
             className="w-full p-3 border rounded-lg mb-8"

@@ -33,6 +33,9 @@ using StackExchange.Redis;
 using Application.UseCases.RestoreIssue;
 using Application.UseCases.DeleteComment;
 using System.Text.Json;
+using Application.UseCases.GetAllRevoredIssue;
+using Application.UseCases.GetUserProfile;
+using Application.UseCases.UpdateProfile;
 
 namespace Web.Extensions
 {
@@ -40,12 +43,16 @@ namespace Web.Extensions
     {
         public static void AddUseCases(this IServiceCollection services)
         {
+            services.AddScoped<IGetUserProfileUseCase, GetUserProfileUseCase>();
+            services.AddScoped<IUpdateUserProfileUseCase, UpdateUserProfileUseCase>();
+
             services.AddScoped<IGetCategoriesUseCase, GetCategoriesUseCase>();
             services.AddScoped<ICreateCategoryUseCase, CreateCategoryUseCase>();
             services.AddScoped<IUpdateCategoryUseCase, UpdateCategoryUseCase>();
             services.AddScoped<IDeleteCategoryUseCase, DeleteCategoryUseCase>();
 
             services.AddScoped<IGetAllIssueUseCase, GetAllIssueUseCase>();
+            services.AddScoped<IGetAllRevoredIssueUseCase, GetAllRevoredIssueUseCase>();
             services.AddScoped<IGetIssueUseCase, GetIssueUseCase>();
             services.AddScoped<ICreateIssueUseCase, CreateIssueUseCase>();
             services.AddScoped<IUpdateIssueUseCase, UpdateIssueUseCase>();

@@ -8,7 +8,14 @@ const RevoredIssueCard = ({ issue, handleDeleteIssue, handleRestoreIssue }) => {
     const [confirmDeleted, setConfirmDeleted] = useState(false);
 
   return (
-    <div className="flex flex-col md:flex-row items-start gap-4 p-4 border rounded-xl shadow-sm bg-white">
+    <div className="flex flex-col md:flex-row items-start gap-4 p-4 border rounded-xl shadow-sm bg-white relative">
+      <div className={`absolute top-2 right-2 px-2 py-1 rounded-md text-xs font-semibold ${
+          issue.selfDeleted 
+              ? "bg-orange-100 text-orange-800" 
+              : "bg-purple-100 text-purple-800"
+      }`}>
+          {issue.selfDeleted ? "Удалено пользователем" : "Удалено модератором"}
+      </div>
       <img
         src={`${imagesURL}/${issue.image}`}
         alt={issue.image}
@@ -32,6 +39,13 @@ const RevoredIssueCard = ({ issue, handleDeleteIssue, handleRestoreIssue }) => {
           </div>
             
           <p className="text-gray-700  mb-3"><strong>Категория:</strong> {issue.category}</p>
+          <p className="text-gray-500 text-sm absolute bottom-0 right-2">
+              <strong>Дата удаления:</strong> {new Date(issue?.revoredOn).toLocaleDateString('ru-RU', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+              })}
+          </p>
         </div>
 
         <div className="flex flex-wrap gap-2 ">

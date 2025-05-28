@@ -46,6 +46,7 @@ namespace Infrastructure.Repositories
                 .Where(i => i.RevokedOn == null)
                 .Include(i => i.Category)
                 .Include(i => i.Grades)
+                .Include(i => i.Images)
                 .Where(issue => issue.UserId == userId)
                 .OrderByDescending(issue => issue.CreatedAt)
                 .ToListAsync();
@@ -59,6 +60,7 @@ namespace Infrastructure.Repositories
                 .Where(i => i.RevokedOn == null)
                 .Include(i => i.Category)
                 .Include(i => i.Grades)
+                .Include(i => i.Images)
                 .Where(issue => issue.Category.ModeratorCategories.Any(mc => mc.ModeratorId == moderatorId))
                 .OrderByDescending(issue => issue.CreatedAt)
                 .ToListAsync();

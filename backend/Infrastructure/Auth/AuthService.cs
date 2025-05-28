@@ -1,6 +1,5 @@
 ﻿using Application.Dtos;
 using Application.Services.Interfaces;
-using Application.UseCases.GetModeratorCategories;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -12,20 +11,17 @@ namespace Infrastructure.Auth
         private readonly UserManager<User> _userManager;
         private readonly IJwtProvider _jwtService;
         private readonly IRefreshTokenService _refreshTokenService;
-        private readonly IGetModeratorCategoriesUseCase _getModeratorCategories;
         private readonly IUserRepository _repo;
 
         public AuthService(
             UserManager<User> userManager,
             IJwtProvider jwtService,
             IRefreshTokenService refreshTokenService,
-            IGetModeratorCategoriesUseCase getModeratorCategories,
             IUserRepository repo)
         {
             _userManager = userManager;
             _jwtService = jwtService;
             _refreshTokenService = refreshTokenService;
-            _getModeratorCategories = getModeratorCategories;
             _repo = repo;
         }
 
@@ -103,23 +99,6 @@ namespace Infrastructure.Auth
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
-        }
-
-        public async Task<UserProfileDto?> GetUserProfile(Guid userId)
-        {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
-            if (user == null) return null;
-
-            var roles = await _userManager.GetRolesAsync(user);
-
-            return new UserProfileDto
-            (
-                user.Id,
-                user.FullName,
-                user.Email!,
-                roles.ToList(),
-                user.CreatedAt
-            );
         }
     }
 }

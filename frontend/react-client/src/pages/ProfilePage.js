@@ -5,14 +5,15 @@ import IssueItem from "../components/IssueItem";
 import UserInfo from "../components/ProfilePage/UserInfo";
 import api from "../api";
 import toast from "react-hot-toast";
+import EditProfileModal from "../components/ProfilePage/EditProfileModal";
 
 const ProfilePage = () => {
   const { id } = useParams();
-  const { user, isLoading } = useAuth();
+  const { user, setUser, isLoading } = useAuth();
   const [issues, setIssues] = useState([]);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('pending');
-  const [moderatorCategories, setModeratorCategories] = useState([]);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
 
@@ -22,26 +23,6 @@ const ProfilePage = () => {
       navigate("/");
     }
   }, [user, id, isLoading, navigate]);
-
-    useEffect(() => {
-    let isMounted = true;
-
-    const fetchData = async() => {
-      try {
-        if(user?.roles?.includes("Moderator")) {
-          await fetchModerCategories();
-        }
-      } catch(err) {
-          if (isMounted) {
-            console.error("Error fetching data:", err);
-          }
-      }
-    }
-    fetchData();
-    return () => {
-      isMounted = false;
-    };
-  }, [user]);
   
   useEffect(() => {
     fetchUserIssues(); 
@@ -53,15 +34,6 @@ const ProfilePage = () => {
       setIssues(response.data);
     }
     catch(err) {
-      console.log(err.response);
-    }
-  }
-
-    const fetchModerCategories = async() => {
-    try {
-      const response = await api.get("/api/moderation/categories");
-      setModeratorCategories(response.data);
-    } catch(err) {
       console.log(err.response);
     }
   }
@@ -78,6 +50,18 @@ const ProfilePage = () => {
       console.log(err.response);
     }
   }
+
+  const handleSaveProfile = async (data) => {
+    try {
+      console.log(data)
+      const response = await api.put('/api/user', data);
+      setUser(response.data);
+      toast.success('Профиль успешно обновлен', { duration: 2000 });
+    } catch (error) {
+      console.log('Ошибка при обновлении профиля', { duration: 2000 });
+      throw error;
+    }
+  };
 
   if (isLoading) {
     return <div>Загрузка профиля...</div>;
@@ -185,7 +169,7 @@ const ProfilePage = () => {
           
           <div className="space-y-4">
             {getActiveIssues().length > 0 ? getActiveIssues().map((issue) => (
-              <IssueItem issue={issue} key={issue.id} user={user} moderatorCategories={moderatorCategories} handleDeleteIssue={handleDeleteIssue} isCurrentUser={true}/>
+              <IssueItem issue={issue} key={issue.id} user={user} handleDeleteIssue={handleDeleteIssue} isCurrentUser={true}/>
             ))
           : <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition">
               <h4 className="text-lg">Здесь нет ваших обращений</h4>
@@ -210,13 +194,19 @@ const ProfilePage = () => {
             Создать новое обращение
           </Link>
           <Link 
-            to="/settings" 
+            onClick={() => setIsEditModalOpen(true)} 
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition text-center"
           >
-            Настройки профиля
+            Обновить профиль
           </Link>
         </div>
       </div>
+      <EditProfileModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        user={user}
+        onSave={handleSaveProfile}
+      />
     </div>
   );
 };
