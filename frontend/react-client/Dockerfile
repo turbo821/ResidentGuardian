@@ -8,7 +8,7 @@ ARG REACT_APP_API_URL
 ENV REACT_APP_API_URL=/reguanapi
 
 ARG REACT_APP_IMAGES_URL
-ENV REACT_APP_IMAGES_URL=/upload
+ENV REACT_APP_IMAGES_URL=https://s3.yandexcloud.net/reguard-busket
 
 RUN npm run build
 

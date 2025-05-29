@@ -1,10 +1,10 @@
 # images are downloaded from docker hub, supports many api
-# run command: docker compose -f .\docker-compose-ready.yml up -d --scale api=<number_api>
-# run admin-seed-tool command: docker-compose -f .\docker-compose-ready.yml run --rm seed-admin-tool
+# run command: docker compose -f .\docker-compose-full.yml up -d --scale api=<number_api>
+# run admin-seed-tool command: docker-compose -f .\docker-compose-full.yml run --rm seed-admin-tool
 
 services:
   client:
-    image: turbo821/resident-guardian-client:05-25
+    image: turbo821/resident-guardian-client:05-29
     depends_on:
       - loadbalancer
     ports:
@@ -20,7 +20,7 @@ services:
       - api
 
   api:
-    image: turbo821/resident-guardian-api:05-25
+    image: turbo821/resident-guardian-api:05-29
     user: "0:0"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
