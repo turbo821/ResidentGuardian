@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Answer from "../components/IssueDetailsPage/Answer";
 import ModalImage from "../components/ModalImage";
 import api from "../api";
@@ -23,7 +23,6 @@ const IssueDetailsPage = () => {
   const { user } = useAuth();
   const [issue, setIssue] = useState(null);
   const [modalImage, setModalImage] = useState(null);
-  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [confirmDeleted, setConfirmDeleted] = useState(false);
   const [moderatorCategories, setModeratorCategories] = useState([]);
@@ -454,7 +453,7 @@ const IssueDetailsPage = () => {
         <p className="text-gray-700 mb-6"><strong>Описание:</strong> {issue?.description}</p>
   
         <Link 
-          onClick={() => navigate(-1)} 
+          to="/issues"
           className="inline-block hover:text-green-500 text-green-400 font-bold py-3 px-6 rounded-lg transition"
         >
           Назад к обращениям

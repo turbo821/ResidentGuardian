@@ -1,6 +1,6 @@
 import api from "../../api";
 
-const SearchFilterPanel = ({ searchText, setIssues, setSearchText, setShowFilters, showFilters }) => {
+const SearchFilterPanel = ({ searchText, setIssues, setTotalCount, setTotalPages, setSearchText, setShowFilters, showFilters }) => {
 
   const handleSearch = async() => {
     const params = new URLSearchParams();
@@ -11,7 +11,9 @@ const SearchFilterPanel = ({ searchText, setIssues, setSearchText, setShowFilter
     
     try {
       const response = await api.get(`/api/issues?${params.toString()}`);
-      setIssues(response.data);
+      setIssues(response.data.items);
+      setTotalCount(response.data.totalItems);
+      setTotalPages(response.data.totalPages);
     } catch(err) {
       console.log(err.response);
     }

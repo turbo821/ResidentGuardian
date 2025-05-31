@@ -6,7 +6,7 @@ namespace Application.Dtos
     {
         [Required]
         [StringLength(100)]
-        [RegularExpression(@"^[a-zA-Z0-9а-яА-ЯёЁ]+$")]
+        [RegularExpression(@"^[a-zA-Z0-9а-яА-ЯёЁ ]+$")]
         public string FullName { get; set; } = string.Empty;
 
         [Required]

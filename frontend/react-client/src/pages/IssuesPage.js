@@ -177,6 +177,8 @@ const IssuesPage = () => {
         <SearchFilterPanel
           searchText={searchText}
           setIssues={setIssues}
+          setTotalCount={setTotalCount}
+          setTotalPages={setTotalPages}
           setSearchText={setSearchText}
           showFilters={showFilters}
           setShowFilters={setShowFilters}

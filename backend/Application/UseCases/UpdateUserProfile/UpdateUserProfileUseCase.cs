@@ -28,6 +28,10 @@ namespace Application.UseCases.UpdateProfile
             }
 
             user.Email = data.Email;
+            user.NormalizedEmail = data.Email.ToUpper();
+            user.NormalizedUserName = data.Email.ToUpper();
+            user.UserName = data.Email;
+
             user.FullName = data.FullName;
 
             var success = await _repo.Update(user);
