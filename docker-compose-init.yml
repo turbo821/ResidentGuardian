@@ -21,13 +21,18 @@ services:
       - api
 
   api:
-    image: turbo821/resident-guardian-api:06-01
+    image: turbo821/resident-guardian-api:06-08
     user: "0:0"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ALLOWED_ORIGINS=http://client:3000,http://client:80,https://client:443,https://client:3000
       - CONNECTION_STRING=Host=database;Port=5432;Database=reguan_db;Username=postgres;Password=postgres
       - REDIS_HOST=redis:6379
+      - YandexStorageOptions__BucketName=your-bucket
+      - YandexStorageOptions__ServiceUrl=https://storage.yandexcloud.net
+      - YandexStorageOptions__AccessKey=your-access-key
+      - YandexStorageOptions__SecretKey=your-secret-key
+
     volumes:
       - uploads_data:/app/wwwroot/upload
     depends_on:

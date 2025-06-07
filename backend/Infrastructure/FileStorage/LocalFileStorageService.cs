@@ -29,8 +29,7 @@ namespace Infrastructure.FileStorage
 
             string absolutePath = Path.Combine(_rootPath, _uploadFolder);
 
-            if (!Directory.Exists(absolutePath))
-                Directory.CreateDirectory(absolutePath);
+            Directory.CreateDirectory(absolutePath);
 
             string extension = Path.GetExtension(file.FileName);
             string fileName = Guid.NewGuid().ToString() + extension;

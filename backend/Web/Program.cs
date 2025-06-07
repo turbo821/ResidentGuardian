@@ -15,6 +15,7 @@ using System.Globalization;
 var cultureInfo = new CultureInfo("en-US");
 CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
 CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
