@@ -1,6 +1,11 @@
 import axios from "axios";
 const baseURL = process.env.REACT_APP_API_URL ?? "http://localhost:5059";
-const imagesURL = process.env.REACT_APP_IMAGES_URL ?? "https://s3.yandexcloud.net/reguard-busket"
+
+// If yandex storage
+// const imagesURL = process.env.REACT_APP_IMAGES_URL ?? "https://s3.yandexcloud.net/reguard-busket"
+
+// If local storage
+const imagesURL = process.env.REACT_APP_IMAGES_URL ?? "http://localhost:5059/upload"
 
 const api = axios.create({
   baseURL: baseURL,

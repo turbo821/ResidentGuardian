@@ -74,8 +74,8 @@ builder.Services.AddHostedService<TokenCleanupService>();
 
 builder.Services.AddScoped<RoleSetter>();
 
-// builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
-builder.Services.AddScoped<IFileStorageService, YandexStorageService>();
+builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
+// builder.Services.AddScoped<IFileStorageService, YandexStorageService>();
 
 builder.Services.AddRepositories();
 builder.Services.AddUseCases();
@@ -103,7 +103,7 @@ app.UseCookiePolicy(new CookiePolicyOptions
 
 });
 
-// app.UseStaticFiles();
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
